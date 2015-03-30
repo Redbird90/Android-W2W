@@ -13,27 +13,25 @@ import android.widget.Button;
 
 public class MainActivity extends ActionBarActivity {
 
+    private static Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        boolean game_starting = true;
+        MainActivity.context =  getApplicationContext();
     }
-    boolean tapped = false;
-    public Input getInput() {
-        return null;
-    }
-
-    public void onClick(View view) {
-        Button screen_button = (Button) findViewById(R.id.screen_button);
-        Log.i("touch", "confirmed");
-        tapped = true;
-
-    }
-
 
     public FileIO getFileIO() {
         return null;
     }
+
+
+
+    //public Input getInput() {
+      //  return null;
+    //}
 
     //public Graphics getGraphics();
 

@@ -1,5 +1,7 @@
 package com.example.jkt.wall2wall0;
 
+import android.util.Log;
+
 import com.example.jkt.wall2wall0.math.Vector2;
 
 /**
@@ -14,6 +16,7 @@ public class example_enemy extends falling_enemy {
         this.y_pos = y;
         this.width = width;
         this.height = height;
+        Log.i("example_enemy", "new enemy created");
     }
     public void update_enemy() {
             this.y_pos -= velocity.getY();

@@ -1,5 +1,7 @@
 package com.example.jkt.wall2wall0;
 
+import android.util.Log;
+
 import com.example.jkt.wall2wall0.math.Rectangle;
 import com.example.jkt.wall2wall0.math.Vector2;
 
@@ -34,6 +36,7 @@ public class player_char extends DynamicGameObject {
         this.y_pos = y;
         this.width = width;
         this.height = height;
+        Log.i("player_char", "new player created");
     }
     public void start_movement() {
         if (!jumped) {

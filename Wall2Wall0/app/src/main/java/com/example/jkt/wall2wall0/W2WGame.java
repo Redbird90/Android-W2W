@@ -29,7 +29,7 @@ public class W2WGame extends AndroidGame {
         //map = convertStreamToString(mapInputStream);   LOADED GAME MAP
 
         //return new SplashLoadingScreen(this);
-        return new GameScreen(this);
+        return new LoadingScreen(this);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class W2WGame extends AndroidGame {
         return sb.toString();
     }*/
 
-    @Override
+/*    @Override
     public void onResume() {
         super.onResume();
 
@@ -71,7 +71,7 @@ public class W2WGame extends AndroidGame {
     public void onPause() {
         super.onPause();
         //Assets.theme.pause();
-    }
+    }*/
 
     //@Override
     public Screen getStartScreen() {

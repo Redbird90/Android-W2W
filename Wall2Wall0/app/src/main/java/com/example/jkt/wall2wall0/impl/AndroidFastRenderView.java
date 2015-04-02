@@ -3,83 +3,68 @@ package com.example.jkt.wall2wall0.impl;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-public class AndroidFastRenderView extends SurfaceView implements Runnable, SurfaceHolder.Callback {
-    AndroidGame game;
-    Bitmap framebuffer;
-    Thread renderThread = null;
-    SurfaceHolder holder;
-    volatile boolean running = false;
-    
-    public AndroidFastRenderView(AndroidGame game, Bitmap framebuffer) {
-        super(game);
-        this.game = game;
-        this.framebuffer = framebuffer;
-        this.holder = getHolder();
-        holder.addCallback(this);
-    }
+public class AndroidFastRenderView extends SurfaceView implements Runnable {
+	AndroidGame game;
+	Bitmap framebuffer;
+	Thread renderThread = null;
+	SurfaceHolder holder;
+	volatile boolean running = false;
 
-    public void resume() { 
-        running = true;
-        renderThread = new Thread(this);
-        renderThread.start();         
-    }      
-    
-    public void run() {
-        Rect dstRect = new Rect();
-        long startTime = System.nanoTime();
-        while(running) {  
-            if(!holder.getSurface().isValid())
-                continue;           
-            
-            float deltaTime = (System.nanoTime()-startTime) / 1000000000.0f;
-            startTime = System.nanoTime();
-
-            game.getCurrentScreen().update(deltaTime);
-            game.getCurrentScreen().present(deltaTime);
-            
-            Canvas canvas = holder.lockCanvas();
-            canvas.getClipBounds(dstRect);
-            canvas.drawBitmap(framebuffer, null, dstRect, null);                           
-            holder.unlockCanvasAndPost(canvas);
-        }
-    }
-
-    public void pause() {                        
-        running = false;                        
-        while(true) {
-            try {
-                renderThread.join();
-                break;
-            } catch (InterruptedException e) {
-                // retry
-            }
-        }
-    }
-
-	
-	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
-		
+	public AndroidFastRenderView(AndroidGame game, Bitmap framebuffer) {
+		super(game);
+		this.game = game;
+		this.framebuffer = framebuffer;
+		this.holder = getHolder();
+        Log.i("AndroidFastRenderView", "constructor built");
 	}
 
-	
-	public void surfaceCreated(SurfaceHolder holder) {
-		
+	public void resume() {
+		running = true;
+		renderThread = new Thread(this);
+		renderThread.start();
+        Log.i("AndroidFastRenderView", "resume completed");
 	}
 
-	
-	public void surfaceDestroyed(SurfaceHolder holder) {
-		boolean retry = true;
-        while (retry) {
-            try {
-                renderThread.join();
-                retry = false;
+	@Override
+	public void run() {
+		Rect dstRect = new Rect();
+		long startTime = System.nanoTime();
+		while (running) {
+			if (!holder.getSurface().isValid())
+				continue;
 
-            } catch (InterruptedException e) {
-            }
-        }
-	}        
+			float deltaTime = (System.nanoTime() - startTime) / 10000000.000f;
+			startTime = System.nanoTime();
+
+			if (deltaTime > 3.15)
+				deltaTime = (float) 3.15;
+
+			game.getCurrentScreen().update(deltaTime);
+			game.getCurrentScreen().paint(deltaTime);
+
+			Canvas canvas = holder.lockCanvas();
+			canvas.getClipBounds(dstRect);
+			canvas.drawBitmap(framebuffer, null, dstRect, null);
+			holder.unlockCanvasAndPost(canvas);
+            Log.i("AndroidFastRenderView", "run completed");
+		}
+	}
+
+	public void pause() {
+		running = false;
+		while (true) {
+			try {
+				renderThread.join();
+				break;
+			} catch (InterruptedException e) {
+				// retry
+			}
+		}
+        Log.i("AndroidFastRenderView", "pause completed");
+	}
+
 }

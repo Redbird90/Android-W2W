@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 
 public interface Graphics {
+
+
     public static enum PixmapFormat {
         ARGB8888, ARGB4444, RGB565
     }

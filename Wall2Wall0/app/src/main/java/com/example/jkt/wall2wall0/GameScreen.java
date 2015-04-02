@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.example.jkt.wall2wall0.impl.AndroidImage;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -17,6 +19,7 @@ public class GameScreen extends Screen {
     enum GameState {
         Ready, Running, Paused, GameOver
     }
+    int a = 0;
 
     GameState state = GameState.Ready;
     //private static player_char player1;
@@ -24,33 +27,36 @@ public class GameScreen extends Screen {
     Paint paint;
     public GameScreen(Game game) {
         super(game);
-        Log.i("gameScreen", "start");
+        Log.i("GameScreen", "start");
+
 
         // Initialize game objects
 
 
-        player_char player1 = new player_char(210f, 1113f, 40f, 40f);
-        example_enemy enemy1 = new example_enemy(450f, 80f, 40f, 40f);
+        //player_char player1 = new player_char(210f, 1113f, 40f, 40f);
+        //example_enemy enemy1 = new example_enemy(450f, 80f, 40f, 40f);
 
         paint = new Paint();
         paint.setTextSize(30);
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setAntiAlias(true);
-        paint.setColor(Color.WHITE);
+        paint.setColor(Color.GREEN);
     }
 
     //player_char player1 = new player_char(210f, 1113f, 40f, 40f);
-    player_char player1 = new player_char(210f, 1113f, 40f, 40f);
-    example_enemy enemy1 = new example_enemy(450f, 80f, 40f, 40f);
-/*    private void loadMap() {
 
-                }*/
+
+
+    Graphics g = game.getGraphics();
+    player_char player1 = new player_char(96f, 576f, 40f, 50f);  // TRIED TO FORCE TO AndroidImage
+    example_enemy enemy1 = new example_enemy(200f, 10f, 60f, 60f);
 
 
 
     @Override
     public void update(float deltaTime) {
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
+        Log.i("GameScreen", "general update");
 
         // We have four separate update methods in this example.
         // Depending on the state of the game, we call different
@@ -62,10 +68,11 @@ public class GameScreen extends Screen {
         // From Running, we should only go to Paused or GameOver.
 
         if (state == GameState.Ready)
+            Log.i("GameScreen", "state is READY");
             updateReady(touchEvents);
+        Log.i("GameScreen", "state is RUNNING");
         if (state == GameState.Running)
             updateRunning(touchEvents, deltaTime);
-        // UPDATE WHEN PAUSED AND GAME_OVER IMPLEMENTED
 /*        if (state == GameState.Paused)
             updatePaused(touchEvents);
         if (state == GameState.GameOver)
@@ -81,7 +88,8 @@ public class GameScreen extends Screen {
         // begins. state now becomes GameState.Running.
         // Now the updateRunning() method will be called!
 
-        if (touchEvents.size() > 0)
+        if (touchEvents.size() > 0) //CHANGE
+            Log.i("GameScreen", "updateReadytoRunning");
             state = GameState.Running;
 
     }
@@ -91,19 +99,22 @@ public class GameScreen extends Screen {
         // This is identical to the update() method from Unit 2/3.
 
         // 1. All touch input is handled here:
+        Log.i("GameScreen", "update1, updateRunning started");
         int touchEventsSize = touchEvents.size();
         for (int currentTouchEventIndex = 0; currentTouchEventIndex < touchEventsSize; currentTouchEventIndex++) {
             Input.TouchEvent currentEvent = (Input.TouchEvent) touchEvents
                     .get(currentTouchEventIndex);
             if (currentEvent.type == Input.TouchEvent.TOUCH_DOWN) {
+                Log.i("GameScreen", "TOUCH_DOWN");
                 // Check if pause button pressed
                 // UPDATE FOR PAUSE IMPLEMENTATION
-                if (inBounds(currentEvent, 0, 0, 35, 35)) {
+/*                if (inBounds(currentEvent, 0, 0, 35, 35)) {
                     player1.stop_movement();
                     pause();
-                }
+                }*/
             }
             if (currentEvent.type == Input.TouchEvent.TOUCH_UP) {
+                Log.i("GameScreen", "TOUCH_UP");
                 // Screen pressed in bounds
                 if (inBounds(currentEvent, 0, 180, 770, 860)) {
                     player1.start_movement();
@@ -111,6 +122,7 @@ public class GameScreen extends Screen {
                 }
             }
         }
+        Log.i("GameScreen", "update2, past touch handling");
 
         // 2. Check miscellaneous events like death:
 
@@ -121,8 +133,9 @@ public class GameScreen extends Screen {
         // 3. Call individual update methods here.
         // This is where all the game updates happen.
         // For example, player1.update();
-        player1.update_char();
-        enemy1.update_enemy();
+/*        player1.update_char();
+        enemy1.update_enemy();*/
+        Log.i("GameScreen", "update3, char and enemy");
 
 /*        ArrayList<Projectile> projectiles = robot.getProjectiles();
         for (int projectileIndex = 0; projectileIndex < projectiles.size(); projectileIndex++) {
@@ -142,13 +155,15 @@ public class GameScreen extends Screen {
             animate();*/
 
         // We have fallen to our death.
-            if (player1.getY_pos() > 500) {
+/*            if (player1.getY_pos() > 500) {
+                Log.i("GameScreen", "GameOver");
                 state = GameState.GameOver;
-            }
+            }*/
     }
 
     private boolean inBounds(Input.TouchEvent event, int x, int y, int width,
                              int height) {
+        Log.i("GameScreen", "inBounds");
         if (event.x > x && event.x < x + width - 1 && event.y > y
                 && event.y < y + height - 1)
             return true;
@@ -203,6 +218,7 @@ public class GameScreen extends Screen {
 
     //@Override
     public void paint(float deltaTime) {
+        Log.i("GameScreen", "paint1");
         Graphics g = game.getGraphics();
 
         // We start in Z-order: Background first, then map tiles:
@@ -221,8 +237,21 @@ public class GameScreen extends Screen {
 
 
         // Now game elements:
+        Log.i("GameScreen", "paint2");
+/*        g.drawImage(player_char_image, (int) player1.getX_pos(), (int) player1.getY_pos());
+        g.drawImage(enemy1_char_image, (int) enemy1.getX_pos(), (int) enemy1.getY_pos());*/
+/*        g.drawImage(player_char_image, 0, 0);
+        g.drawImage(enemy1_char_image, 200, 400);*/
+        Canvas canvas = g.getCanvas();
+        g.drawImage(g.newImage("left_wall_image.png", Graphics.ImageFormat.RGB565), 0, 0);
+        g.drawImage(g.newImage("right_wall_image.png", Graphics.ImageFormat.RGB565), 384, 0);
+        g.drawImage(g.newImage("player_image.png", Graphics.ImageFormat.RGB565), (int) player1.getX_pos(), (int) player1.getY_pos());
+        g.drawImage(g.newImage("enemy_image1.png", Graphics.ImageFormat.RGB565), (int) enemy1.getX_pos(), (int) enemy1.getY_pos());
+        //g.drawImage(g.newImage("tester_image.png", Graphics.ImageFormat.RGB565), 0, 0);
 
-        g.drawImage(Assets.player_image, (int) player1.getX_pos(), (int) player1.getY_pos());
+/*        g.drawImage(g.newImage("player_image.png", Graphics.ImageFormat.RGB565), 100, 400);
+        g.drawImage(g.newImage("player_image.png", Graphics.ImageFormat.RGB565), 400, 100);*/
+
 
 /*        g.drawImage(currentSprite, robot.getCenterX() - 61,
                 robot.getCenterY() - 63);
@@ -245,27 +274,26 @@ public class GameScreen extends Screen {
 
     @Override
     public void dispose() {
+        Log.i("GameScreen", "dispose");
 
     }
 
     @Override
     public void resume() {
+        Log.i("GameScreen", "resume");
 
     }
 
-    @Override
-    public void present(float deltaTime) {
-
-    }
 
     @Override
     public void pause() {
-
+        Log.i("GameScreen", "pause");
     }
 
     private void nullify() {
         // Set all variables to null. We'll recreate
         // them in the constructor.
+        Log.i("GameScreen", "nullify");
         paint = null;
         player1 = null;
         enemy1 = null;

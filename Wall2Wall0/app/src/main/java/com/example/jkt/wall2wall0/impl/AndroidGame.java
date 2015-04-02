@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -82,38 +83,48 @@ public abstract class AndroidGame extends Activity implements Game {
 
     @Override
     public Input getInput() {
+        Log.i("AndroidGame", "getInput");
         return input;
     }
 
     @Override
     public Graphics getGraphics() {
+        Log.i("AndroidGame", "getGraphics");
         return graphics;
     }
 
     @Override
     public Audio getAudio() {
+        Log.i("AndroidGame", "getAudio");
         return audio;
     }
 
     @Override
     public FileIO getFileIO() {
+        Log.i("AndroidGame", "getFileIO");
         return fileIO;
     }
 
     @Override
     public void setScreen(Screen screen) {
+        Log.i("AndroidGame", "setScreen1");
         if (screen == null)
             throw new IllegalArgumentException("Screen must not be null");
 
-        this.screen.pause();
-        this.screen.dispose();
-        screen.resume();
+        Log.i("AndroidGame", "setScreen2");
+        //this.screen.pause();
+        //this.screen.dispose();
+        //screen.resume();
         screen.update(0);
         this.screen = screen;
     }
 
     public Screen getCurrentScreen() {
-        return screen;
+        setScreen(this.screen);
+        Log.i("AndroidGame", "getCurrScreen");
+        return this.screen;
     }
+
+
 
 }

@@ -97,7 +97,7 @@ public abstract class GLGame extends Activity implements Game, Renderer {
             startTime = System.nanoTime();
             
             screen.update(deltaTime);
-            screen.present(deltaTime);
+            //screen.present(deltaTime);
         }
         
         if(state == GLGameState.Paused) {

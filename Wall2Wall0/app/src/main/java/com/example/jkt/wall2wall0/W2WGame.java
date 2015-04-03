@@ -1,5 +1,7 @@
 package com.example.jkt.wall2wall0;
 
+import android.app.Activity;
+import android.os.Handler;
 import android.util.Log;
 
 import com.example.jkt.wall2wall0.impl.AndroidGame;
@@ -16,7 +18,6 @@ public class W2WGame extends AndroidGame {
 
     public static String map;
     boolean firstTimeCreate = true;
-
 
     public Screen getInitScreen() {
         if (firstTimeCreate) {

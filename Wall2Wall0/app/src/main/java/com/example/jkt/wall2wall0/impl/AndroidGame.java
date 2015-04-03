@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.DisplayMetrics;
@@ -19,6 +20,7 @@ import com.example.jkt.wall2wall0.Game;
 import com.example.jkt.wall2wall0.Graphics;
 import com.example.jkt.wall2wall0.Input;
 import com.example.jkt.wall2wall0.Screen;
+import com.example.jkt.wall2wall0.example_enemy;
 
 public abstract class AndroidGame extends Activity implements Game {
 
@@ -120,7 +122,7 @@ public abstract class AndroidGame extends Activity implements Game {
     }
 
     public Screen getCurrentScreen() {
-        setScreen(this.screen);
+        this.screen.update(0);
         Log.i("AndroidGame", "getCurrScreen");
         return this.screen;
     }

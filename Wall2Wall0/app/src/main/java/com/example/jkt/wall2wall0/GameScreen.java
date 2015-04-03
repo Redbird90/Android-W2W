@@ -3,6 +3,8 @@ package com.example.jkt.wall2wall0;
 import android.content.Context;
 import android.graphics.*;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -13,11 +15,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by JDK on 3/30/2015.
  */
-public class                                GameScreen extends Screen {
+public class GameScreen extends Screen {
+    private player_char player1;
+    private example_enemy enemy1;
+    private boolean enemy1added;
+    private final Random randomGenerator;
+    private final ArrayList<example_enemy> enemy_list;
+    private final OverlapTester checkForOverlap;
+    private boolean drawPlayer;
+    private final long[] previousSpawnTime;
+    private final long startTime;
+    private final Handler timerHandler;
+    private final Runnable timerRunnable;
+    private long delay_time;
+
     enum GameState {
         Ready, Running, Paused, GameOver
     }
@@ -27,6 +44,7 @@ public class                                GameScreen extends Screen {
     //private static player_char player1;
     //private static example_enemy enemy1;
     Paint paint;
+    Paint paint2;
     public GameScreen(Game game) {
         super(game);
         Log.i("GameScreen", "start");
@@ -34,37 +52,48 @@ public class                                GameScreen extends Screen {
 
         // Initialize game objects
 
+        this.player1 = new player_char(96f, 576f, 40f, 50f);
+        this.enemy1 = new example_enemy(200f, -30f, 60f, 60f);
+        this.enemy1added = false;
+        this.randomGenerator = new Random();
+        this.enemy_list = new ArrayList<example_enemy>(12);
+        this.checkForOverlap = new OverlapTester();
+        this.drawPlayer = true;
+        this.previousSpawnTime = new long[1];
+        this.startTime = System.currentTimeMillis();
+        this.timerHandler = new Handler(Looper.getMainLooper());
+        this.timerRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.i("GameScreen", "ready to spawn");
+                if (enemy_list.size() < 12) {
+                    example_enemy later_enemy = new example_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 200) + 110), (-80f), 60, 60);
+                    enemy_list.add(later_enemy);
+                    previousSpawnTime[0] = System.currentTimeMillis();
+                }
+            }
+        };
 
-        //player_char player1 = new player_char(210f, 1113f, 40f, 40f);
-        //example_enemy enemy1 = new example_enemy(450f, 80f, 40f, 40f);
 
         paint = new Paint();
         paint.setTextSize(30);
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setAntiAlias(true);
-        paint.setColor(Color.GREEN);
+        paint.setColor(Color.WHITE);
+
+        paint2 = new Paint();
+        paint2.setTextSize(10);
+        paint2.setAntiAlias(true);
+        paint2.setColor(Color.YELLOW);
     }
 
-    //player_char player1 = new player_char(210f, 1113f, 40f, 40f);
-
-
-
     Graphics g = game.getGraphics();  //ONLY NEEDED IF DRAWING AT GAME START.
-    player_char player1 = new player_char(96f, 576f, 40f, 50f);  // TRIED TO FORCE TO AndroidImage
-    example_enemy enemy1 = new example_enemy(200f, 10f, 60f, 60f);
-    Random randomGenerator = new Random();
-    int enemyspawntime;
-    ArrayList<example_enemy> enemy_list = new ArrayList(12);
-    boolean spawn_enemy = false;
-    OverlapTester checkForOverlap = new OverlapTester();
-
-
-
 
     @Override
     public void update(float deltaTime) {
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
         Log.i("GameScreen", "general update");
+        Log.i("TESTING", String.valueOf(this.player1.getY_pos()));
 
         // We have four separate update methods in this example.
         // Depending on the state of the game, we call different
@@ -78,13 +107,13 @@ public class                                GameScreen extends Screen {
         if (state == GameState.Ready)
             Log.i("GameScreen", "state is READY");
             updateReady(touchEvents);
-        Log.i("GameScreen", "state is RUNNING");
         if (state == GameState.Running)
+            Log.i("GameScreen", "state is RUNNING");
             updateRunning(touchEvents, deltaTime);
 /*        if (state == GameState.Paused)
-            updatePaused(touchEvents);
+            updatePaused(touchEvents);*/
         if (state == GameState.GameOver)
-            updateGameOver(touchEvents);*/
+            updateGameOver(touchEvents);
 
     }
 
@@ -96,15 +125,24 @@ public class                                GameScreen extends Screen {
         // begins. state now becomes GameState.Running.
         // Now the updateRunning() method will be called!
 
-        if (touchEvents.size() > 0) //CHANGE
+        Log.i("TESTING", String.valueOf(this.player1.getY_pos()));
+
+        if (true) {//CHANGE
             Log.i("GameScreen", "updateReadytoRunning");
             state = GameState.Running;
-
+            this.drawPlayer = true;
+        }
     }
 
     private void updateRunning(List<Input.TouchEvent> touchEvents, float deltaTime) {
 
         // This is identical to the update() method from Unit 2/3.
+        if (this.player1.getY_pos() > 870) {
+            state = GameState.GameOver;
+            Log.i("GameScreen", "player fell to DEATH");
+            this.drawPlayer = false;
+            delay_time = (long) 0;
+        }
 
         // 1. All touch input is handled here:
         Log.i("GameScreen", "update1, updateRunning started");
@@ -125,14 +163,22 @@ public class                                GameScreen extends Screen {
                 Log.i("GameScreen", "TOUCH_UP");
                 // Screen pressed in bounds
                 if (inBounds(currentEvent, 0, 180, 770, 860)) {
-                    player1.start_movement();
-                    //currentSprite = anim.getImage();
+                    if (System.currentTimeMillis() - delay_time > 2000) {
+                        this.player1.start_movement();
+                        delay_time = 0;
+                        Log.i("GameScreen", "player movement started");
+                    }
                 }
             }
         }
-        Log.i("GameScreen", "update2, past touch handling");
 
         // 2. Check miscellaneous events like death:
+        if (!enemy1added) {
+            this.enemy_list.add(this.enemy1);
+            Log.i("GameScreen", "first enemy spawned");
+            this.enemy1added=true;
+            this.previousSpawnTime[0] = System.currentTimeMillis();
+        }
 
         // UPDATE TO CHECK FOR COLLISION BETWEEN PLAYER AND ENEMIES
     /*        if (player1.player_rect)
@@ -141,38 +187,33 @@ public class                                GameScreen extends Screen {
         // 3. Call individual update methods here.
         // This is where all the game updates happen.
         // For example, player1.update();
-        player1.update_char();
-        enemy1.update_enemy();
-        for (int i=0; i < enemy_list.size(); i++) {
-            enemy_list.get(i).update_enemy();
+        this.player1.update_char();
+        for (int i=0; i < this.enemy_list.size(); i++) {
+            this.enemy_list.get(i).update_enemy();
         }
 
-        for (int i=0; i < enemy_list.size(); i++) {
-            if (player1.dying == false) {
-                if (checkForOverlap.overlapRectangles(player1.player_rect, enemy_list.get(i).bounds)) {
-                    player1.dying = true;
-                    Log.i("OVERLAP FOUND", String.valueOf(player1.getX_pos()));
+        for (int i=0; i < this.enemy_list.size(); i++) {
+            if (this.player1.dying == false) {
+                if (this.checkForOverlap.overlapRectangles(this.player1.player_rect, this.enemy_list.get(i).bounds)) {
+                    this.player1.dying = true;
+                    Log.i("OVERLAP FOUND", String.valueOf(this.player1.getX_pos()));
                     break;
                 }
             }
         }
 
 
-        Log.i("GameScreen", "update3, char and enemy");
-        if (enemyspawntime + deltaTime > 30) {
-            enemyspawntime += 30;
-            example_enemy later_enemy = new example_enemy((float) (((randomGenerator.nextInt(10000)/10000.0)*258)+110), (-80f), 60, 60);
-            enemy_list.add(later_enemy);
-/*            example_enemy next_enemy;
-            next_enemy = (example_enemy) enemy_list.get(0);*/
-            spawn_enemy = true;
-            Log.i("afterup3", "enemy spawned");
+        Log.i("GameScreen", "update2, char and enemy");
+        if (System.currentTimeMillis() - this.previousSpawnTime[0] > 1600) {
+            Log.i(String.valueOf(System.currentTimeMillis()), String.valueOf(this.previousSpawnTime));
+            this.timerRunnable.run(); // previousSpawnTime modified in runnable
+            Log.i("afterup2", ("enemy spawned " + String.valueOf(this.enemy_list.size())));
         }
 
-        for (int i=0; i < enemy_list.size(); i++) {
-            if ((enemy_list.get(i).getY_pos() > 820)) {
-                enemy_list.remove(i);
-                Log.i("after up3", "enemy removed");
+        for (int i=0; i < this.enemy_list.size(); i++) {
+            if ((this.enemy_list.get(i).getY_pos() > 820)) {
+                this.enemy_list.remove(i);
+                Log.i("after up2", "enemy removed");
             }
         }
 
@@ -236,7 +277,8 @@ public class                                GameScreen extends Screen {
     }*/
 
     // UPDATE FOR GAME OVER IMPLEMENTATION
-/*    private void updateGameOver(List<Input.TouchEvent> touchEvents) {
+    private void updateGameOver(List<Input.TouchEvent> touchEvents) {
+        Log.i("GameScreen", "GAME CURRENTLY OVER");
         int touchEventsSize = touchEvents.size();
         for (int touchEventIndex = 0; touchEventIndex < touchEventsSize; touchEventIndex++) {
             Input.TouchEvent currentEvent = (Input.TouchEvent) touchEvents
@@ -246,14 +288,17 @@ public class                                GameScreen extends Screen {
             // clean up and return to the menu (on a new game.)
             if (currentEvent.type == Input.TouchEvent.TOUCH_DOWN) {
                 if (inBounds(currentEvent, 0, 0, 800, 480)) {
+                    Log.i("Game Screen", "Restarting Game...");
                     nullify();
-                    game.setScreen(new MainMenuScreen(game));
+                    game.setScreen(new GameScreen(game));
+                    state = GameState.Ready;
+                    delay_time = System.currentTimeMillis();
                     return;
                 }
             }
         }
 
-    }*/
+    }
 
     //@Override
     public void paint(float deltaTime) {
@@ -279,25 +324,17 @@ public class                                GameScreen extends Screen {
 
         // Now game elements:
         Log.i("GameScreen", "paint2");
-/*        g.drawImage(player_char_image, (int) player1.getX_pos(), (int) player1.getY_pos());
-        g.drawImage(enemy1_char_image, (int) enemy1.getX_pos(), (int) enemy1.getY_pos());*/
-/*        g.drawImage(player_char_image, 0, 0);
-        g.drawImage(enemy1_char_image, 200, 400);*/
-        Canvas canvas = g.getCanvas();
 
-/*        player1.update_char();
-        enemy1.update_enemy();*/
         g.drawImage(g.newImage("left_wall_image.png", Graphics.ImageFormat.RGB565), 0, 0);
         g.drawImage(g.newImage("right_wall_image.png", Graphics.ImageFormat.RGB565), 384, 0);
-        g.drawImage(g.newImage("enemy_image1.png", Graphics.ImageFormat.RGB565), (int) enemy1.getX_pos(), (int) enemy1.getY_pos());
-        g.drawImage(g.newImage("player_image.png", Graphics.ImageFormat.RGB565), (int) player1.getX_pos(), (int) player1.getY_pos());
-        Log.i("char X", String.valueOf(player1.getX_pos()));
-        Log.i("char Y", String.valueOf(player1.getY_pos()));
-        Log.i("enemy X", String.valueOf(enemy1.getX_pos()));
-        Log.i("enemy Y", String.valueOf(enemy1.getY_pos()));
+        g.drawImage(g.newImage("player_image.png", Graphics.ImageFormat.RGB565), (int) this.player1.getX_pos(), (int) this.player1.getY_pos());
+        Log.i("char X", String.valueOf(this.player1.getX_pos()));
+        Log.i("char Y", String.valueOf(this.player1.getY_pos()));
+        Log.i("enemy X", String.valueOf(this.enemy1.getX_pos()));
+        Log.i("enemy Y", String.valueOf(this.enemy1.getY_pos()));
 
-        for (int i = 0; i < enemy_list.size(); i++) {
-            g.drawImage(g.newImage("enemy_image1.png", Graphics.ImageFormat.RGB565), (int) enemy_list.get(i).getX_pos(), (int) enemy_list.get(i).getY_pos());
+        for (int i = 0; i < this.enemy_list.size(); i++) {
+            g.drawImage(g.newImage("enemy_image1.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
         }
 
         //g.drawImage(g.newImage("tester_image.png", Graphics.ImageFormat.RGB565), 0, 0);
@@ -311,17 +348,17 @@ public class                                GameScreen extends Screen {
         g.drawImage(hanim.getImage(), hb.getCenterX() - 48,
                 hb.getCenterY() - 48);
         g.drawImage(hanim.getImage(), hb2.getCenterX() - 48,
-                hb2.getCenterY() - 48);
+                hb2.getCenterY() - 48);*/
 
         // And now, we overlay the UI:
         if (state == GameState.Ready)
             drawReadyUI();
         if (state == GameState.Running)
             drawRunningUI();
-        if (state == GameState.Paused)
-            drawPausedUI();
+/*        if (state == GameState.Paused)
+            drawPausedUI();*/
         if (state == GameState.GameOver)
-            drawGameOverUI();*/
+            drawGameOverUI();
 
     }
 
@@ -341,6 +378,7 @@ public class                                GameScreen extends Screen {
     @Override
     public void pause() {
         Log.i("GameScreen", "pause");
+        this.timerHandler.removeCallbacks(this.timerRunnable);
     }
 
     private void nullify() {
@@ -348,11 +386,43 @@ public class                                GameScreen extends Screen {
         // them in the constructor.
         Log.i("GameScreen", "nullify");
         paint = null;
-        player1 = null;
-        enemy1 = null;
+        this.player1 = null;
+        for(int i = 0; i < this.enemy_list.size(); i++) {
+            this.enemy_list.clear();
+        }
         // Call the garbage collector to clean up our memory.
         System.gc();
     }
 
+    private void drawReadyUI() {
+        Graphics g = game.getGraphics();
+
+        // Darken the screen
+        g.drawARGB(155, 0, 0, 0);
+
+    }
+
+    private void drawRunningUI() {
+        Graphics g = game.getGraphics();
+        // ADD RUNNING UI
+        g.drawString(("Height Scaled: " + String.valueOf(this.player1.player_score)), 45, 50, paint2);
+        g.drawRect(400, 20, 60, 60, Color.CYAN);
+    }
+
+/*    private void drawPausedUI() {
+        Graphics g = game.getGraphics();
+        // Darken the screen to display the Paused screen.
+        g.drawARGB(155, 0, 0, 0);
+        g.drawString("Resume", 400, 165, paint2);
+        g.drawString("Menu", 400, 360, paint2);
+
+    }*/
+
+    private void drawGameOverUI() {
+        Graphics g = game.getGraphics();
+        //g.drawRect(0, 0, 482, 802, Color.BLACK);
+        g.drawString("Game Over", 240, 200, paint);
+        g.drawString("Tap to Try Again!", 240, 320, paint);
+    }
 }
 

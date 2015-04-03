@@ -11,7 +11,7 @@ import java.util.Random;
  */
 public class example_enemy extends falling_enemy {
     private final int enemy_num;
-    public Vector2 velocity = new Vector2(0.0f, 10.0f);
+    public Vector2 velocity = new Vector2(0.0f, 7.0f);
     Random randGenerator = new Random();
 
     public example_enemy(float x, float y, float width, float height) {

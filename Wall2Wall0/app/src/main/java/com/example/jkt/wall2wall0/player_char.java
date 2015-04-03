@@ -26,6 +26,7 @@ public class player_char extends DynamicGameObject {
     public float width;
     public float height;
     public Rectangle player_rect = this.bounds;
+    public float player_score;
 
     private String char_direction;
     private boolean jumped;
@@ -38,15 +39,16 @@ public class player_char extends DynamicGameObject {
         this.width = width;
         this.height = height;
         Log.i("player_char", "new player created");
+        Log.i("player_char", String.valueOf(getY_pos()));
     }
     public void start_movement() {
         if (!jumped) {
             jumped = true;
             if (this.x_pos < 240) {
-                velocity.set(4.0f, 0.0f);
+                velocity.set(8.0f, 0.0f);
                 this.char_direction = "right";
             } else if (this.x_pos > 240) {
-                velocity.set(4.0f, 0.0f);
+                velocity.set(8.0f, 0.0f);
                 this.char_direction = "left";
             }
 
@@ -57,33 +59,42 @@ public class player_char extends DynamicGameObject {
         if (!dying) {
             if (this.char_direction == "right") {
                 this.x_pos += velocity.getX();
-                this.y_pos = (float) (0.015 * ((this.x_pos - 220) * (this.x_pos - 220)) + 345.45);
+                this.y_pos = (float) (0.012 * ((this.x_pos - 220) * (this.x_pos - 220)) + 385.45);
+                if (velocity.getX() > 0) {
+                    this.player_score += (velocity.getX() - 5);
+                }
                 Log.i(String.valueOf(this.getX_pos()), String.valueOf(this.getY_pos()));
             } else if (this.char_direction == "left") {
                 this.x_pos -= velocity.getX();
-                this.y_pos = (float) (0.015 * ((this.x_pos - 220) * (this.x_pos - 220)) + 345.45);
+                this.y_pos = (float) (0.012 * ((this.x_pos - 220) * (this.x_pos - 220)) + 385.45);
+                if (velocity.getX() > 0) {
+                    this.player_score += (velocity.getX() - 5);
+                }
                 Log.i(String.valueOf(this.getX_pos()), String.valueOf(this.getY_pos()));
             }
             // if left wall reached, reattach to left wall and stop velocity
-            if (this.x_pos <= 96) {
+            if (this.x_pos < 96) {
                 this.x_pos = 96f;
                 this.y_pos = 576f;
+                if (velocity.getX() > 0) {
+                    this.player_score += (velocity.getX() - 5);
+                }
                 this.velocity.set(0.0f, 0.0f);
                 this.char_direction = "none";
                 jumped = false;
             }
-            if (this.x_pos >= 344) {
+            if (this.x_pos > 344) {
                 this.x_pos = 344f;
                 this.y_pos = 576f;
+                if (velocity.getX() > 0) {
+                    this.player_score += (velocity.getX() - 5);
+                }
                 this.velocity.set(0.0f, 0.0f);
                 this.char_direction = "none";
                 jumped = false;
             }
         } else {
-            this.y_pos -= 15f;
-            if (this.y_pos > 870) {
-                dying = false;
-            }
+            this.y_pos += 18f;
         }
         this.update_bounds();
     }

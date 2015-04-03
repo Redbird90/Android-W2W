@@ -1,5 +1,7 @@
 package com.example.jkt.wall2wall0;
 
+import android.util.Log;
+
 /**
  * Created by JDK on 4/1/2015.
  */
@@ -19,6 +21,7 @@ public class LoadingScreen extends Screen {
         Assets.enemy_image3 = g.newImage("enemy_image3.png", Graphics.ImageFormat.RGB565);*/
 
         game.setScreen(new GameScreen(game));
+        Log.i("Loading Screen", "Setting new GameScreen...");
     }
 
     @Override

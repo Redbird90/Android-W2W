@@ -144,7 +144,7 @@ public class AndroidGraphics implements Graphics {
     }
 
     @Override
-    public void drawRect(int x, int y, int width, int height, int color, Paint paint) {
+    public void drawRect(int x, int y, int width, int height, Paint paint) {
 
     }
 

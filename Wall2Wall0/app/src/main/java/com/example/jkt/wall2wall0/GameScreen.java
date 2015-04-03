@@ -7,15 +7,17 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.jkt.wall2wall0.impl.AndroidImage;
+import com.example.jkt.wall2wall0.math.OverlapTester;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
  * Created by JDK on 3/30/2015.
  */
-public class GameScreen extends Screen {
+public class                                GameScreen extends Screen {
     enum GameState {
         Ready, Running, Paused, GameOver
     }
@@ -47,9 +49,15 @@ public class GameScreen extends Screen {
 
 
 
-    Graphics g = game.getGraphics();
+    Graphics g = game.getGraphics();  //ONLY NEEDED IF DRAWING AT GAME START.
     player_char player1 = new player_char(96f, 576f, 40f, 50f);  // TRIED TO FORCE TO AndroidImage
     example_enemy enemy1 = new example_enemy(200f, 10f, 60f, 60f);
+    Random randomGenerator = new Random();
+    int enemyspawntime;
+    ArrayList<example_enemy> enemy_list = new ArrayList(12);
+    boolean spawn_enemy = false;
+    OverlapTester checkForOverlap = new OverlapTester();
+
 
 
 
@@ -133,9 +141,40 @@ public class GameScreen extends Screen {
         // 3. Call individual update methods here.
         // This is where all the game updates happen.
         // For example, player1.update();
-/*        player1.update_char();
-        enemy1.update_enemy();*/
+        player1.update_char();
+        enemy1.update_enemy();
+        for (int i=0; i < enemy_list.size(); i++) {
+            enemy_list.get(i).update_enemy();
+        }
+
+        for (int i=0; i < enemy_list.size(); i++) {
+            if (player1.dying == false) {
+                if (checkForOverlap.overlapRectangles(player1.player_rect, enemy_list.get(i).bounds)) {
+                    player1.dying = true;
+                    Log.i("OVERLAP FOUND", String.valueOf(player1.getX_pos()));
+                    break;
+                }
+            }
+        }
+
+
         Log.i("GameScreen", "update3, char and enemy");
+        if (enemyspawntime + deltaTime > 30) {
+            enemyspawntime += 30;
+            example_enemy later_enemy = new example_enemy((float) (((randomGenerator.nextInt(10000)/10000.0)*258)+110), (-80f), 60, 60);
+            enemy_list.add(later_enemy);
+/*            example_enemy next_enemy;
+            next_enemy = (example_enemy) enemy_list.get(0);*/
+            spawn_enemy = true;
+            Log.i("afterup3", "enemy spawned");
+        }
+
+        for (int i=0; i < enemy_list.size(); i++) {
+            if ((enemy_list.get(i).getY_pos() > 820)) {
+                enemy_list.remove(i);
+                Log.i("after up3", "enemy removed");
+            }
+        }
 
 /*        ArrayList<Projectile> projectiles = robot.getProjectiles();
         for (int projectileIndex = 0; projectileIndex < projectiles.size(); projectileIndex++) {
@@ -220,6 +259,8 @@ public class GameScreen extends Screen {
     public void paint(float deltaTime) {
         Log.i("GameScreen", "paint1");
         Graphics g = game.getGraphics();
+        g.clearScreen(Color.GRAY);
+
 
         // We start in Z-order: Background first, then map tiles:
         //g.drawImage(Assets.background, bg1.getBgX(), bg1.getBgY());
@@ -243,10 +284,22 @@ public class GameScreen extends Screen {
 /*        g.drawImage(player_char_image, 0, 0);
         g.drawImage(enemy1_char_image, 200, 400);*/
         Canvas canvas = g.getCanvas();
+
+/*        player1.update_char();
+        enemy1.update_enemy();*/
         g.drawImage(g.newImage("left_wall_image.png", Graphics.ImageFormat.RGB565), 0, 0);
         g.drawImage(g.newImage("right_wall_image.png", Graphics.ImageFormat.RGB565), 384, 0);
-        g.drawImage(g.newImage("player_image.png", Graphics.ImageFormat.RGB565), (int) player1.getX_pos(), (int) player1.getY_pos());
         g.drawImage(g.newImage("enemy_image1.png", Graphics.ImageFormat.RGB565), (int) enemy1.getX_pos(), (int) enemy1.getY_pos());
+        g.drawImage(g.newImage("player_image.png", Graphics.ImageFormat.RGB565), (int) player1.getX_pos(), (int) player1.getY_pos());
+        Log.i("char X", String.valueOf(player1.getX_pos()));
+        Log.i("char Y", String.valueOf(player1.getY_pos()));
+        Log.i("enemy X", String.valueOf(enemy1.getX_pos()));
+        Log.i("enemy Y", String.valueOf(enemy1.getY_pos()));
+
+        for (int i = 0; i < enemy_list.size(); i++) {
+            g.drawImage(g.newImage("enemy_image1.png", Graphics.ImageFormat.RGB565), (int) enemy_list.get(i).getX_pos(), (int) enemy_list.get(i).getY_pos());
+        }
+
         //g.drawImage(g.newImage("tester_image.png", Graphics.ImageFormat.RGB565), 0, 0);
 
 /*        g.drawImage(g.newImage("player_image.png", Graphics.ImageFormat.RGB565), 100, 400);

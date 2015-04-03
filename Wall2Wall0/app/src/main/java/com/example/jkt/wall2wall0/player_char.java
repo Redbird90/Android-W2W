@@ -29,6 +29,7 @@ public class player_char extends DynamicGameObject {
 
     private String char_direction;
     private boolean jumped;
+    public boolean dying;
 
     public player_char(float x, float y, float width, float height) {
         super(x, y, width, height);
@@ -41,11 +42,11 @@ public class player_char extends DynamicGameObject {
     public void start_movement() {
         if (!jumped) {
             jumped = true;
-            if (this.x_pos < 385) {
-                velocity.set(3.0f, 0.0f);
+            if (this.x_pos < 240) {
+                velocity.set(4.0f, 0.0f);
                 this.char_direction = "right";
-            } else if (this.x_pos > 385) {
-                velocity.set(3.0f, 0.0f);
+            } else if (this.x_pos > 240) {
+                velocity.set(4.0f, 0.0f);
                 this.char_direction = "left";
             }
 
@@ -53,27 +54,44 @@ public class player_char extends DynamicGameObject {
     }
 
     public void update_char() {
-        if (this.char_direction == "right") {
-            this.x_pos += velocity.getX();
-            this.y_pos += velocity.getY();
-        } else if (this.char_direction == "left") {
-            this.x_pos -= velocity.getX();
-            this.y_pos -= velocity.getY();
+        if (!dying) {
+            if (this.char_direction == "right") {
+                this.x_pos += velocity.getX();
+                this.y_pos = (float) (0.015 * ((this.x_pos - 220) * (this.x_pos - 220)) + 345.45);
+                Log.i(String.valueOf(this.getX_pos()), String.valueOf(this.getY_pos()));
+            } else if (this.char_direction == "left") {
+                this.x_pos -= velocity.getX();
+                this.y_pos = (float) (0.015 * ((this.x_pos - 220) * (this.x_pos - 220)) + 345.45);
+                Log.i(String.valueOf(this.getX_pos()), String.valueOf(this.getY_pos()));
+            }
+            // if left wall reached, reattach to left wall and stop velocity
+            if (this.x_pos <= 96) {
+                this.x_pos = 96f;
+                this.y_pos = 576f;
+                this.velocity.set(0.0f, 0.0f);
+                this.char_direction = "none";
+                jumped = false;
+            }
+            if (this.x_pos >= 344) {
+                this.x_pos = 344f;
+                this.y_pos = 576f;
+                this.velocity.set(0.0f, 0.0f);
+                this.char_direction = "none";
+                jumped = false;
+            }
+        } else {
+            this.y_pos -= 15f;
+            if (this.y_pos > 870) {
+                dying = false;
+            }
         }
-        // if left wall reached, reattach to left wall and stop velocity
-        if (this.x_pos <= 140) {
-            this.x_pos = 210f;
-            this.y_pos = 1113f;
-            this.velocity.set(0.0f, 0.0f);
-            this.char_direction = "none";
-        }
-        if (this.x_pos >= 630) {
-            this.x_pos = 590f;
-            this.y_pos = 1113f;
-            this.velocity.set(0.0f, 0.0f);
-            this.char_direction = "none";
-        }
+        this.update_bounds();
     }
+
+    public void update_bounds() {
+        this.bounds.setLowerLeft(this.x_pos, this.y_pos);
+    }
+
     public void stop_movement() {// CURRENTLY OBSOLETE
         this.velocity.set(0.0f, 0.0f);
     }

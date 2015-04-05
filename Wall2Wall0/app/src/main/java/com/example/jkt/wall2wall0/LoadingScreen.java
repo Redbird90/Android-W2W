@@ -1,6 +1,9 @@
 package com.example.jkt.wall2wall0;
 
+import android.app.Activity;
 import android.util.Log;
+
+import com.example.jkt.wall2wall0.impl.AndroidFileIO;
 
 /**
  * Created by JDK on 4/1/2015.
@@ -20,8 +23,8 @@ public class LoadingScreen extends Screen {
         Assets.enemy_image2 = g.newImage("enemy_image2.png", Graphics.ImageFormat.RGB565);
         Assets.enemy_image3 = g.newImage("enemy_image3.png", Graphics.ImageFormat.RGB565);*/
 
-        game.setScreen(new GameScreen(game));
-        Log.i("Loading Screen", "Setting new GameScreen...");
+        game.setScreen(new MainMenuScreen(game));
+        Log.i("Loading Screen", "Setting new MainMenuScreen...");
     }
 
     @Override

@@ -14,6 +14,10 @@ public class example_enemy extends falling_enemy {
     public Vector2 velocity = new Vector2(0.0f, 7.0f);
     Random randGenerator = new Random();
 
+    public int getEnemy_num() {
+        return enemy_num;
+    }
+
     public example_enemy(float x, float y, float width, float height) {
         super(x, y, width, height);
         this.x_pos = x;

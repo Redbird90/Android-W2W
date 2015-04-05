@@ -38,6 +38,7 @@ public class player_char extends DynamicGameObject {
         this.y_pos = y;
         this.width = width;
         this.height = height;
+        this.player_score = 0;
         Log.i("player_char", "new player created");
         Log.i("player_char", String.valueOf(getY_pos()));
     }
@@ -59,16 +60,16 @@ public class player_char extends DynamicGameObject {
         if (!dying) {
             if (this.char_direction == "right") {
                 this.x_pos += velocity.getX();
-                this.y_pos = (float) (0.012 * ((this.x_pos - 220) * (this.x_pos - 220)) + 385.45);
+                this.y_pos = (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 457);
                 if (velocity.getX() > 0) {
-                    this.player_score += (velocity.getX() - 5);
+                    this.player_score += 1.4;
                 }
                 Log.i(String.valueOf(this.getX_pos()), String.valueOf(this.getY_pos()));
             } else if (this.char_direction == "left") {
                 this.x_pos -= velocity.getX();
-                this.y_pos = (float) (0.012 * ((this.x_pos - 220) * (this.x_pos - 220)) + 385.45);
+                this.y_pos = (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 457);
                 if (velocity.getX() > 0) {
-                    this.player_score += (velocity.getX() - 5);
+                    this.player_score += 1.4;
                 }
                 Log.i(String.valueOf(this.getX_pos()), String.valueOf(this.getY_pos()));
             }
@@ -77,7 +78,7 @@ public class player_char extends DynamicGameObject {
                 this.x_pos = 96f;
                 this.y_pos = 576f;
                 if (velocity.getX() > 0) {
-                    this.player_score += (velocity.getX() - 5);
+                    this.player_score += 1.4;
                 }
                 this.velocity.set(0.0f, 0.0f);
                 this.char_direction = "none";
@@ -87,7 +88,7 @@ public class player_char extends DynamicGameObject {
                 this.x_pos = 344f;
                 this.y_pos = 576f;
                 if (velocity.getX() > 0) {
-                    this.player_score += (velocity.getX() - 5);
+                    this.player_score += 1.4;
                 }
                 this.velocity.set(0.0f, 0.0f);
                 this.char_direction = "none";

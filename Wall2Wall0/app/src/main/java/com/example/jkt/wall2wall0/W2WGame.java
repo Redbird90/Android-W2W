@@ -19,9 +19,11 @@ public class W2WGame extends AndroidGame {
     public static String map;
     boolean firstTimeCreate = true;
 
+
     public Screen getInitScreen() {
         if (firstTimeCreate) {
             // Assets.load(this);
+            Settings.load(getFileIO());
             firstTimeCreate = false;
         }
         Log.i("W2WGame", "getInitScreen");
@@ -61,7 +63,7 @@ public class W2WGame extends AndroidGame {
         return sb.toString();
     }*/
 
-/*    @Override
+    @Override
     public void onResume() {
         super.onResume();
 
@@ -72,7 +74,7 @@ public class W2WGame extends AndroidGame {
     public void onPause() {
         super.onPause();
         //Assets.theme.pause();
-    }*/
+    }
 
     //@Override
     public Screen getStartScreen() {
@@ -93,4 +95,12 @@ public class W2WGame extends AndroidGame {
     public int getScreenOrientation() {
         return 0;
     }
+
+/*    public int getHighScore() {
+        return this.highScore;
+    }
+
+    public void setHighScore(int highScore) {
+        this.highScore = highScore;
+    }*/
 }

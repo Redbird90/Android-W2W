@@ -11,21 +11,21 @@ import java.util.Random;
  */
 public class example_enemy extends falling_enemy {
     private final int enemy_num;
-    public Vector2 velocity = new Vector2(0.0f, 7.0f);
-    Random randGenerator = new Random();
+    public Vector2 velocity = new Vector2(0.0f, 3.0f); // CHANGED ON 4/6
 
     public int getEnemy_num() {
         return enemy_num;
     }
 
-    public example_enemy(float x, float y, float width, float height) {
+    public example_enemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height);
         this.x_pos = x;
         this.y_pos = y;
         this.width = width;
         this.height = height;
-        this.enemy_num = randGenerator.nextInt(3);
+        this.enemy_num = enemy_num;
         Log.i("example_enemy", "new enemy created");
+        Log.i("TESTING", "enemy_num" + String.valueOf((this.enemy_num)) + " and bounds " + String.valueOf(this.bounds.getLowerLeft())+","+String.valueOf(this.bounds.width)+","+String.valueOf(this.bounds.height));
     }
     public void update_enemy() {
             this.y_pos += velocity.getY();

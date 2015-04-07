@@ -11,6 +11,8 @@ import android.widget.ImageView;
 
 import com.example.jkt.wall2wall0.impl.AndroidGame;
 import com.example.jkt.wall2wall0.impl.AndroidImage;
+import com.example.jkt.wall2wall0.impl.AndroidMusic;
+import com.example.jkt.wall2wall0.impl.AndroidSound;
 import com.example.jkt.wall2wall0.math.OverlapTester;
 import com.example.jkt.wall2wall0.math.Rectangle;
 
@@ -34,7 +36,6 @@ public class GameScreen extends Screen {
     private final OverlapTester checkForOverlap;
     private boolean drawPlayer;
     private final long[] previousSpawnTime;
-    private final long startTime;
     private final Handler timerHandler;
     private final Runnable timerRunnable;
     private long delay_time;
@@ -43,6 +44,12 @@ public class GameScreen extends Screen {
     private int passes;
     private int currentScore;
     private boolean newHighScore;
+    private long menu_delay;
+
+    public AndroidMusic game_music;
+    public AndroidSound death_sound;
+    private long pause_time;
+    private long time_paused;
 
     enum GameState {
         Ready, Running, Paused, GameOver
@@ -63,26 +70,34 @@ public class GameScreen extends Screen {
 
         // Initialize game objects
 
-        this.player1 = new player_char(96f, 576f, 40f, 50f);
-        this.enemy1 = new example_enemy(200f, -30f, 60f, 60f);
+        this.player1 = new player_char(80f, 576f, 40f, 55f);
+        this.enemy1 = new example_enemy(200f, -30f, 60f, 60f, 0);
         this.enemy1added = false;
         this.randomGenerator = new Random();
         this.enemy_list = new ArrayList<example_enemy>(12);
         this.checkForOverlap = new OverlapTester();
         this.drawPlayer = true;
         this.previousSpawnTime = new long[1];
-        this.startTime = System.currentTimeMillis();
         this.passes = 0;
         this.currentScore = 0;
         this.newHighScore = false;
         this.highScore = Settings.getHighScore();
+        this.delay_time = System.currentTimeMillis();
         this.timerHandler = new Handler(Looper.getMainLooper());
         this.timerRunnable = new Runnable() {
             @Override
             public void run() {
                 Log.i("GameScreen", "ready to spawn");
                 if (enemy_list.size() < 12) {
-                    example_enemy later_enemy = new example_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 200) + 110), (-80f), 60, 60);
+                    example_enemy later_enemy;
+                    int enemy_num = randomGenerator.nextInt(3);
+                    if (enemy_num == 0) {
+                        later_enemy = new example_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 200) + 110), (-80f), 60, 60, enemy_num);
+                    } else if (enemy_num == 1) {
+                        later_enemy = new example_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 200) + 110), (-80f), 64, 96, enemy_num);
+                    } else {
+                        later_enemy = new example_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 200) + 110), (-80f), 96, 64, enemy_num);
+                    }
                     enemy_list.add(later_enemy);
                     previousSpawnTime[0] = System.currentTimeMillis();
                 }
@@ -115,7 +130,12 @@ public class GameScreen extends Screen {
         paint4.setColor(Color.BLACK);
 
         pause_rect = new Rectangle(395, 15, 70, 70);
-        Log.i("TESTING0", String.valueOf(this.highScore));
+
+        game_music = (AndroidMusic) game.getAudio().newMusic("179562__clinthammer__clinthammermusic-ts-bass.wav");
+        game_music.play();
+        game_music.setLooping(true);
+        death_sound = (AndroidSound) game.getAudio().newSound("Realistic_Punch.wav");
+
     }
 
     Graphics g = game.getGraphics();  //ONLY NEEDED IF DRAWING AT GAME START.
@@ -133,33 +153,23 @@ public class GameScreen extends Screen {
         // Note that order is important here. If the game is
         // in Ready state, we should only go to Running.
         // From Running, we should only go to Paused or GameOver.
-        Log.i("TESTING1", String.valueOf(this.highScore));
 
         if (state == GameState.Ready) {
-            Log.i("TESTINGa", String.valueOf(this.highScore));
             Log.i("GameScreen", "state is READY");
             updateReady(touchEvents);
-            Log.i("TESTINGa", String.valueOf(this.highScore));
         }
         if (state == GameState.Running) {
-            Log.i("TESTINGb", String.valueOf(this.highScore));
             Log.i("GameScreen", "state is RUNNING");
             updateRunning(touchEvents, deltaTime);
-            Log.i("TESTINGb", String.valueOf(this.highScore));
         }
         if (state == GameState.Paused) {
-            Log.i("TESTINGc", String.valueOf(this.highScore));
             Log.i("GameScreen", "state is PAUSED");
             updatePaused(touchEvents);
-            Log.i("TESTINGc", String.valueOf(this.highScore));
         }
         if (state == GameState.GameOver) {
-            Log.i("TESTINGd", String.valueOf(this.highScore));
             Log.i("GameScreen", "state is GAME OVER");
             updateGameOver(touchEvents);
-            Log.i("TESTINGd", String.valueOf(this.highScore));
         }
-        Log.i("TESTING4", String.valueOf(this.highScore));
     }
 
 
@@ -188,7 +198,6 @@ public class GameScreen extends Screen {
                 if (currentEvent.type == Input.TouchEvent.TOUCH_DOWN) {
                     Log.i("GameScreen", "TOUCH_DOWN");
                     // Check if pause button pressed
-                    // UPDATE FOR PAUSE IMPLEMENTATION
                     if (inBounds(currentEvent, 395, 15, 70, 70)) {
                         pause();
                         Log.i("GameScreen", "GAME PAUSED");
@@ -196,9 +205,9 @@ public class GameScreen extends Screen {
                 }
                 if (currentEvent.type == Input.TouchEvent.TOUCH_UP) {
                     Log.i("GameScreen", "TOUCH_UP");
-                    // Screen pressed in bounds
+                    // Screen pressed in game bounds
                     if (inBounds(currentEvent, 0, 180, 770, 860)) {
-                        if (System.currentTimeMillis() - delay_time > 2000) {
+                        if (System.currentTimeMillis() - delay_time > 1000) {
                             this.player1.start_movement();
                             delay_time = 0;
                             Log.i("GameScreen", "player movement started");
@@ -208,14 +217,13 @@ public class GameScreen extends Screen {
             }
             // 2. Check miscellaneous events like death:
             if (this.player1.getY_pos() > 870) {
+                death_sound.play(1.0f);
                 this.state = GameState.GameOver;
                 Log.i("GameScreen", "player fell to DEATH");
                 this.drawPlayer = false;
                 this.currentScore = (int) player1.player_score;
-                Log.i("TESTING2", (String.valueOf(this.currentScore)+","+String.valueOf(this.highScore)));
                 if (this.currentScore > this.highScore) {
                     this.highScore = this.currentScore;
-                    Log.i("TESTING3", "highScore is " + String.valueOf(this.highScore));
                     this.newHighScore = true;
                     Settings.setHighScore(this.highScore);
                     Settings.save(game.getFileIO());
@@ -254,7 +262,7 @@ public class GameScreen extends Screen {
 
 
             Log.i("GameScreen", "update2, char and enemy");
-            if (System.currentTimeMillis() - this.previousSpawnTime[0] > 1600) {
+            if (System.currentTimeMillis() - this.previousSpawnTime[0] > 800) {
                 Log.i(String.valueOf(System.currentTimeMillis()), String.valueOf(this.previousSpawnTime));
                 this.timerRunnable.run(); // previousSpawnTime modified in runnable
                 Log.i("afterup2", ("enemy spawned " + String.valueOf(this.enemy_list.size())));
@@ -284,11 +292,7 @@ public class GameScreen extends Screen {
             bg2.update();
             animate();*/
 
-            // We have fallen to our death.
-/*            if (player1.getY_pos() > 500) {
-                Log.i("GameScreen", "GameOver");
-                state = GameState.GameOver;
-            }*/
+
         }
 
     private boolean inBounds(Input.TouchEvent event, int x, int y, int width,
@@ -378,12 +382,12 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
         Log.i("GameScreen", "paint2");
 
         g.drawImage(g.newImage("left_wall_image.png", Graphics.ImageFormat.RGB565), 0, 0);
-        g.drawImage(g.newImage("right_wall_image.png", Graphics.ImageFormat.RGB565), 384, 0);
+        g.drawImage(g.newImage("right_wall_image.png", Graphics.ImageFormat.RGB565), 400, 0);
         for (int i = 0; i < this.enemy_list.size(); i++) {
             example_enemy current_enemy_draw = this.enemy_list.get(i);
-            if (current_enemy_draw.getEnemy_num() == 1) {
+            if (current_enemy_draw.getEnemy_num() == 0) {
                 g.drawImage(g.newImage("enemy_image1.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
-            } else if (current_enemy_draw.getEnemy_num() == 2) {
+            } else if (current_enemy_draw.getEnemy_num() == 1) {
                 g.drawImage(g.newImage("enemy_image2.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             } else {
                 g.drawImage(g.newImage("enemy_image3.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
@@ -430,6 +434,9 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
 
     @Override
     public void resume() {
+        this.time_paused = System.currentTimeMillis() - this.pause_time;
+        this.game_music.seekBegin();
+        this.previousSpawnTime[0] += time_paused;
         Log.i("GameScreen", "resume");
         this.passes = 0;
         this.state = GameState.Running;
@@ -439,6 +446,8 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
     @Override
     public void pause() {
         Log.i("GameScreen", "pause");
+        this.pause_time = System.currentTimeMillis();
+        this.game_music.pause();
         Settings.save(game.getFileIO());
         this.timerHandler.removeCallbacks(this.timerRunnable);
         this.state = GameState.Paused
@@ -469,13 +478,13 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
     private void drawRunningUI() {
         Graphics g = game.getGraphics();
         // ADD RUNNING UI
-        if (this.player1.player_score > 10000) {
-            g.drawString((String.valueOf((int) this.player1.player_score) + "m"), 48, 40, paint3);
+        if (this.player1.player_score > 1000) {
+            g.drawString((String.valueOf((int) this.player1.player_score) + "m"), 40, 40, paint3);
         } else {
-            g.drawString((String.valueOf((int) this.player1.player_score) + "m"), 48, 40, paint2);
+            g.drawString((String.valueOf((int) this.player1.player_score) + "m"), 40, 40, paint2);
         }
-        g.drawRect(400, 20, 60, 60, Color.CYAN);
-        g.drawString("Pause", 430, 50, paint4);
+        g.drawRect(410, 20, 60, 60, Color.CYAN);
+        g.drawString("Pause", 440, 50, paint4);
     }
 
 private void drawPausedUI() {
@@ -483,8 +492,8 @@ private void drawPausedUI() {
     // Darken the screen to display the Paused screen.
     g.drawARGB(155, 0, 0, 0);
     g.drawRect(140, 365, 200, 50, Color.BLACK);
-    g.drawRect(400, 20, 60, 60, Color.CYAN);
-    g.drawString("Resume", 430, 50, paint4);
+    g.drawRect(410, 20, 60, 60, Color.CYAN);
+    g.drawString("Resume", 440, 50, paint4);
     g.drawString("Back to Menu", 240, 400, paint);
 
     Log.i("GameScreen", "drawing paused UI");

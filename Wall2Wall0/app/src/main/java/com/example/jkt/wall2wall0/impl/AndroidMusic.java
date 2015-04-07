@@ -5,12 +5,20 @@ import java.io.IOException;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaPlayer.OnPreparedListener;
+import android.media.MediaPlayer.OnSeekCompleteListener;
+import android.media.MediaPlayer.OnVideoSizeChangedListener;
 
 import com.example.jkt.wall2wall0.Music;
+import java.io.IOException;
 
-public class AndroidMusic implements Music, OnCompletionListener {
+
+
+
+public class AndroidMusic implements Music, OnCompletionListener, OnSeekCompleteListener, OnPreparedListener, OnVideoSizeChangedListener {
     MediaPlayer mediaPlayer;
     boolean isPrepared = false;
+    private int pause_spot;
 
     public AndroidMusic(AssetFileDescriptor assetDescriptor) {
         mediaPlayer = new MediaPlayer();
@@ -21,42 +29,51 @@ public class AndroidMusic implements Music, OnCompletionListener {
             mediaPlayer.prepare();
             isPrepared = true;
             mediaPlayer.setOnCompletionListener(this);
+            mediaPlayer.setOnSeekCompleteListener(this);
+            mediaPlayer.setOnPreparedListener(this);
+            mediaPlayer.setOnVideoSizeChangedListener(this);
+
         } catch (Exception e) {
             throw new RuntimeException("Couldn't load music");
         }
     }
 
-    
+    @Override
     public void dispose() {
-        if (mediaPlayer.isPlaying())
-            mediaPlayer.stop();
-        mediaPlayer.release();
+
+        if (this.mediaPlayer.isPlaying()){
+            this.mediaPlayer.stop();
+        }
+        this.mediaPlayer.release();
     }
 
-    
+    @Override
     public boolean isLooping() {
         return mediaPlayer.isLooping();
     }
 
-    
+    @Override
     public boolean isPlaying() {
-        return mediaPlayer.isPlaying();
+        return this.mediaPlayer.isPlaying();
     }
 
-    
+    @Override
     public boolean isStopped() {
         return !isPrepared;
     }
 
-    
+    @Override
     public void pause() {
-        if (mediaPlayer.isPlaying())
+        if (this.mediaPlayer.isPlaying())
             mediaPlayer.pause();
+            pause_spot = mediaPlayer.getCurrentPosition();
     }
 
-    
+
+
+    @Override
     public void play() {
-        if (mediaPlayer.isPlaying())
+        if (this.mediaPlayer.isPlaying())
             return;
 
         try {
@@ -72,28 +89,60 @@ public class AndroidMusic implements Music, OnCompletionListener {
         }
     }
 
-    
+    @Override
     public void setLooping(boolean isLooping) {
         mediaPlayer.setLooping(isLooping);
     }
 
-    
+    @Override
     public void setVolume(float volume) {
         mediaPlayer.setVolume(volume, volume);
     }
 
-    
+    @Override
     public void stop() {
-        mediaPlayer.stop();
+        if (this.mediaPlayer.isPlaying() == true){
+            this.mediaPlayer.stop();
+
+            synchronized (this) {
+                isPrepared = false;
+            }}
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer player) {
         synchronized (this) {
             isPrepared = false;
         }
     }
 
-    
-    public void onCompletion(MediaPlayer player) {
+    //@Override
+    public void seekBegin() {
+        mediaPlayer.seekTo(pause_spot);
+        this.play();
+    }
+
+
+
+
+    @Override
+    public void onPrepared(MediaPlayer player) {
+        // TODO Auto-generated method stub
         synchronized (this) {
-            isPrepared = false;
+            isPrepared = true;
         }
+
+    }
+
+    @Override
+    public void onSeekComplete(MediaPlayer player) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onVideoSizeChanged(MediaPlayer player, int width, int height) {
+        // TODO Auto-generated method stub
+
     }
 }

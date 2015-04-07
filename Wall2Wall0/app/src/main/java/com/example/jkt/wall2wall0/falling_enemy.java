@@ -21,7 +21,6 @@ public class falling_enemy extends DynamicGameObject {
     public float y_pos;
     public float width;
     public float height;
-    public Rectangle enemy_rect = this.bounds;
 
     public falling_enemy(float x, float y, float width, float height) {
         super(x, y, width, height);

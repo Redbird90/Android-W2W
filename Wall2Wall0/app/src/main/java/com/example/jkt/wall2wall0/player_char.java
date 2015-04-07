@@ -46,10 +46,10 @@ public class player_char extends DynamicGameObject {
         if (!jumped) {
             jumped = true;
             if (this.x_pos < 240) {
-                velocity.set(8.0f, 0.0f);
+                velocity.set(9.0f, 0.0f);
                 this.char_direction = "right";
             } else if (this.x_pos > 240) {
-                velocity.set(8.0f, 0.0f);
+                velocity.set(9.0f, 0.0f);
                 this.char_direction = "left";
             }
 
@@ -60,35 +60,35 @@ public class player_char extends DynamicGameObject {
         if (!dying) {
             if (this.char_direction == "right") {
                 this.x_pos += velocity.getX();
-                this.y_pos = (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 457);
+                this.y_pos = (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 419.2);
                 if (velocity.getX() > 0) {
                     this.player_score += 1.4;
                 }
                 Log.i(String.valueOf(this.getX_pos()), String.valueOf(this.getY_pos()));
             } else if (this.char_direction == "left") {
                 this.x_pos -= velocity.getX();
-                this.y_pos = (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 457);
+                this.y_pos = (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 419.2);
                 if (velocity.getX() > 0) {
                     this.player_score += 1.4;
                 }
                 Log.i(String.valueOf(this.getX_pos()), String.valueOf(this.getY_pos()));
             }
             // if left wall reached, reattach to left wall and stop velocity
-            if (this.x_pos < 96) {
-                this.x_pos = 96f;
+            if (this.x_pos < 80) {
+                this.x_pos = 80f;
                 this.y_pos = 576f;
                 if (velocity.getX() > 0) {
-                    this.player_score += 1.4;
+                    this.player_score += 2.3;
                 }
                 this.velocity.set(0.0f, 0.0f);
                 this.char_direction = "none";
                 jumped = false;
             }
-            if (this.x_pos > 344) {
-                this.x_pos = 344f;
+            if (this.x_pos > 360) {
+                this.x_pos = 360f;
                 this.y_pos = 576f;
                 if (velocity.getX() > 0) {
-                    this.player_score += 1.4;
+                    this.player_score += 2.3;
                 }
                 this.velocity.set(0.0f, 0.0f);
                 this.char_direction = "none";

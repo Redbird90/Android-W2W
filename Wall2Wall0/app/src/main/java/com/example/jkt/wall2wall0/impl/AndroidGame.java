@@ -19,7 +19,9 @@ import com.example.jkt.wall2wall0.FileIO;
 import com.example.jkt.wall2wall0.Game;
 import com.example.jkt.wall2wall0.Graphics;
 import com.example.jkt.wall2wall0.Input;
+import com.example.jkt.wall2wall0.Music;
 import com.example.jkt.wall2wall0.Screen;
+import com.example.jkt.wall2wall0.Sound;
 import com.example.jkt.wall2wall0.example_enemy;
 
 public abstract class AndroidGame extends Activity implements Game {
@@ -30,6 +32,9 @@ public abstract class AndroidGame extends Activity implements Game {
     Input input;
     FileIO fileIO;
     Screen screen;
+    Music music;
+    Sound sound;
+
     WakeLock wakeLock;
 
     @Override

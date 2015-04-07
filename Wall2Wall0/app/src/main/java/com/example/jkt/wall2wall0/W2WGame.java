@@ -19,10 +19,8 @@ public class W2WGame extends AndroidGame {
     public static String map;
     boolean firstTimeCreate = true;
 
-
     public Screen getInitScreen() {
         if (firstTimeCreate) {
-            // Assets.load(this);
             Settings.load(getFileIO());
             firstTimeCreate = false;
         }
@@ -32,6 +30,7 @@ public class W2WGame extends AndroidGame {
         //map = convertStreamToString(mapInputStream);   LOADED GAME MAP
 
         //return new SplashLoadingScreen(this);
+
         return new LoadingScreen(this);
     }
 

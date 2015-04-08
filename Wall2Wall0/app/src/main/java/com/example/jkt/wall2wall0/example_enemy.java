@@ -11,7 +11,7 @@ import java.util.Random;
  */
 public class example_enemy extends falling_enemy {
     private final int enemy_num;
-    public Vector2 velocity = new Vector2(0.0f, 3.0f); // CHANGED ON 4/6
+    public Vector2 velocity = new Vector2(0.0f, 3.5f); // CHANGED ON 4/6
 
     public int getEnemy_num() {
         return enemy_num;

@@ -45,6 +45,10 @@ public class GameScreen extends Screen {
     private int currentScore;
     private boolean newHighScore;
     private long menu_delay;
+    private int top_walls_y_pos;
+    private int bot_walls_y_pos;
+    private int top_backg_y_pos;
+    private int bot_backg_y_pos;
 
     public AndroidMusic game_music;
     public AndroidSound death_sound;
@@ -67,7 +71,6 @@ public class GameScreen extends Screen {
         super(game);
         Log.i("GameScreen", "start");
 
-
         // Initialize game objects
 
         this.player1 = new player_char(80f, 576f, 40f, 55f);
@@ -82,6 +85,10 @@ public class GameScreen extends Screen {
         this.currentScore = 0;
         this.newHighScore = false;
         this.highScore = Settings.getHighScore();
+        this.top_backg_y_pos = -800;
+        this.bot_backg_y_pos = 0;
+        this.top_walls_y_pos = -800;
+        this.bot_walls_y_pos = 0;
         this.delay_time = System.currentTimeMillis();
         this.timerHandler = new Handler(Looper.getMainLooper());
         this.timerRunnable = new Runnable() {
@@ -92,18 +99,17 @@ public class GameScreen extends Screen {
                     example_enemy later_enemy;
                     int enemy_num = randomGenerator.nextInt(3);
                     if (enemy_num == 0) {
-                        later_enemy = new example_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 200) + 110), (-80f), 60, 60, enemy_num);
+                        later_enemy = new example_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 230) + 90), (-80f), 60, 60, enemy_num);
                     } else if (enemy_num == 1) {
-                        later_enemy = new example_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 200) + 110), (-80f), 64, 96, enemy_num);
+                        later_enemy = new example_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 230) + 90), (-80f), 64, 96, enemy_num);
                     } else {
-                        later_enemy = new example_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 200) + 110), (-80f), 96, 64, enemy_num);
+                        later_enemy = new example_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 230) + 90), (-80f), 96, 64, enemy_num);
                     }
                     enemy_list.add(later_enemy);
                     previousSpawnTime[0] = System.currentTimeMillis();
                 }
             }
         };
-
 
         paint = new Paint();
         paint.setTextSize(30);
@@ -207,7 +213,7 @@ public class GameScreen extends Screen {
                     Log.i("GameScreen", "TOUCH_UP");
                     // Screen pressed in game bounds
                     if (inBounds(currentEvent, 0, 180, 770, 860)) {
-                        if (System.currentTimeMillis() - delay_time > 1000) {
+                        if (System.currentTimeMillis() - delay_time > 300) {
                             this.player1.start_movement();
                             delay_time = 0;
                             Log.i("GameScreen", "player movement started");
@@ -238,10 +244,6 @@ public class GameScreen extends Screen {
                 this.previousSpawnTime[0] = System.currentTimeMillis();
             }
 
-            // UPDATE TO CHECK FOR COLLISION BETWEEN PLAYER AND ENEMIES
-    /*        if (player1.player_rect)
-            state = GameState.GameOver;*/
-
             // 3. Call individual update methods here.
             // This is where all the game updates happen.
             // For example, player1.update();
@@ -249,6 +251,40 @@ public class GameScreen extends Screen {
             for (int i = 0; i < this.enemy_list.size(); i++) {
                 this.enemy_list.get(i).update_enemy();
             }
+
+
+            if (player1.jumped) {
+                Log.i("TESTING BACKG", (String.valueOf(top_backg_y_pos) + String.valueOf(bot_backg_y_pos)));
+                Log.i("TESTING WALLS", (String.valueOf(top_walls_y_pos) + String.valueOf(bot_walls_y_pos)));
+                // Handle background scrolling as player is jumping
+                this.top_backg_y_pos += 4.0f;
+                this.bot_backg_y_pos += 4.0f;
+                if (this.bot_backg_y_pos > 800) {
+                    this.bot_backg_y_pos = -800;
+                    this.top_backg_y_pos = 0;
+                } else if (this.top_backg_y_pos > 800) {
+                    this.top_backg_y_pos = -800;
+                    this.bot_backg_y_pos = 0;
+                }
+                // Handle walls scrolling as player is jumping
+                this.top_walls_y_pos += 7.0f;
+                this.bot_walls_y_pos += 7.0f;
+                if (this.bot_walls_y_pos > 800) {
+                    this.bot_walls_y_pos = -800;
+                    this.top_walls_y_pos = 0;
+                } else if (this.top_walls_y_pos > 800) {
+                    this.top_walls_y_pos = -800;
+                    this.bot_walls_y_pos = 0;
+                }
+            }
+
+
+
+
+
+
+
+
 
             for (int i = 0; i < this.enemy_list.size(); i++) {
                 if (this.player1.dying == false) {
@@ -262,7 +298,7 @@ public class GameScreen extends Screen {
 
 
             Log.i("GameScreen", "update2, char and enemy");
-            if (System.currentTimeMillis() - this.previousSpawnTime[0] > 800) {
+            if (System.currentTimeMillis() - this.previousSpawnTime[0] > (randomGenerator.nextInt(200)+1101)) {
                 Log.i(String.valueOf(System.currentTimeMillis()), String.valueOf(this.previousSpawnTime));
                 this.timerRunnable.run(); // previousSpawnTime modified in runnable
                 Log.i("afterup2", ("enemy spawned " + String.valueOf(this.enemy_list.size())));
@@ -360,7 +396,7 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
     public void paint(float deltaTime) {
         Log.i("GameScreen", "paint1");
         Graphics g = game.getGraphics();
-        g.clearScreen(Color.GRAY);
+        g.clearScreen(Color.BLACK);
 
 
         // We start in Z-order: Background first, then map tiles:
@@ -380,9 +416,16 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
 
         // Now game elements:
         Log.i("GameScreen", "paint2");
+        // Draw two sets of scrolling backgrounds
+        g.drawImage(g.newImage("background_scrolling_image.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
+        g.drawImage(g.newImage("background_scrolling_image.png", Graphics.ImageFormat.RGB565), 0, this.bot_backg_y_pos);
+        // Draw two sets of left walls
+        g.drawImage(g.newImage("left_wall_scrolling_image.png", Graphics.ImageFormat.RGB565), 0, this.top_walls_y_pos);
+        g.drawImage(g.newImage("left_wall_scrolling_image.png", Graphics.ImageFormat.RGB565), 0, this.bot_walls_y_pos);
+        // Draw two sets of right walls
+        g.drawImage(g.newImage("right_wall_scrolling_image.png", Graphics.ImageFormat.RGB565), 400, this.top_walls_y_pos);
+        g.drawImage(g.newImage("right_wall_scrolling_image.png", Graphics.ImageFormat.RGB565), 400, this.bot_walls_y_pos);
 
-        g.drawImage(g.newImage("left_wall_image.png", Graphics.ImageFormat.RGB565), 0, 0);
-        g.drawImage(g.newImage("right_wall_image.png", Graphics.ImageFormat.RGB565), 400, 0);
         for (int i = 0; i < this.enemy_list.size(); i++) {
             example_enemy current_enemy_draw = this.enemy_list.get(i);
             if (current_enemy_draw.getEnemy_num() == 0) {

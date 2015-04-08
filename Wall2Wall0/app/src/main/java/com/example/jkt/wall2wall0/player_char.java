@@ -27,10 +27,15 @@ public class player_char extends DynamicGameObject {
     public float height;
     public Rectangle player_rect = this.bounds;
     public float player_score;
+    public float landing_y;
+    public float vertex_y;
 
     private String char_direction;
-    private boolean jumped;
+    public boolean jumped;
     public boolean dying;
+    private boolean first_jump;
+    private long timer1;
+    private boolean timer_started = false;
 
     public player_char(float x, float y, float width, float height) {
         super(x, y, width, height);
@@ -44,6 +49,7 @@ public class player_char extends DynamicGameObject {
     }
     public void start_movement() {
         if (!jumped) {
+            first_jump = true;
             jumped = true;
             if (this.x_pos < 240) {
                 velocity.set(9.0f, 0.0f);
@@ -52,31 +58,46 @@ public class player_char extends DynamicGameObject {
                 velocity.set(9.0f, 0.0f);
                 this.char_direction = "left";
             }
+            landing_y = this.y_pos - 131.7f;
+            vertex_y = this.y_pos - 161.35f;
+            timer_started = false;
 
         }
     }
 
     public void update_char() {
         if (!dying) {
+            Log.i("player_char1", String.valueOf((!timer_started && !jumped && first_jump)));
+            if (!timer_started && !jumped && first_jump) {
+                timer1 = System.currentTimeMillis();
+                timer_started = true;
+            } else if (timer_started) {
+                if (System.currentTimeMillis() - timer1 > 1800) {
+                    this.velocity.set(0.0f, 1.0f);
+                    Log.i("player_char", "DRAG INITIATED");
+                }
+            }
             if (this.char_direction == "right") {
                 this.x_pos += velocity.getX();
-                this.y_pos = (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 419.2);
+                this.y_pos = (float) (0.0042 * ((this.x_pos - 276) * (this.x_pos - 276)) + vertex_y);
                 if (velocity.getX() > 0) {
                     this.player_score += 1.4;
                 }
                 Log.i(String.valueOf(this.getX_pos()), String.valueOf(this.getY_pos()));
             } else if (this.char_direction == "left") {
                 this.x_pos -= velocity.getX();
-                this.y_pos = (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 419.2);
+                this.y_pos = (float) (0.0042 * ((this.x_pos - 164) * (this.x_pos - 164)) + vertex_y);  // ORIGINAL WAS (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 419.2);
                 if (velocity.getX() > 0) {
                     this.player_score += 1.4;
                 }
                 Log.i(String.valueOf(this.getX_pos()), String.valueOf(this.getY_pos()));
+            } else {
+                this.y_pos += this.velocity.getY();
             }
             // if left wall reached, reattach to left wall and stop velocity
             if (this.x_pos < 80) {
                 this.x_pos = 80f;
-                this.y_pos = 576f;
+                this.y_pos = landing_y;
                 if (velocity.getX() > 0) {
                     this.player_score += 2.3;
                 }
@@ -86,7 +107,7 @@ public class player_char extends DynamicGameObject {
             }
             if (this.x_pos > 360) {
                 this.x_pos = 360f;
-                this.y_pos = 576f;
+                this.y_pos = landing_y;
                 if (velocity.getX() > 0) {
                     this.player_score += 2.3;
                 }
@@ -94,6 +115,7 @@ public class player_char extends DynamicGameObject {
                 this.char_direction = "none";
                 jumped = false;
             }
+
         } else {
             this.y_pos += 18f;
         }

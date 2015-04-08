@@ -14,8 +14,8 @@ public class MainMenuScreen extends Screen {
     public MainMenuScreen(Game game) {
         super(game);
         Log.i("MainMenuScreen", "Starting Main Menu Screen...");
-        Music menu_music = game.getAudio().newMusic("Boxing Bell Start Round.wav");
-        menu_music.play();
+        //Music menu_music = game.getAudio().newMusic("Boxing Bell Start Round.wav");
+        //menu_music.play();
         //menu_music.setLooping(true);
 
     }

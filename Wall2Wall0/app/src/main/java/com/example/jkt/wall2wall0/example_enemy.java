@@ -1,7 +1,5 @@
 package com.example.jkt.wall2wall0;
 
-import android.util.Log;
-
 import com.example.jkt.wall2wall0.math.Vector2;
 
 import java.util.Random;
@@ -11,7 +9,7 @@ import java.util.Random;
  */
 public class example_enemy extends falling_enemy {
     private final int enemy_num;
-    public Vector2 velocity = new Vector2(0.0f, 3.5f); // CHANGED ON 4/6
+    public Vector2 velocity = new Vector2(0.0f, 8.0f);
 
     public int getEnemy_num() {
         return enemy_num;
@@ -24,8 +22,6 @@ public class example_enemy extends falling_enemy {
         this.width = width;
         this.height = height;
         this.enemy_num = enemy_num;
-        Log.i("example_enemy", "new enemy created");
-        Log.i("TESTING", "enemy_num" + String.valueOf((this.enemy_num)) + " and bounds " + String.valueOf(this.bounds.getLowerLeft())+","+String.valueOf(this.bounds.width)+","+String.valueOf(this.bounds.height));
     }
     public void update_enemy() {
             this.y_pos += velocity.getY();

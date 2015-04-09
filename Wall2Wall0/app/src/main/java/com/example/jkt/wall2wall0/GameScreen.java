@@ -49,6 +49,7 @@ public class GameScreen extends Screen {
     private int bot_walls_y_pos;
     private int top_backg_y_pos;
     private int bot_backg_y_pos;
+    private float fpscounter;
 
     public AndroidMusic game_music;
     public AndroidSound death_sound;
@@ -89,6 +90,7 @@ public class GameScreen extends Screen {
         this.bot_backg_y_pos = 0;
         this.top_walls_y_pos = -800;
         this.bot_walls_y_pos = 0;
+        this.fpscounter = 0;
         this.delay_time = System.currentTimeMillis();
         this.timerHandler = new Handler(Looper.getMainLooper());
         this.timerRunnable = new Runnable() {
@@ -99,7 +101,7 @@ public class GameScreen extends Screen {
                     example_enemy later_enemy;
                     int enemy_num = randomGenerator.nextInt(3);
                     if (enemy_num == 0) {
-                        later_enemy = new example_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 230) + 90), (-80f), 60, 60, enemy_num);
+                        later_enemy = new example_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 230) + 90), (-80f), 80, 80, enemy_num);
                     } else if (enemy_num == 1) {
                         later_enemy = new example_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 230) + 90), (-80f), 64, 96, enemy_num);
                     } else {
@@ -149,7 +151,8 @@ public class GameScreen extends Screen {
     @Override
     public void update(float deltaTime) {
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
-        Log.i("GameScreen", "general update");
+        Log.i("FPSCOUNTER", String.valueOf((System.currentTimeMillis() - this.fpscounter)*(1.000/1.000)));
+        this.fpscounter = System.currentTimeMillis();
 
         // We have four separate update methods in this example.
         // Depending on the state of the game, we call different
@@ -165,7 +168,6 @@ public class GameScreen extends Screen {
             updateReady(touchEvents);
         }
         if (state == GameState.Running) {
-            Log.i("GameScreen", "state is RUNNING");
             updateRunning(touchEvents, deltaTime);
         }
         if (state == GameState.Paused) {
@@ -186,8 +188,7 @@ public class GameScreen extends Screen {
             // begins. state now becomes GameState.Running.
             // Now the updateRunning() method will be called!
 
-            if (true) {//CHANGE
-                Log.i("GameScreen", "updateReadytoRunning");
+            if (true) {
                 state = GameState.Running;
                 this.drawPlayer = true;
             }
@@ -202,15 +203,12 @@ public class GameScreen extends Screen {
                 Input.TouchEvent currentEvent = (Input.TouchEvent) touchEvents
                         .get(currentTouchEventIndex);
                 if (currentEvent.type == Input.TouchEvent.TOUCH_DOWN) {
-                    Log.i("GameScreen", "TOUCH_DOWN");
                     // Check if pause button pressed
                     if (inBounds(currentEvent, 395, 15, 70, 70)) {
                         pause();
-                        Log.i("GameScreen", "GAME PAUSED");
                     }
                 }
                 if (currentEvent.type == Input.TouchEvent.TOUCH_UP) {
-                    Log.i("GameScreen", "TOUCH_UP");
                     // Screen pressed in game bounds
                     if (inBounds(currentEvent, 0, 180, 770, 860)) {
                         if (System.currentTimeMillis() - delay_time > 300) {
@@ -254,8 +252,8 @@ public class GameScreen extends Screen {
 
 
             if (player1.jumped) {
-                Log.i("TESTING BACKG", (String.valueOf(top_backg_y_pos) + String.valueOf(bot_backg_y_pos)));
-                Log.i("TESTING WALLS", (String.valueOf(top_walls_y_pos) + String.valueOf(bot_walls_y_pos)));
+                Log.i("TESTING BACKG", (String.valueOf(top_backg_y_pos) + "," + String.valueOf(bot_backg_y_pos)));
+                Log.i("TESTING WALLS", (String.valueOf(top_walls_y_pos) + "," + String.valueOf(bot_walls_y_pos)));
                 // Handle background scrolling as player is jumping
                 this.top_backg_y_pos += 4.0f;
                 this.bot_backg_y_pos += 4.0f;
@@ -291,6 +289,7 @@ public class GameScreen extends Screen {
                     if (this.checkForOverlap.overlapRectangles(this.player1.player_rect, this.enemy_list.get(i).bounds)) {
                         this.player1.dying = true;
                         Log.i("OVERLAP FOUND", String.valueOf(this.player1.getX_pos()));
+                        Log.i("OVERLAP", String.valueOf(this.enemy_list.get(i).bounds.width));
                         break;
                     }
                 }
@@ -298,16 +297,13 @@ public class GameScreen extends Screen {
 
 
             Log.i("GameScreen", "update2, char and enemy");
-            if (System.currentTimeMillis() - this.previousSpawnTime[0] > (randomGenerator.nextInt(200)+1101)) {
-                Log.i(String.valueOf(System.currentTimeMillis()), String.valueOf(this.previousSpawnTime));
+            if (System.currentTimeMillis() - this.previousSpawnTime[0] > (randomGenerator.nextInt(250)+1600)) {
                 this.timerRunnable.run(); // previousSpawnTime modified in runnable
-                Log.i("afterup2", ("enemy spawned " + String.valueOf(this.enemy_list.size())));
             }
 
             for (int i = 0; i < this.enemy_list.size(); i++) {
                 if ((this.enemy_list.get(i).getY_pos() > 820)) {
                     this.enemy_list.remove(i);
-                    Log.i("after up2", "enemy removed");
                 }
             }
 
@@ -342,7 +338,6 @@ public class GameScreen extends Screen {
 
     // UPDATE FOR PAUSE SCREEN IMPLEMENTATION
 private void updatePaused(List<Input.TouchEvent> touchEvents) {
-    Log.i("GameScreen", "Still Paused...");
     int touchEventsSize = touchEvents.size();
     for (int touchEventIndex = 0; touchEventIndex < touchEventsSize; touchEventIndex++) {
         Input.TouchEvent currentEvent = (Input.TouchEvent) touchEvents.get(touchEventIndex);
@@ -350,9 +345,7 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
         if (currentEvent.type == Input.TouchEvent.TOUCH_DOWN) {
             // If on Pause Button again
             if (inBounds(currentEvent, 395, 15, 70, 70)) {
-                Log.i("RESUMING", "updatePaused");
                 if (this.state == GameState.Paused && this.passes < 1) {
-                    Log.i("GameScreen", "skipping Resume");
                     this.passes ++;
                 } else {
                     resume();
@@ -370,7 +363,6 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
 
     // UPDATE FOR GAME OVER IMPLEMENTATION
     private void updateGameOver(List<Input.TouchEvent> touchEvents) {
-        Log.i("GameScreen", "GAME CURRENTLY OVER");
         int touchEventsSize = touchEvents.size();
         for (int touchEventIndex = 0; touchEventIndex < touchEventsSize; touchEventIndex++) {
             Input.TouchEvent currentEvent = (Input.TouchEvent) touchEvents
@@ -380,7 +372,6 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
             // clean up and return to the menu (on a new game.)
             if (currentEvent.type == Input.TouchEvent.TOUCH_DOWN) {
                 if (inBounds(currentEvent, 0, 80, 800, 400)) {
-                    Log.i("Game Screen", "Restarting Game...");
                     nullify();
                     game.setScreen(new GameScreen(game));  // CREATES NEW GAMESCREEN EVERY GAME
                     state = GameState.Ready;
@@ -394,7 +385,6 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
 
     //@Override
     public void paint(float deltaTime) {
-        Log.i("GameScreen", "paint1");
         Graphics g = game.getGraphics();
         g.clearScreen(Color.BLACK);
 
@@ -415,21 +405,20 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
 
 
         // Now game elements:
-        Log.i("GameScreen", "paint2");
         // Draw two sets of scrolling backgrounds
-        g.drawImage(g.newImage("background_scrolling_image.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
-        g.drawImage(g.newImage("background_scrolling_image.png", Graphics.ImageFormat.RGB565), 0, this.bot_backg_y_pos);
+        g.drawImage(g.newImage("background_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
+        g.drawImage(g.newImage("background_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.bot_backg_y_pos);
         // Draw two sets of left walls
-        g.drawImage(g.newImage("left_wall_scrolling_image.png", Graphics.ImageFormat.RGB565), 0, this.top_walls_y_pos);
-        g.drawImage(g.newImage("left_wall_scrolling_image.png", Graphics.ImageFormat.RGB565), 0, this.bot_walls_y_pos);
+        g.drawImage(g.newImage("left_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.top_walls_y_pos);
+        g.drawImage(g.newImage("left_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.bot_walls_y_pos);
         // Draw two sets of right walls
-        g.drawImage(g.newImage("right_wall_scrolling_image.png", Graphics.ImageFormat.RGB565), 400, this.top_walls_y_pos);
-        g.drawImage(g.newImage("right_wall_scrolling_image.png", Graphics.ImageFormat.RGB565), 400, this.bot_walls_y_pos);
+        g.drawImage(g.newImage("right_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 400, this.top_walls_y_pos);
+        g.drawImage(g.newImage("right_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 400, this.bot_walls_y_pos);
 
         for (int i = 0; i < this.enemy_list.size(); i++) {
             example_enemy current_enemy_draw = this.enemy_list.get(i);
             if (current_enemy_draw.getEnemy_num() == 0) {
-                g.drawImage(g.newImage("enemy_image1.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
+                g.drawImage(g.newImage("enemy_image1_larger.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             } else if (current_enemy_draw.getEnemy_num() == 1) {
                 g.drawImage(g.newImage("enemy_image2.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             } else {
@@ -437,12 +426,6 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
             }
         }
         g.drawImage(g.newImage("player_image.png", Graphics.ImageFormat.RGB565), (int) this.player1.getX_pos(), (int) this.player1.getY_pos());
-        Log.i("char X", String.valueOf(this.player1.getX_pos()));
-        Log.i("char Y", String.valueOf(this.player1.getY_pos()));
-        Log.i("enemy X", String.valueOf(this.enemy1.getX_pos()));
-        Log.i("enemy Y", String.valueOf(this.enemy1.getY_pos()));
-
-
 
         //g.drawImage(g.newImage("tester_image.png", Graphics.ImageFormat.RGB565), 0, 0);
 
@@ -480,7 +463,6 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
         this.time_paused = System.currentTimeMillis() - this.pause_time;
         this.game_music.seekBegin();
         this.previousSpawnTime[0] += time_paused;
-        Log.i("GameScreen", "resume");
         this.passes = 0;
         this.state = GameState.Running;
     }
@@ -488,7 +470,6 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
 
     @Override
     public void pause() {
-        Log.i("GameScreen", "pause");
         this.pause_time = System.currentTimeMillis();
         this.game_music.pause();
         Settings.save(game.getFileIO());
@@ -538,9 +519,6 @@ private void drawPausedUI() {
     g.drawRect(410, 20, 60, 60, Color.CYAN);
     g.drawString("Resume", 440, 50, paint4);
     g.drawString("Back to Menu", 240, 400, paint);
-
-    Log.i("GameScreen", "drawing paused UI");
-
     }
 
     private void drawGameOverUI() {

@@ -23,8 +23,10 @@ import com.example.jkt.wall2wall0.Music;
 import com.example.jkt.wall2wall0.Screen;
 import com.example.jkt.wall2wall0.Sound;
 import com.example.jkt.wall2wall0.example_enemy;
+/*import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;*/
 
-public abstract class AndroidGame extends Activity implements Game {
+public abstract class AndroidGame extends Activity implements Game { // GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
 
     AndroidFastRenderView renderView;
     Graphics graphics;
@@ -34,6 +36,9 @@ public abstract class AndroidGame extends Activity implements Game {
     Screen screen;
     Music music;
     Sound sound;
+    //protected GoogleApiClient play_services_client;
+    private static boolean mResolvingError = false;
+    protected static final String STATE_RESOLVING_ERROR = "resolving_error";
 
     WakeLock wakeLock;
 
@@ -64,10 +69,20 @@ public abstract class AndroidGame extends Activity implements Game {
         screen = getInitScreen();
         setContentView(renderView);
 
+/*        GoogleApiClient play_services_client = new GoogleApiClient.Builder(this.getApplicationContext())
+                .addApi(Plus.API)
+                .addScope(Plus.SCOPE_PLUS_LOGIN)
+                .setAccountName("users.account.name@gmail.com")
+                .build();*/
+
+        mResolvingError = savedInstanceState != null
+                && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
+
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK,
                 "MyGame");
     }
+
 
     @Override
     public void onResume() {
@@ -132,6 +147,15 @@ public abstract class AndroidGame extends Activity implements Game {
         return this.screen;
     }
 
+/*    @Override
+    public void onStop() {
+        super.onStop();
+        play_services_client.disconnect();
+    }*/
 
-
+/*    @Override
+     public void onStart() {
+    super.onStart();
+    play_services_client.connect();
+}*/
 }

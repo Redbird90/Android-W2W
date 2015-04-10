@@ -105,25 +105,21 @@ public abstract class AndroidGame extends Activity implements Game { // GoogleAp
 
     @Override
     public Input getInput() {
-        Log.i("AndroidGame", "getInput");
         return input;
     }
 
     @Override
     public Graphics getGraphics() {
-        Log.i("AndroidGame", "getGraphics");
         return graphics;
     }
 
     @Override
     public Audio getAudio() {
-        Log.i("AndroidGame", "getAudio");
         return audio;
     }
 
     @Override
     public FileIO getFileIO() {
-        Log.i("AndroidGame", "getFileIO");
         return fileIO;
     }
 
@@ -143,7 +139,6 @@ public abstract class AndroidGame extends Activity implements Game { // GoogleAp
 
     public Screen getCurrentScreen() {
         this.screen.update(0);
-        Log.i("AndroidGame", "getCurrScreen");
         return this.screen;
     }
 

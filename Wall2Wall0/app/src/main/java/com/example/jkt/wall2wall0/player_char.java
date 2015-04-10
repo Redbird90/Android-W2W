@@ -31,9 +31,12 @@ public class player_char extends DynamicGameObject {
     private String char_direction;
     public boolean jumped;
     public boolean dying;
-    private boolean first_jump;
+    public boolean first_jump;
+    public boolean too_high1;
+    public boolean too_high2;
     private long timer1;
     private boolean timer_started = false;
+    private float decreased_y;
 
     public player_char(float x, float y, float width, float height) {
         super(x, y, width, height);
@@ -48,10 +51,10 @@ public class player_char extends DynamicGameObject {
             first_jump = true;
             jumped = true;
             if (this.x_pos < 240) {
-                velocity.set(14.0f, 0.0f);
+                velocity.set(12.0f, 0.0f);
                 this.char_direction = "right";
             } else if (this.x_pos > 240) {
-                velocity.set(14.0f, 0.0f);
+                velocity.set(12.0f, 0.0f);
                 this.char_direction = "left";
             }
             landing_y = this.y_pos - 78.4f;
@@ -68,25 +71,38 @@ public class player_char extends DynamicGameObject {
                 timer_started = true;
             } else if (timer_started) {
                 if (System.currentTimeMillis() - timer1 > 1800) {
-                    this.velocity.set(0.0f, 1.0f);
+                    this.velocity.set(0.0f, 0.5f);
                 }
                 if (System.currentTimeMillis() - timer1 > 3000) {
-                    this.velocity.set(0.0f, 1.8f);
+                    this.velocity.set(0.0f, 1.0f);
                 }
                 if (System.currentTimeMillis() - timer1 > 6000) {
-                    this.velocity.set(0.0f, 2.6f);
+                    this.velocity.set(0.0f, 2.0f);
+                }
+            }
+
+            if (this.y_pos <= 526) {
+                if (this.y_pos <= 476) {
+                    this.setY_pos(this.y_pos + 4.0f);
+                    if (jumped) {
+                        decreased_y += 4.0f;
+                    }
+                }
+                this.setY_pos(this.y_pos + 2.0f);
+                if (jumped) {
+                    decreased_y += 2.0f;
                 }
             }
 
             if (this.char_direction == "right") {
                 this.x_pos += velocity.getX();
-                this.y_pos = (float) (0.0025 * ((this.x_pos - 276) * (this.x_pos - 276)) + vertex_y);
+                this.y_pos = (float) (0.0025 * ((this.x_pos - 276) * (this.x_pos - 276)) + (vertex_y + decreased_y));
                 if (velocity.getX() > 0) {
                     this.player_score += 1.4;
                 }
             } else if (this.char_direction == "left") {
                 this.x_pos -= velocity.getX();
-                this.y_pos = (float) (0.0025 * ((this.x_pos - 164) * (this.x_pos - 164)) + vertex_y);  // ORIGINAL WAS (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 419.2);
+                this.y_pos = (float) (0.0025 * ((this.x_pos - 164) * (this.x_pos - 164)) + (vertex_y + decreased_y));  // ORIGINAL WAS (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 419.2);
                 if (velocity.getX() > 0) {
                     this.player_score += 1.4;
                 }
@@ -96,23 +112,25 @@ public class player_char extends DynamicGameObject {
             // if left wall reached, reattach to left wall and stop velocity
             if (this.x_pos < 80) {
                 this.x_pos = 80f;
-                this.y_pos = landing_y;
+                this.y_pos = landing_y + decreased_y;
                 if (velocity.getX() > 0) {
                     this.player_score += 2.3;
                 }
                 this.velocity.set(0.0f, 0.0f);
                 this.char_direction = "none";
                 jumped = false;
+                decreased_y = 0f;
             }
             if (this.x_pos > 360) {
                 this.x_pos = 360f;
-                this.y_pos = landing_y;
+                this.y_pos = landing_y + decreased_y;
                 if (velocity.getX() > 0) {
                     this.player_score += 2.3;
                 }
                 this.velocity.set(0.0f, 0.0f);
                 this.char_direction = "none";
                 jumped = false;
+                decreased_y = 0f;
             }
 
         } else {

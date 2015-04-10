@@ -9,7 +9,11 @@ import java.util.Random;
  */
 public class example_enemy extends falling_enemy {
     private final int enemy_num;
-    public Vector2 velocity = new Vector2(0.0f, 8.0f);
+    public Vector2 velocity = new Vector2(0.0f, 6.0f);
+
+
+
+    public boolean player_jumping = false;
 
     public int getEnemy_num() {
         return enemy_num;
@@ -24,8 +28,14 @@ public class example_enemy extends falling_enemy {
         this.enemy_num = enemy_num;
     }
     public void update_enemy() {
+        if (this.player_jumping) {
+            this.y_pos += (velocity.getY() + 1.5f) ;
+            this.update_bounds();
+        } else {
             this.y_pos += velocity.getY();
             this.update_bounds();
+        }
+
     }
     public float getX_pos() {
         return x_pos;
@@ -46,4 +56,9 @@ public class example_enemy extends falling_enemy {
     public void update_bounds() {
         this.bounds.setLowerLeft(this.x_pos, this.y_pos);
     }
+
+    public void setPlayer_jumping(boolean player_jumping) {
+        this.player_jumping = player_jumping;
+    }
 }
+

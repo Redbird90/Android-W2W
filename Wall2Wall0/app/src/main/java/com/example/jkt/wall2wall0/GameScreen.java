@@ -50,6 +50,10 @@ public class GameScreen extends Screen {
     private int top_backg_y_pos;
     private int bot_backg_y_pos;
     private float fpscounter;
+    private float cam_scroll1;
+    private float cam_scroll2;
+    public boolean height_thresh1;
+    public boolean height_thresh2;
 
     public AndroidMusic game_music;
     public AndroidSound death_sound;
@@ -92,6 +96,8 @@ public class GameScreen extends Screen {
         this.bot_walls_y_pos = 0;
         this.fpscounter = 0;
         this.delay_time = System.currentTimeMillis();
+        this.cam_scroll1 = 0;
+        this.cam_scroll2 = 0;
         this.timerHandler = new Handler(Looper.getMainLooper());
         this.timerRunnable = new Runnable() {
             @Override
@@ -234,54 +240,106 @@ public class GameScreen extends Screen {
                 }
                 delay_time = (long) 0;
             }
+            if (player1.first_jump) {
+                if (!enemy1added) {
+                    this.enemy_list.add(this.enemy1);
+                    Log.i("GameScreen", "first enemy spawned");
+                    this.enemy1added = true;
+                    this.previousSpawnTime[0] = System.currentTimeMillis();
+                }
+            }
 
-            if (!enemy1added) {
-                this.enemy_list.add(this.enemy1);
-                Log.i("GameScreen", "first enemy spawned");
-                this.enemy1added = true;
-                this.previousSpawnTime[0] = System.currentTimeMillis();
+            if (this.player1.getY_pos() > 526) {
+
             }
 
             // 3. Call individual update methods here.
             // This is where all the game updates happen.
             // For example, player1.update();
             this.player1.update_char();
-            for (int i = 0; i < this.enemy_list.size(); i++) {
-                this.enemy_list.get(i).update_enemy();
+
+            // Check player height and update appropriate variables
+            if (this.player1.getY_pos() <= 526) {
+                this.height_thresh1 = true;
+                if (this.player1.getY_pos() <= 476) {
+                    this.height_thresh2 = true;
+                } else if (this.player1.getY_pos() > 476 && this.height_thresh2) {
+                    this.height_thresh2 = false;
+                }
+            } else if (this.player1.getY_pos() > 526 && this.height_thresh1) {
+                this.height_thresh1 = false;
             }
+
+            // Check height variables and set falling speed variables
+            if (this.height_thresh1) {
+                if (this.height_thresh2) {
+                    this.cam_scroll2 = 4.0f;
+                } else {
+                    this.cam_scroll2 = 0.0f;
+                }
+                this.cam_scroll1 = 2.0f;
+            } else {
+                this.cam_scroll1 = 0.0f;
+            }
+
+            for (int i = 0; i < this.enemy_list.size(); i++) {
+                // Speed up blocks when player jumps
+                if (this.player1.jumped) {
+                    Log.i("TESTING", "loop1");
+                    if (this.enemy_list.get(i).player_jumping == false) {
+                        this.enemy_list.get(i).setPlayer_jumping(true);
+                    }
+                    this.enemy_list.get(i).update_enemy();
+                } else {
+                    Log.i("TESTING", "loop2");
+                    if (this.enemy_list.get(i).player_jumping == true) {
+                        this.enemy_list.get(i).setPlayer_jumping(false);
+                    }
+                    this.enemy_list.get(i).update_enemy();
+                }
+                // Speed up blocks when player is too high
+                if (this.height_thresh1) {
+                    if (this.height_thresh2) {
+                        this.enemy_list.get(i).setY_pos(this.enemy_list.get(i).getY_pos() + 4.0f);
+                    }
+                    this.enemy_list.get(i).setY_pos(this.enemy_list.get(i).getY_pos() + 2.0f);
+                }
+            }
+            Log.i("CAM", String.valueOf(this.cam_scroll1) + "," + String.valueOf(this.cam_scroll2));
+            this.top_backg_y_pos += ((this.cam_scroll1 + this.cam_scroll2)*0.8);
+            this.bot_backg_y_pos += ((this.cam_scroll1 + this.cam_scroll2)*0.8);
+
+            this.top_walls_y_pos += (this.cam_scroll1 + this.cam_scroll2);
+            this.bot_walls_y_pos += (this.cam_scroll1 + this.cam_scroll2);
 
 
             if (player1.jumped) {
-                Log.i("TESTING BACKG", (String.valueOf(top_backg_y_pos) + "," + String.valueOf(bot_backg_y_pos)));
-                Log.i("TESTING WALLS", (String.valueOf(top_walls_y_pos) + "," + String.valueOf(bot_walls_y_pos)));
+/*                Log.i("TESTING BACKG", (String.valueOf(top_backg_y_pos) + "," + String.valueOf(bot_backg_y_pos)));
+                Log.i("TESTING WALLS", (String.valueOf(top_walls_y_pos) + "," + String.valueOf(bot_walls_y_pos)));*/
                 // Handle background scrolling as player is jumping
                 this.top_backg_y_pos += 4.0f;
                 this.bot_backg_y_pos += 4.0f;
-                if (this.bot_backg_y_pos > 800) {
-                    this.bot_backg_y_pos = -800;
-                    this.top_backg_y_pos = 0;
-                } else if (this.top_backg_y_pos > 800) {
-                    this.top_backg_y_pos = -800;
-                    this.bot_backg_y_pos = 0;
-                }
                 // Handle walls scrolling as player is jumping
                 this.top_walls_y_pos += 7.0f;
                 this.bot_walls_y_pos += 7.0f;
-                if (this.bot_walls_y_pos > 800) {
-                    this.bot_walls_y_pos = -800;
-                    this.top_walls_y_pos = 0;
-                } else if (this.top_walls_y_pos > 800) {
-                    this.top_walls_y_pos = -800;
-                    this.bot_walls_y_pos = 0;
-                }
             }
 
+            // Redraw background and walls once they reach the bottom
+            if (this.bot_backg_y_pos >= 800) {
+                this.bot_backg_y_pos = -800;
+                this.top_backg_y_pos = 0;
+            } else if (this.top_backg_y_pos >= 800) {
+                this.top_backg_y_pos = -800;
+                this.bot_backg_y_pos = 0;
+            }
 
-
-
-
-
-
+            if (this.bot_walls_y_pos > 800) {
+                this.bot_walls_y_pos = -800;
+                this.top_walls_y_pos = 0;
+            } else if (this.top_walls_y_pos > 800) {
+                this.top_walls_y_pos = -800;
+                this.bot_walls_y_pos = 0;
+            }
 
 
             for (int i = 0; i < this.enemy_list.size(); i++) {
@@ -295,10 +353,11 @@ public class GameScreen extends Screen {
                 }
             }
 
-
             Log.i("GameScreen", "update2, char and enemy");
-            if (System.currentTimeMillis() - this.previousSpawnTime[0] > (randomGenerator.nextInt(250)+1600)) {
-                this.timerRunnable.run(); // previousSpawnTime modified in runnable
+            if (player1.first_jump) {
+                if (System.currentTimeMillis() - this.previousSpawnTime[0] > (randomGenerator.nextInt(250) + 1600)) {
+                    this.timerRunnable.run(); // previousSpawnTime modified in runnable
+                }
             }
 
             for (int i = 0; i < this.enemy_list.size(); i++) {
@@ -426,19 +485,6 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
             }
         }
         g.drawImage(g.newImage("player_image.png", Graphics.ImageFormat.RGB565), (int) this.player1.getX_pos(), (int) this.player1.getY_pos());
-
-        //g.drawImage(g.newImage("tester_image.png", Graphics.ImageFormat.RGB565), 0, 0);
-
-/*        g.drawImage(g.newImage("player_image.png", Graphics.ImageFormat.RGB565), 100, 400);
-        g.drawImage(g.newImage("player_image.png", Graphics.ImageFormat.RGB565), 400, 100);*/
-
-
-/*        g.drawImage(currentSprite, robot.getCenterX() - 61,
-                robot.getCenterY() - 63);
-        g.drawImage(hanim.getImage(), hb.getCenterX() - 48,
-                hb.getCenterY() - 48);
-        g.drawImage(hanim.getImage(), hb2.getCenterX() - 48,
-                hb2.getCenterY() - 48);*/
 
         // And now, we overlay the UI:
         if (state == GameState.Ready)

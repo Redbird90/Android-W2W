@@ -306,8 +306,10 @@ public class GameScreen extends Screen {
                 }
             }
             Log.i("CAM", String.valueOf(this.cam_scroll1) + "," + String.valueOf(this.cam_scroll2));
-            this.top_backg_y_pos += ((this.cam_scroll1 + this.cam_scroll2)*0.8);
-            this.bot_backg_y_pos += ((this.cam_scroll1 + this.cam_scroll2)*0.8);
+            this.top_backg_y_pos += ((this.cam_scroll1 + this.cam_scroll2)-2.0f);
+            this.bot_backg_y_pos += ((this.cam_scroll1 + this.cam_scroll2)-2.0f);
+            Log.i("TESTING1A", String.valueOf(this.top_backg_y_pos) + "," + String.valueOf(this.bot_backg_y_pos));
+            Log.i("TESTING2A", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
 
             this.top_walls_y_pos += (this.cam_scroll1 + this.cam_scroll2);
             this.bot_walls_y_pos += (this.cam_scroll1 + this.cam_scroll2);
@@ -317,6 +319,8 @@ public class GameScreen extends Screen {
 /*                Log.i("TESTING BACKG", (String.valueOf(top_backg_y_pos) + "," + String.valueOf(bot_backg_y_pos)));
                 Log.i("TESTING WALLS", (String.valueOf(top_walls_y_pos) + "," + String.valueOf(bot_walls_y_pos)));*/
                 // Handle background scrolling as player is jumping
+                Log.i("TESTING1B", String.valueOf(this.top_backg_y_pos) + "," + String.valueOf(this.bot_backg_y_pos));
+                Log.i("TESTING2B", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
                 this.top_backg_y_pos += 4.0f;
                 this.bot_backg_y_pos += 4.0f;
                 // Handle walls scrolling as player is jumping
@@ -325,10 +329,10 @@ public class GameScreen extends Screen {
             }
 
             // Redraw background and walls once they reach the bottom
-            if (this.bot_backg_y_pos >= 800) {
+            if (this.bot_backg_y_pos > 800) {
                 this.bot_backg_y_pos = -800;
                 this.top_backg_y_pos = 0;
-            } else if (this.top_backg_y_pos >= 800) {
+            } else if (this.top_backg_y_pos > 800) {
                 this.top_backg_y_pos = -800;
                 this.bot_backg_y_pos = 0;
             }
@@ -467,6 +471,8 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
         // Draw two sets of scrolling backgrounds
         g.drawImage(g.newImage("background_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
         g.drawImage(g.newImage("background_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.bot_backg_y_pos);
+        Log.i("TESTING1", String.valueOf(this.top_backg_y_pos) + "," + String.valueOf(this.bot_backg_y_pos));
+        Log.i("TESTING2", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
         // Draw two sets of left walls
         g.drawImage(g.newImage("left_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.top_walls_y_pos);
         g.drawImage(g.newImage("left_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.bot_walls_y_pos);

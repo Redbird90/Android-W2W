@@ -59,11 +59,11 @@ public class GameScreen extends Screen {
     public AndroidSound death_sound;
     private long pause_time;
     private long time_paused;
-    private boolean tutorial_time;
+    private boolean tutorial_time = true;
     private int current_level = 1;
     private int opacity_num = 5;
     private boolean reached_255_opacity = false;
-    private boolean transition_incomplete = false;
+    private boolean transition_incomplete = true;
 
     enum GameState {
         Ready, Running, Paused, GameOver
@@ -150,10 +150,12 @@ public class GameScreen extends Screen {
 
         pause_rect = new Rectangle(395, 15, 70, 70);
 
-        game_music = (AndroidMusic) game.getAudio().newMusic("179562__clinthammer__clinthammermusic-ts-bass.wav");
-        game_music.play();
-        game_music.setLooping(true);
-        death_sound = (AndroidSound) game.getAudio().newSound("Realistic_Punch.wav");
+        if (Settings.soundEnabled){
+            game_music = (AndroidMusic) game.getAudio().newMusic("179562__clinthammer__clinthammermusic-ts-bass.wav");
+            game_music.play();
+            game_music.setLooping(true);
+            death_sound = (AndroidSound) game.getAudio().newSound("Realistic_Punch.wav");
+        }
 
     }
 
@@ -222,7 +224,7 @@ public class GameScreen extends Screen {
                 if (currentEvent.type == Input.TouchEvent.TOUCH_UP) {
                     // Screen pressed in game bounds
                     if (inBounds(currentEvent, 0, 180, 770, 860)) {
-                        if (System.currentTimeMillis() - delay_time > 300) {
+                        if (System.currentTimeMillis() - delay_time > 300) { // CHANGE 300 TO 2000
                             if (tutorial_time) {
                                 tutorial_time = false;
                             } else {
@@ -236,7 +238,9 @@ public class GameScreen extends Screen {
             }
             // 2. Check miscellaneous events like death:
             if (this.player1.getY_pos() > 870) {
-                death_sound.play(1.0f);
+                if (Settings.soundEnabled) {
+                    death_sound.play(1.0f);
+                }
                 this.state = GameState.GameOver;
                 Log.i("GameScreen", "player fell to DEATH");
                 this.drawPlayer = false;
@@ -251,7 +255,6 @@ public class GameScreen extends Screen {
             }
             if (player1.first_jump) {
                 if (!enemy1added) {
-                    tutorial_time = true;
                     this.enemy_list.add(this.enemy1);
                     Log.i("GameScreen", "first enemy spawned");
                     this.enemy1added = true;
@@ -316,8 +319,10 @@ public class GameScreen extends Screen {
                 }
             }
             Log.i("CAM", String.valueOf(this.cam_scroll1) + "," + String.valueOf(this.cam_scroll2));
-            this.top_backg_y_pos += ((this.cam_scroll1 + this.cam_scroll2)-2.0f);
-            this.bot_backg_y_pos += ((this.cam_scroll1 + this.cam_scroll2)-2.0f);
+            if (this.cam_scroll1 != 0 && this.cam_scroll2 != 0) {
+                this.top_backg_y_pos += ((this.cam_scroll1 + this.cam_scroll2) - 2.0f);
+                this.bot_backg_y_pos += ((this.cam_scroll1 + this.cam_scroll2) - 2.0f);
+            }
             Log.i("TESTING1A", String.valueOf(this.top_backg_y_pos) + "," + String.valueOf(this.bot_backg_y_pos));
             Log.i("TESTING2A", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
 
@@ -363,7 +368,9 @@ public class GameScreen extends Screen {
                         Log.i("OVERLAP FOUND", String.valueOf(this.player1.getX_pos()));
                         Log.i("OVERLAP", String.valueOf(this.enemy_list.get(i).bounds.width));
                         // CHANGE TO DIFF SOUND EFFECT
-                        death_sound.play(1f);
+                        if (Settings.soundEnabled) {
+                            death_sound.play(1f);
+                        }
                         break;
                     }
                 }
@@ -372,7 +379,7 @@ public class GameScreen extends Screen {
             Log.i("GameScreen", "update2, char and enemy");
             if (player1.first_jump) {
                 if (System.currentTimeMillis() - this.previousSpawnTime[0] > (randomGenerator.nextInt(250) + 1600)) {
-                    this.timerRunnable.run(); // previousSpawnTime modified in runnable
+                    //this.timerRunnable.run(); // previousSpawnTime modified in runnable
                 }
             }
 
@@ -477,10 +484,6 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
             g.drawRect(projectile.getX(), projectile.getY(), 10, 5,
                     android.graphics.Color.YELLOW);
         }*/
-        if (tutorial_time) {
-            g.drawString("Tap anywhere to jump.", 240, 350, paint);
-            g.drawString("Avoid the obstacles falling from above!", 240, 400, paint);
-        }
 
 
         if (current_level == 1) {
@@ -568,7 +571,9 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
     @Override
     public void pause() {
         this.pause_time = System.currentTimeMillis();
-        this.game_music.pause();
+        if (Settings.soundEnabled) {
+            this.game_music.pause();
+        }
         Settings.save(game.getFileIO());
         this.timerHandler.removeCallbacks(this.timerRunnable);
         this.state = GameState.Paused
@@ -607,20 +612,30 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
         g.drawRect(410, 20, 60, 60, Color.CYAN);
         g.drawString("Pause", 440, 50, paint4);
 
-        if (this.currentScore >= 2000 && transition_incomplete) {
-            g.drawARGB(this.opacity_num, 0, 0, 0);
+        if (this.player1.player_score >= 300 && transition_incomplete) {
+            Log.i("STARTING", String.valueOf(this.opacity_num));
+            g.drawARGB(this.opacity_num, 255, 255, 255);
             if (this.opacity_num < 255 && !this.reached_255_opacity) {
-                this.opacity_num += 50;
+                this.opacity_num += 25;
             } else if (this.opacity_num == 255) {
-                this.opacity_num -= 50;
+                this.opacity_num -= 25;
                 this.reached_255_opacity = true;
                 this.current_level = 2;
             } else if (this.opacity_num < 255 && this.reached_255_opacity) {
-                this.opacity_num -= 50;
-            } else if (this.opacity_num < 0) {
+                this.opacity_num -= 25;
+            }
+            if (this.opacity_num < 0) {
                 transition_incomplete = false;
+                Log.i("ENDING", "TRANSITION");
             }
         }
+
+        if (tutorial_time) {
+            g.drawString("Tap anywhere to jump.", 240, 350, paint4);
+            g.drawString("Avoid the obstacles", 240, 400, paint);
+            g.drawString("falling from above!", 240, 430, paint);
+        }
+
     }
 
 private void drawPausedUI() {

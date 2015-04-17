@@ -40,12 +40,23 @@ public class MainMenuScreen extends Screen {
                 }
                 if (!at_settings && inBounds(event, 200, 730, 280, 790)) {
                     at_settings = true;
-                } else if (at_settings && inBounds(event, 140, 370, 340, 80)) {
+                } else if (at_settings && inBounds(event, 120, 370, 240, 100) && Settings.soundEnabled) {
                     Settings.soundEnabled = false;
-                    Settings.save(game.getFileIO());
-                } else if (at_settings && inBounds(event, 140, 590, 340, 40)) {
+                } else if (at_settings && inBounds(event, 120, 370, 240, 100) && !Settings.soundEnabled) {
+                    Settings.soundEnabled = true;
+                } else if (at_settings && inBounds(event, 140, 555, 240, 80)) {
                     at_settings = false;
+                    Settings.save(game.getFileIO());
                 }
+
+/*                g.drawRect(115, 365, 250, 260, Color.BLACK);
+                g.drawRect(120, 370, 240, 250, Color.WHITE);
+                menu_paint.setTextSize(28);
+                g.drawString(sound_pref_text, 240, 390, menu_paint);
+                menu_paint.setTextSize(16);
+                g.drawString("Tap to change", 240, 430, menu_paint);
+                menu_paint.setTextSize(20);
+                g.drawString("Back", 240, 600, menu_paint);*/
 
             }
         }
@@ -83,15 +94,18 @@ public class MainMenuScreen extends Screen {
         if (at_settings) {
             if (Settings.soundEnabled) {
                 sound_pref_text = "Sound is ON";
-            } else {
+            } else if (!Settings.soundEnabled) {
                 sound_pref_text = "Sound is OFF";
             }
 
             g.drawRect(115, 365, 250, 260, Color.BLACK);
             g.drawRect(120, 370, 240, 250, Color.WHITE);
-            g.drawString(sound_pref_text, 240, 390, menu_paint);
-            g.drawString("Tap to change", 240, 430, menu_paint);
-            g.drawString("Back", 240, 600, menu_paint);
+            menu_paint.setTextSize(28);
+            g.drawString(sound_pref_text, 240, 410, menu_paint);
+            menu_paint.setTextSize(16);
+            g.drawString("Tap to change", 240, 440, menu_paint);
+            menu_paint.setTextSize(20);
+            g.drawString("Back", 240, 590, menu_paint);
         }
     }
 

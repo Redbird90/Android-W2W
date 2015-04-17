@@ -1,8 +1,10 @@
 package com.example.jkt.wall2wall0;
 
+import android.content.Context;
 import android.graphics.*;
 import android.graphics.Color;
 import android.util.Log;
+import android.widget.CheckBox;
 
 import java.util.List;
 
@@ -10,6 +12,9 @@ import java.util.List;
  * Created by JDK on 4/3/2015.
  */
 public class MainMenuScreen extends Screen {
+
+    private boolean at_settings;
+    private String sound_pref_text;
 
     public MainMenuScreen(Game game) {
         super(game);
@@ -30,9 +35,18 @@ public class MainMenuScreen extends Screen {
         for (int touchEventIndex = 0; touchEventIndex < touchEventsListSize; touchEventIndex++) {
             Input.TouchEvent event = touchEvents.get(touchEventIndex);
             if (event.type == Input.TouchEvent.TOUCH_DOWN) {
-                if (inBounds(event, 0, 0, 480, 800)) {
+                if (!at_settings && inBounds(event, 0, 0, 480, 600)) {
                     game.setScreen(new GameScreen(game));
                 }
+                if (!at_settings && inBounds(event, 200, 730, 280, 790)) {
+                    at_settings = true;
+                } else if (at_settings && inBounds(event, 140, 370, 340, 80)) {
+                    Settings.soundEnabled = false;
+                    Settings.save(game.getFileIO());
+                } else if (at_settings && inBounds(event, 140, 590, 340, 40)) {
+                    at_settings = false;
+                }
+
             }
         }
 
@@ -63,6 +77,22 @@ public class MainMenuScreen extends Screen {
         menu_paint.setTextSize(35);
         menu_paint.setColor(Color.BLUE);
         g.drawString("START", 240, 600, menu_paint);
+
+        g.drawString("Settings", 240, 760, menu_paint);
+
+        if (at_settings) {
+            if (Settings.soundEnabled) {
+                sound_pref_text = "Sound is ON";
+            } else {
+                sound_pref_text = "Sound is OFF";
+            }
+
+            g.drawRect(115, 365, 250, 260, Color.BLACK);
+            g.drawRect(120, 370, 240, 250, Color.WHITE);
+            g.drawString(sound_pref_text, 240, 390, menu_paint);
+            g.drawString("Tap to change", 240, 430, menu_paint);
+            g.drawString("Back", 240, 600, menu_paint);
+        }
     }
 
     @Override
@@ -87,7 +117,6 @@ public class MainMenuScreen extends Screen {
     public void backButton() {
         // The user seems to want to quit.
         android.os.Process.killProcess(android.os.Process.myPid());
-
     }
 
 }

@@ -7,17 +7,13 @@ import java.util.Random;
 /**
  * Created by JDK on 3/30/2015.
  */
-public class example_enemy extends falling_enemy {
+
+/*Class marked as DEPRECATED as of 4.16.15*/
+/*public class example_enemy extends falling_enemy {
     private final int enemy_num;
     public Vector2 velocity = new Vector2(0.0f, 6.0f);
 
-
-
     public boolean player_jumping = false;
-
-    public int getEnemy_num() {
-        return enemy_num;
-    }
 
     public example_enemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height);
@@ -37,6 +33,11 @@ public class example_enemy extends falling_enemy {
         }
 
     }
+
+    public int getEnemy_num() {
+        return enemy_num;
+    }
+
     public float getX_pos() {
         return x_pos;
     }
@@ -60,5 +61,5 @@ public class example_enemy extends falling_enemy {
     public void setPlayer_jumping(boolean player_jumping) {
         this.player_jumping = player_jumping;
     }
-}
+}*/
 

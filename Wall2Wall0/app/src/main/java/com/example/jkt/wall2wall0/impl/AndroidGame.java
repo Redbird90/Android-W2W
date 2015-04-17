@@ -22,7 +22,7 @@ import com.example.jkt.wall2wall0.Input;
 import com.example.jkt.wall2wall0.Music;
 import com.example.jkt.wall2wall0.Screen;
 import com.example.jkt.wall2wall0.Sound;
-import com.example.jkt.wall2wall0.example_enemy;
+import com.example.jkt.wall2wall0.falling_enemy;
 /*import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;*/
 

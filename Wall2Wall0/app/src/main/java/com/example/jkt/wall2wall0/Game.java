@@ -20,4 +20,5 @@ public interface Game {
 
     public Screen getInitScreen();
 
+    void goToLeaderboard();
 }

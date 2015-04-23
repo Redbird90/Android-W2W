@@ -42,7 +42,7 @@ public class Settings {
             out.write(Boolean.toString(soundEnabled));
             out.write("\n");
 
-            // Uses a for loop to save 5 numbers to the save file.
+            // Uses a for loop to save 5 numbers to the save file. INCORRECT NOTE
             out.write(Integer.toString(highScore));
             out.write("\n");
 

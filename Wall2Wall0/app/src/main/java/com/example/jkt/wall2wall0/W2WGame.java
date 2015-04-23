@@ -14,7 +14,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.example.jkt.wall2wall0.impl.AndroidGame;
-/*import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -23,7 +23,8 @@ import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.common.api.zza;
-import com.google.android.gms.common.api.zze;*/
+import com.google.android.gms.common.api.zze;
+import com.google.android.gms.games.Games;
 
 import java.io.BufferedReader;
 import java.io.FileDescriptor;
@@ -57,10 +58,6 @@ public class W2WGame extends AndroidGame {
         }
         Log.i("W2WGame", "getInitScreen");
 
-        //InputStream mapInputStream = getResources().openRawResource(R.raw.map1);
-        //map = convertStreamToString(mapInputStream);   LOADED GAME MAP
-
-        //return new SplashLoadingScreen(this);
 
         return new LoadingScreen(this);
     }
@@ -70,40 +67,22 @@ public class W2WGame extends AndroidGame {
         //getCurrentScreen().backButton();
     }
 
-/*    private static String convertStreamToString(InputStream convertStream) {
-        BufferedReader inputReader = new BufferedReader(new InputStreamReader(
-                convertStream));
-        StringBuilder sb = new StringBuilder();
+    public void goToLeaderboard() {
+/*        startActivityForResult(Games.Leaderboards.getLeaderboardIntent(this.play_services_client,
+                LEADERBOARD_ID), 1); // Last arg is an arbitrary int*/
+    }
 
-        String line = null;
-        try {
-            while ((line = inputReader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-        } catch (IOException e) {
-            Log.w("LOG", e.getMessage());
-        } finally {
-            try {
-                convertStream.close();
-            } catch (IOException e) {
-                Log.w("LOG", e.getMessage());
-            }
-        }
-
-        return sb.toString();
-    }*/
 
     @Override
     public void onResume() {
         super.onResume();
 
-        //Assets.theme.play();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        //Assets.theme.pause();
+
     }
 
     //@Override
@@ -126,7 +105,7 @@ public class W2WGame extends AndroidGame {
         return 0;
     }
 
-/*    @Override
+    @Override
     public void onConnected(Bundle bundle) {
 
     }
@@ -160,7 +139,7 @@ public class W2WGame extends AndroidGame {
 
     // The rest of this code is all about building the error dialog
 
-    *//* Creates a dialog for an error message *//*
+     //Creates a dialog for an error message
     private void showErrorDialog(int errorCode) {
         // Create a fragment for the error dialog
         ErrorDialogFragment dialogFragment = new ErrorDialogFragment();
@@ -171,12 +150,12 @@ public class W2WGame extends AndroidGame {
         dialogFragment.show(this.getFragmentManager(), "errordialog");
     }
 
-    *//* Called from ErrorDialogFragment when the dialog is dismissed. *//*
+     //Called from ErrorDialogFragment when the dialog is dismissed.
     public static void onDialogDismissed() {
         mResolvingError = false;
     }
 
-    *//* A fragment to display an error dialog *//*
+     //A fragment to display an error dialog
     public static class ErrorDialogFragment extends DialogFragment {
         public ErrorDialogFragment() { }
 
@@ -194,7 +173,7 @@ public class W2WGame extends AndroidGame {
         }
     }
 
-*//*    @Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_RESOLVE_ERROR) {
             mResolvingError = false;
@@ -206,13 +185,13 @@ public class W2WGame extends AndroidGame {
                 }
             }
         }
-    }*//*
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(STATE_RESOLVING_ERROR, mResolvingError);
-    }*/
+    }
 }
 
 /*    public int getHighScore() {

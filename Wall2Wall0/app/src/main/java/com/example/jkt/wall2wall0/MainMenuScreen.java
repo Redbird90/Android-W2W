@@ -1,10 +1,13 @@
 package com.example.jkt.wall2wall0;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.*;
 import android.graphics.Color;
 import android.util.Log;
 import android.widget.CheckBox;
+
+import com.google.android.gms.games.Games;
 
 import java.util.List;
 
@@ -15,6 +18,7 @@ public class MainMenuScreen extends Screen {
 
     private boolean at_settings;
     private String sound_pref_text;
+    Activity activity;
 
     public MainMenuScreen(Game game) {
         super(game);
@@ -48,6 +52,10 @@ public class MainMenuScreen extends Screen {
                     at_settings = false;
                     Settings.save(game.getFileIO());
                 }
+
+/*                if (!at_settings && inBounds(event, LEADERBOARD_BUTTON_DIMENSIONS)) {
+                    game.goToLeaderboard();
+                }*/
 
 /*                g.drawRect(115, 365, 250, 260, Color.BLACK);
                 g.drawRect(120, 370, 240, 250, Color.WHITE);

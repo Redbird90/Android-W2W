@@ -23,10 +23,10 @@ import com.example.jkt.wall2wall0.Music;
 import com.example.jkt.wall2wall0.Screen;
 import com.example.jkt.wall2wall0.Sound;
 import com.example.jkt.wall2wall0.falling_enemy;
-/*import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.plus.Plus;*/
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;
 
-public abstract class AndroidGame extends Activity implements Game { // GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+public abstract class AndroidGame extends Activity implements Game, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     AndroidFastRenderView renderView;
     Graphics graphics;
@@ -36,7 +36,7 @@ public abstract class AndroidGame extends Activity implements Game { // GoogleAp
     Screen screen;
     Music music;
     Sound sound;
-    //protected GoogleApiClient play_services_client;
+    public GoogleApiClient play_services_client;
     private static boolean mResolvingError = false;
     protected static final String STATE_RESOLVING_ERROR = "resolving_error";
 
@@ -69,11 +69,11 @@ public abstract class AndroidGame extends Activity implements Game { // GoogleAp
         screen = getInitScreen();
         setContentView(renderView);
 
-/*        GoogleApiClient play_services_client = new GoogleApiClient.Builder(this.getApplicationContext())
+        GoogleApiClient play_services_client = new GoogleApiClient.Builder(this.getApplicationContext())
                 .addApi(Plus.API)
                 .addScope(Plus.SCOPE_PLUS_LOGIN)
                 .setAccountName("users.account.name@gmail.com")
-                .build();*/
+                .build();
 
         mResolvingError = savedInstanceState != null
                 && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
@@ -142,15 +142,20 @@ public abstract class AndroidGame extends Activity implements Game { // GoogleAp
         return this.screen;
     }
 
-/*    @Override
+    @Override
     public void onStop() {
         super.onStop();
         play_services_client.disconnect();
-    }*/
+    }
 
-/*    @Override
+    @Override
      public void onStart() {
     super.onStart();
+    GoogleApiClient play_services_client = new GoogleApiClient.Builder(this.getApplicationContext())
+            .addApi(Plus.API)
+            .addScope(Plus.SCOPE_PLUS_LOGIN)
+            .setAccountName("users.account.name@gmail.com")
+            .build();
     play_services_client.connect();
-}*/
+}
 }

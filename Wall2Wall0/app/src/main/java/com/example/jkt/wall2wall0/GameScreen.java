@@ -54,6 +54,8 @@ public class GameScreen extends Screen {
     private float cam_scroll2;
     public boolean height_thresh1;
     public boolean height_thresh2;
+    private SpawnTimer enemySpawnTimer;
+    private ArrayList<SpawnEvent> enemySpawnEventArray;
 
     public AndroidMusic game_music;
     public AndroidSound death_sound;
@@ -64,7 +66,33 @@ public class GameScreen extends Screen {
     private int opacity_num = 5;
     private boolean reached_255_opacity = false;
     private boolean transition_incomplete = true;
+    private long start_time;
+    private long current_time;
+    private int enemy_count = 0;
+    
+    private final float ENEMY_Y_SPAWN_POS = -80f;
 
+    public float ENEMY_1_WIDTH=10f;
+    public float ENEMY_1_HEIGHT=10f;
+    public float ENEMY_2_WIDTH=10f;
+    public float ENEMY_2_HEIGHT=10f;
+    public float ENEMY_3_WIDTH=10f;
+    public float ENEMY_3_HEIGHT=10f;
+    public float ENEMY_4_WIDTH=10f;
+    public float ENEMY_4_HEIGHT=10f;
+    public float ENEMY_5_WIDTH=10f;
+    public float ENEMY_5_HEIGHT=10f;
+    public float ENEMY_6_WIDTH=10f;
+    public float ENEMY_6_HEIGHT=10f;
+    public float ENEMY_7_WIDTH=10f;
+    public float ENEMY_7_HEIGHT=10f;
+    public float ENEMY_8_WIDTH=10f;
+    public float ENEMY_8_HEIGHT=10f;
+    public float ENEMY_9_WIDTH=10f;
+    public float ENEMY_9_HEIGHT=10f;
+    public float ENEMY_10_WIDTH=10f;
+    public float ENEMY_10_HEIGHT=10f;
+    
     enum GameState {
         Ready, Running, Paused, GameOver
     }
@@ -77,6 +105,8 @@ public class GameScreen extends Screen {
     Paint paint2;
     Paint paint3;
     Paint paint4;
+
+
     public GameScreen(Game game) {
         super(game);
         Log.i("GameScreen", "start");
@@ -87,7 +117,7 @@ public class GameScreen extends Screen {
         this.enemy1 = new falling_enemy(200f, -30f, 60f, 60f, 0);
         this.enemy1added = false;
         this.randomGenerator = new Random();
-        this.enemy_list = new ArrayList<falling_enemy>(12);
+        this.enemy_list = new ArrayList<falling_enemy>(16);
         this.checkForOverlap = new OverlapTester();
         this.drawPlayer = true;
         this.previousSpawnTime = new long[1];
@@ -103,23 +133,58 @@ public class GameScreen extends Screen {
         this.delay_time = System.currentTimeMillis();
         this.cam_scroll1 = 0;
         this.cam_scroll2 = 0;
+        this.enemySpawnTimer = new SpawnTimer();
+        this.enemySpawnEventArray = new ArrayList<SpawnEvent>();
+
         this.timerHandler = new Handler(Looper.getMainLooper());
         this.timerRunnable = new Runnable() {
             @Override
             public void run() {
                 Log.i("GameScreen", "ready to spawn");
-                if (enemy_list.size() < 12) {
-                    falling_enemy later_enemy;
-                    int enemy_num = randomGenerator.nextInt(3);
-                    if (enemy_num == 0) {
-                        later_enemy = new falling_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 230) + 90), (-80f), 80, 80, enemy_num);
-                    } else if (enemy_num == 1) {
-                        later_enemy = new falling_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 230) + 90), (-80f), 64, 96, enemy_num);
-                    } else {
-                        later_enemy = new falling_enemy((float) (((randomGenerator.nextInt(10000) / 10000.0) * 230) + 90), (-80f), 96, 64, enemy_num);
-                    }
-                    enemy_list.add(later_enemy);
+                if (enemy_list.size() < 16) {
+                    enemy_count += 1;
+
                     previousSpawnTime[0] = System.currentTimeMillis();
+                    
+                    SpawnEvent current_spawn = enemySpawnEventArray.get(enemy_count);
+                    Log.i("GameScreen", "Spawning enemy number " +
+                            String.valueOf(current_spawn.enemy_type));
+                    
+                    if (current_spawn.enemy_type == 1) {
+                        LogEnemy new_enemy = new LogEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_1_WIDTH, ENEMY_1_HEIGHT, 1);
+                        enemy_list.add(new_enemy);
+                    } else if (current_spawn.enemy_type == 2) {
+                        BranchEnemy new_enemy = new BranchEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_2_WIDTH, ENEMY_2_HEIGHT, 2);
+                        enemy_list.add(new_enemy);
+                    } else if (current_spawn.enemy_type == 3) {
+                        AppleEnemy new_enemy = new AppleEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_3_WIDTH, ENEMY_3_HEIGHT, 3);
+                        enemy_list.add(new_enemy);
+                    } else if (current_spawn.enemy_type == 4) {
+                        MonkeyEnemy new_enemy = new MonkeyEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_4_WIDTH, ENEMY_4_HEIGHT, 4);
+                        enemy_list.add(new_enemy);
+                    } else if (current_spawn.enemy_type == 5) {
+                        BirdEnemy new_enemy = new BirdEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_5_WIDTH, ENEMY_5_HEIGHT, 5);
+                        enemy_list.add(new_enemy);
+                    } else if (current_spawn.enemy_type == 6) {
+                        CrateEnemy new_enemy = new CrateEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_6_WIDTH, ENEMY_6_HEIGHT, 6);
+                        enemy_list.add(new_enemy);
+                    } else if (current_spawn.enemy_type == 7) {
+                        WheelEnemy new_enemy = new WheelEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_7_WIDTH, ENEMY_7_HEIGHT, 7);
+                        enemy_list.add(new_enemy);
+                    } else if (current_spawn.enemy_type == 8) {
+                        HammerEnemy new_enemy = new HammerEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_8_WIDTH, ENEMY_8_HEIGHT, 8);
+                        enemy_list.add(new_enemy);
+                    } else if (current_spawn.enemy_type == 9) {
+                        RobotHeadEnemy new_enemy = new RobotHeadEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_9_WIDTH, ENEMY_9_HEIGHT, 9);
+                        enemy_list.add(new_enemy);
+                    } else if (current_spawn.enemy_type == 10) {
+                        DroneEnemy new_enemy = new DroneEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_10_WIDTH, ENEMY_10_HEIGHT, 10);
+                        enemy_list.add(new_enemy);
+                    } else {
+                        enemy_count -= 1;
+                        Log.i("GAMESCREEN", "SPAWNING FAILED");
+                    }
+
                 }
             }
         };
@@ -156,8 +221,9 @@ public class GameScreen extends Screen {
             game_music.setLooping(true);
             death_sound = (AndroidSound) game.getAudio().newSound("Realistic_Punch.wav");
         }
-
     }
+
+
 
     Graphics g = game.getGraphics();  //ONLY NEEDED IF DRAWING AT GAME START.
 
@@ -201,6 +267,9 @@ public class GameScreen extends Screen {
             // begins. state now becomes GameState.Running.
             // Now the updateRunning() method will be called!
 
+            this.enemySpawnTimer.createEnemyArray();
+            this.enemySpawnEventArray = enemySpawnTimer.parseEnemyArray();
+
             if (true) {
                 state = GameState.Running;
                 this.drawPlayer = true;
@@ -208,6 +277,7 @@ public class GameScreen extends Screen {
         }
 
         private void updateRunning(List<Input.TouchEvent> touchEvents, float deltaTime) {
+            current_time = System.currentTimeMillis();
 
             // 1. All touch input is handled here:
             Log.i("GameScreen", "update1, updateRunning started");
@@ -227,6 +297,7 @@ public class GameScreen extends Screen {
                         if (System.currentTimeMillis() - delay_time > 300) { // CHANGE 300 TO 2000
                             if (tutorial_time) {
                                 tutorial_time = false;
+                                start_time = System.currentTimeMillis();
                             } else {
                                 this.player1.start_movement();
                                 delay_time = 0;
@@ -377,10 +448,13 @@ public class GameScreen extends Screen {
             }
 
             Log.i("GameScreen", "update2, char and enemy");
+
             if (player1.first_jump) {
-                if (System.currentTimeMillis() - this.previousSpawnTime[0] > (randomGenerator.nextInt(250) + 1600)) {
-                    //this.timerRunnable.run(); // previousSpawnTime modified in runnable
+                if ((current_time - start_time) > 
+                        enemySpawnEventArray.get(enemy_count).enemy_spawn_time) {
+                    this.timerRunnable.run();
                 }
+                Log.i("TESTING", String.valueOf(System.currentTimeMillis()));
             }
 
             for (int i = 0; i < this.enemy_list.size(); i++) {
@@ -499,7 +573,7 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
             // Draw two sets of right walls
             g.drawImage(g.newImage("right_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 400, this.top_walls_y_pos);
             g.drawImage(g.newImage("right_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 400, this.bot_walls_y_pos);
-        } else if (current_level == 2) {  // REPLACE IMAGES ONCE OBT
+        } else if (current_level == 2) {  // REPLACE IMAGES ONCE ASSETS OBTAINED
             // Now game elements:
             // Draw two sets of scrolling backgrounds
             g.drawImage(g.newImage("background_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
@@ -563,6 +637,7 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
         this.time_paused = System.currentTimeMillis() - this.pause_time;
         this.game_music.seekBegin();
         this.previousSpawnTime[0] += time_paused;
+        this.start_time += time_paused;
         this.passes = 0;
         this.state = GameState.Running;
     }

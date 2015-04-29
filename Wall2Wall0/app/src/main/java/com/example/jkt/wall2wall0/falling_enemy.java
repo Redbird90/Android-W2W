@@ -4,7 +4,11 @@ package com.example.jkt.wall2wall0;
  * Created by JDK on 3/29/2015.
  */
 
+import android.util.Log;
+
+import com.example.jkt.wall2wall0.math.Circle;
 import com.example.jkt.wall2wall0.math.Rectangle;
+import com.example.jkt.wall2wall0.math.Shape;
 import com.example.jkt.wall2wall0.math.Vector2;
 
 /**         Dyn constructor:
@@ -22,23 +26,34 @@ public class falling_enemy extends DynamicGameObject {
     public float width;
     public float height;
     private final int enemy_num;
+    public Shape bounds;
 
     public boolean player_jumping = false;
 
     public falling_enemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height);
         this.enemy_num = enemy_num;
+        this.x_pos = x;
+        this.y_pos = y;
+        if (this.enemy_num == 7) {
+            this.bounds = new Circle(x, y, (width / 2));
+        } else {
+            this.bounds = new Rectangle(x, y, width, height);
+        }
     }
 
     public void update_enemy() {
         if (this.player_jumping) {
-            this.y_pos += (velocity.getY() + 1.5f);
-            this.x_pos += velocity.getX();
+            this.y_pos += (this.velocity.getY() + 1.5f);
+            this.x_pos += this.velocity.getX();
             this.update_bounds();
+            Log.i("falling_enemy1", String.valueOf(velocity.getY()));
         } else {
-            this.y_pos += velocity.getY();
-            this.x_pos += velocity.getX();
+
+            this.y_pos += this.velocity.getY();
+            this.x_pos += this.velocity.getX();
             this.update_bounds();
+            Log.i("falling_enemy2", String.valueOf(velocity.getY()));
         }
     }
 

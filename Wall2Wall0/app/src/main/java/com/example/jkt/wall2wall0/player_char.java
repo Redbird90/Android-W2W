@@ -23,7 +23,7 @@ public class player_char extends DynamicGameObject {
     public float y_pos;
     public float width;
     public float height;
-    public Rectangle player_rect = this.bounds;
+    public Rectangle player_rect;
     public float player_score;
     public float landing_y;
     public float vertex_y;
@@ -45,6 +45,7 @@ public class player_char extends DynamicGameObject {
         this.width = width;
         this.height = height;
         this.player_score = 0;
+        this.player_rect = new Rectangle(x-width/2, y-height/2, width, height);
     }
     public void start_movement() {
         if (!jumped) {
@@ -118,7 +119,7 @@ public class player_char extends DynamicGameObject {
                 }
                 this.velocity.set(0.0f, 0.0f);
                 this.char_direction = "none";
-                jumped = false;
+                this.jumped = false;
                 decreased_y = 0f;
             }
             if (this.x_pos > 360) {
@@ -129,7 +130,7 @@ public class player_char extends DynamicGameObject {
                 }
                 this.velocity.set(0.0f, 0.0f);
                 this.char_direction = "none";
-                jumped = false;
+                this.jumped = false;
                 decreased_y = 0f;
             }
 
@@ -140,7 +141,7 @@ public class player_char extends DynamicGameObject {
     }
 
     public void update_bounds() {
-        this.bounds.setLowerLeft(this.x_pos, this.y_pos);
+        this.player_rect.setLowerLeft(this.x_pos, this.y_pos);
     }
 
     public void stop_movement() {// CURRENTLY OBSOLETE

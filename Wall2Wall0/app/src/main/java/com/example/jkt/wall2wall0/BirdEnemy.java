@@ -6,12 +6,11 @@ import com.example.jkt.wall2wall0.math.Vector2;
  * Created by James on 4/16/2015.
  */
 public class BirdEnemy extends falling_enemy {
-
-    public Vector2 velocity = new Vector2(3f, 4.5f);
     private boolean start_moving_left;
 
     public BirdEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);
+        this.velocity = new Vector2(3f, 4.5f);
     }
 
     @Override

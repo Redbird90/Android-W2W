@@ -7,7 +7,6 @@ import com.example.jkt.wall2wall0.math.Vector2;
  */
 public class DroneEnemy extends falling_enemy {
 
-    public Vector2 velocity = new Vector2(2.5f, 5f);
     private boolean start_moving_left;
     private int num_of_updates = 0;
     private boolean stop_movement = false;
@@ -15,6 +14,7 @@ public class DroneEnemy extends falling_enemy {
 
     public DroneEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);
+        this.velocity = new Vector2(2.5f, 5f);
     }
 
     public void update_enemy() {

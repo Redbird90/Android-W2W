@@ -145,7 +145,7 @@ public abstract class AndroidGame extends Activity implements Game, GoogleApiCli
     @Override
     public void onStop() {
         super.onStop();
-        play_services_client.disconnect();
+        //play_services_client.disconnect();
     }
 
     @Override
@@ -156,6 +156,6 @@ public abstract class AndroidGame extends Activity implements Game, GoogleApiCli
             .addScope(Plus.SCOPE_PLUS_LOGIN)
             .setAccountName("users.account.name@gmail.com")
             .build();
-    play_services_client.connect();
+    //play_services_client.connect();
 }
 }

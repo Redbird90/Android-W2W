@@ -13,6 +13,7 @@ import com.example.jkt.wall2wall0.impl.AndroidGame;
 import com.example.jkt.wall2wall0.impl.AndroidImage;
 import com.example.jkt.wall2wall0.impl.AndroidMusic;
 import com.example.jkt.wall2wall0.impl.AndroidSound;
+import com.example.jkt.wall2wall0.math.Circle;
 import com.example.jkt.wall2wall0.math.OverlapTester;
 import com.example.jkt.wall2wall0.math.Rectangle;
 
@@ -69,29 +70,29 @@ public class GameScreen extends Screen {
     private long start_time;
     private long current_time;
     private int enemy_count = 0;
+    private boolean enemyArrayParsed;
     
-    private final float ENEMY_Y_SPAWN_POS = -80f;
+    private final float ENEMY_Y_SPAWN_POS = -180f;
 
-    public float ENEMY_1_WIDTH=10f;
-    public float ENEMY_1_HEIGHT=10f;
-    public float ENEMY_2_WIDTH=10f;
-    public float ENEMY_2_HEIGHT=10f;
-    public float ENEMY_3_WIDTH=10f;
-    public float ENEMY_3_HEIGHT=10f;
-    public float ENEMY_4_WIDTH=10f;
-    public float ENEMY_4_HEIGHT=10f;
-    public float ENEMY_5_WIDTH=10f;
-    public float ENEMY_5_HEIGHT=10f;
-    public float ENEMY_6_WIDTH=10f;
-    public float ENEMY_6_HEIGHT=10f;
-    public float ENEMY_7_WIDTH=10f;
-    public float ENEMY_7_HEIGHT=10f;
-    public float ENEMY_8_WIDTH=10f;
-    public float ENEMY_8_HEIGHT=10f;
-    public float ENEMY_9_WIDTH=10f;
-    public float ENEMY_9_HEIGHT=10f;
-    public float ENEMY_10_WIDTH=10f;
-    public float ENEMY_10_HEIGHT=10f;
+    public float ENEMY_1_WIDTH=80f;
+    public float ENEMY_1_HEIGHT=80f;
+    public float ENEMY_2_WIDTH=64f;
+    public float ENEMY_2_HEIGHT=96f;
+    public float ENEMY_3_WIDTH=96f;
+    public float ENEMY_3_HEIGHT=64f;
+    public float ENEMY_4_WIDTH=50f;
+    public float ENEMY_4_HEIGHT=50f;
+    public float ENEMY_5_WIDTH=60f;
+    public float ENEMY_5_HEIGHT=80f;
+    public float ENEMY_6_WIDTH=95f;
+    public float ENEMY_6_HEIGHT=95f;
+    public float ENEMY_7_RADIUS=40f;
+    public float ENEMY_8_WIDTH=80f;
+    public float ENEMY_8_HEIGHT=40f;
+    public float ENEMY_9_WIDTH=50f;
+    public float ENEMY_9_HEIGHT=30f;
+    public float ENEMY_10_WIDTH=85f;
+    public float ENEMY_10_HEIGHT=70f;
     
     enum GameState {
         Ready, Running, Paused, GameOver
@@ -114,7 +115,7 @@ public class GameScreen extends Screen {
         // Initialize game objects
 
         this.player1 = new player_char(80f, 576f, 40f, 55f);
-        this.enemy1 = new falling_enemy(200f, -30f, 60f, 60f, 0);
+        this.enemy1 = new LogEnemy(200f, -50f, ENEMY_1_WIDTH, ENEMY_1_HEIGHT, 1);
         this.enemy1added = false;
         this.randomGenerator = new Random();
         this.enemy_list = new ArrayList<falling_enemy>(16);
@@ -135,6 +136,7 @@ public class GameScreen extends Screen {
         this.cam_scroll2 = 0;
         this.enemySpawnTimer = new SpawnTimer();
         this.enemySpawnEventArray = new ArrayList<SpawnEvent>();
+        this.enemyArrayParsed = false;
 
         this.timerHandler = new Handler(Looper.getMainLooper());
         this.timerRunnable = new Runnable() {
@@ -151,6 +153,7 @@ public class GameScreen extends Screen {
                             String.valueOf(current_spawn.enemy_type));
                     
                     if (current_spawn.enemy_type == 1) {
+                        Log.i("TESTING!", String.valueOf(current_spawn.enemy_x_location));
                         LogEnemy new_enemy = new LogEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_1_WIDTH, ENEMY_1_HEIGHT, 1);
                         enemy_list.add(new_enemy);
                     } else if (current_spawn.enemy_type == 2) {
@@ -169,7 +172,7 @@ public class GameScreen extends Screen {
                         CrateEnemy new_enemy = new CrateEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_6_WIDTH, ENEMY_6_HEIGHT, 6);
                         enemy_list.add(new_enemy);
                     } else if (current_spawn.enemy_type == 7) {
-                        WheelEnemy new_enemy = new WheelEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_7_WIDTH, ENEMY_7_HEIGHT, 7);
+                        WheelEnemy new_enemy = new WheelEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_7_RADIUS*2, ENEMY_7_RADIUS*2, 7);
                         enemy_list.add(new_enemy);
                     } else if (current_spawn.enemy_type == 8) {
                         HammerEnemy new_enemy = new HammerEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_8_WIDTH, ENEMY_8_HEIGHT, 8);
@@ -184,7 +187,6 @@ public class GameScreen extends Screen {
                         enemy_count -= 1;
                         Log.i("GAMESCREEN", "SPAWNING FAILED");
                     }
-
                 }
             }
         };
@@ -267,8 +269,12 @@ public class GameScreen extends Screen {
             // begins. state now becomes GameState.Running.
             // Now the updateRunning() method will be called!
 
-            this.enemySpawnTimer.createEnemyArray();
-            this.enemySpawnEventArray = enemySpawnTimer.parseEnemyArray();
+
+            if (!this.enemyArrayParsed) {
+                this.enemySpawnTimer.createEnemyArray();
+                this.enemySpawnEventArray = enemySpawnTimer.parseEnemyArray();
+                this.enemyArrayParsed = true;
+            }
 
             if (true) {
                 state = GameState.Running;
@@ -294,7 +300,7 @@ public class GameScreen extends Screen {
                 if (currentEvent.type == Input.TouchEvent.TOUCH_UP) {
                     // Screen pressed in game bounds
                     if (inBounds(currentEvent, 0, 180, 770, 860)) {
-                        if (System.currentTimeMillis() - delay_time > 300) { // CHANGE 300 TO 2000
+                        if (System.currentTimeMillis() - delay_time > 2000) {
                             if (tutorial_time) {
                                 tutorial_time = false;
                                 start_time = System.currentTimeMillis();
@@ -324,15 +330,19 @@ public class GameScreen extends Screen {
                 }
                 delay_time = (long) 0;
             }
+
+            // ADD FIRST ENEMY AT CERTAIN SPOT; KEEP OR REMOVE?
             if (player1.first_jump) {
                 if (!enemy1added) {
                     this.enemy_list.add(this.enemy1);
+                    this.enemy_count += 1;
                     Log.i("GameScreen", "first enemy spawned");
                     this.enemy1added = true;
                     this.previousSpawnTime[0] = System.currentTimeMillis();
                 }
             }
 
+            // OBSOLETE?
             if (this.player1.getY_pos() > 526) {
 
             }
@@ -369,17 +379,17 @@ public class GameScreen extends Screen {
             for (int i = 0; i < this.enemy_list.size(); i++) {
                 // Speed up blocks when player jumps
                 if (this.player1.jumped) {
-                    Log.i("TESTING", "loop1");
                     if (this.enemy_list.get(i).player_jumping == false) {
                         this.enemy_list.get(i).setPlayer_jumping(true);
                     }
-                    this.enemy_list.get(i).update_enemy();
+                    //this.enemy_list.get(i).update_enemy();
+                    Log.i("TESTING EN1", String.valueOf(this.enemy_list.get(i).getY_pos()));
                 } else {
-                    Log.i("TESTING", "loop2");
                     if (this.enemy_list.get(i).player_jumping == true) {
                         this.enemy_list.get(i).setPlayer_jumping(false);
                     }
-                    this.enemy_list.get(i).update_enemy();
+                    //this.enemy_list.get(i).update_enemy();
+                    Log.i("TESTING EN2", String.valueOf(this.enemy_list.get(i).getY_pos()));
                 }
                 // Speed up blocks when player is too high
                 if (this.height_thresh1) {
@@ -388,25 +398,27 @@ public class GameScreen extends Screen {
                     }
                     this.enemy_list.get(i).setY_pos(this.enemy_list.get(i).getY_pos() + 2.0f);
                 }
+                this.enemy_list.get(i).update_enemy();
             }
-            Log.i("CAM", String.valueOf(this.cam_scroll1) + "," + String.valueOf(this.cam_scroll2));
+
+            //Log.i("CAM", String.valueOf(this.cam_scroll1) + "," + String.valueOf(this.cam_scroll2));
             if (this.cam_scroll1 != 0 && this.cam_scroll2 != 0) {
                 this.top_backg_y_pos += ((this.cam_scroll1 + this.cam_scroll2) - 2.0f);
                 this.bot_backg_y_pos += ((this.cam_scroll1 + this.cam_scroll2) - 2.0f);
             }
-            Log.i("TESTING1A", String.valueOf(this.top_backg_y_pos) + "," + String.valueOf(this.bot_backg_y_pos));
-            Log.i("TESTING2A", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
+            //Log.i("TESTING1A", String.valueOf(this.top_backg_y_pos) + "," + String.valueOf(this.bot_backg_y_pos));
+            //Log.i("TESTING2A", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
 
             this.top_walls_y_pos += (this.cam_scroll1 + this.cam_scroll2);
             this.bot_walls_y_pos += (this.cam_scroll1 + this.cam_scroll2);
 
 
-            if (player1.jumped) {
+            if (this.player1.jumped) {
 /*                Log.i("TESTING BACKG", (String.valueOf(top_backg_y_pos) + "," + String.valueOf(bot_backg_y_pos)));
                 Log.i("TESTING WALLS", (String.valueOf(top_walls_y_pos) + "," + String.valueOf(bot_walls_y_pos)));*/
                 // Handle background scrolling as player is jumping
-                Log.i("TESTING1B", String.valueOf(this.top_backg_y_pos) + "," + String.valueOf(this.bot_backg_y_pos));
-                Log.i("TESTING2B", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
+                //Log.i("TESTING1B", String.valueOf(this.top_backg_y_pos) + "," + String.valueOf(this.bot_backg_y_pos));
+                //Log.i("TESTING2B", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
                 this.top_backg_y_pos += 4.0f;
                 this.bot_backg_y_pos += 4.0f;
                 // Handle walls scrolling as player is jumping
@@ -434,15 +446,26 @@ public class GameScreen extends Screen {
 
             for (int i = 0; i < this.enemy_list.size(); i++) {
                 if (this.player1.dying == false) {
-                    if (this.checkForOverlap.overlapRectangles(this.player1.player_rect, this.enemy_list.get(i).bounds)) {
+                    if (this.enemy_list.get(i).getEnemy_num() == 7) {
+                        if (this.checkForOverlap.overlapCircleRectangle((Circle) this.enemy_list.get(i).bounds, this.player1.player_rect)) {
+                            this.player1.dying = true;
+                            Log.i("OVERLAP FOUND", String.valueOf(this.player1.getX_pos()));
+                            // CHANGE TO DIFF SOUND EFFECT
+                            if (Settings.soundEnabled) {
+                                death_sound.play(1f);
+                            }
+                            break;
+                        }
+                    } else {
+                    if (this.checkForOverlap.overlapRectangles(this.player1.player_rect, (Rectangle) this.enemy_list.get(i).bounds)) {
                         this.player1.dying = true;
                         Log.i("OVERLAP FOUND", String.valueOf(this.player1.getX_pos()));
-                        Log.i("OVERLAP", String.valueOf(this.enemy_list.get(i).bounds.width));
                         // CHANGE TO DIFF SOUND EFFECT
                         if (Settings.soundEnabled) {
                             death_sound.play(1f);
                         }
                         break;
+                        }
                     }
                 }
             }
@@ -451,7 +474,7 @@ public class GameScreen extends Screen {
 
             if (player1.first_jump) {
                 if ((current_time - start_time) > 
-                        enemySpawnEventArray.get(enemy_count).enemy_spawn_time) {
+                        (enemySpawnEventArray.get(enemy_count).enemy_spawn_time)*1000) {
                     this.timerRunnable.run();
                 }
                 Log.i("TESTING", String.valueOf(System.currentTimeMillis()));
@@ -589,27 +612,27 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
         }
 
         for (int i = 0; i < this.enemy_list.size(); i++) {
-            falling_enemy current_enemy_draw = this.enemy_list.get(i);
-            if (current_enemy_draw.getEnemy_num() == 0) {
+            falling_enemy current_enemy_draw = (falling_enemy) this.enemy_list.get(i);
+            if (current_enemy_draw.getEnemy_num() == 1) {
                 g.drawImage(g.newImage("enemy_image1_larger.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
-            } else if (current_enemy_draw.getEnemy_num() == 1) {
-                g.drawImage(g.newImage("enemy_image2.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             } else if (current_enemy_draw.getEnemy_num() == 2) {
-                g.drawImage(g.newImage("enemy_image3.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
+                g.drawImage(g.newImage("enemy_image2.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             } else if (current_enemy_draw.getEnemy_num() == 3) {
-
+                g.drawImage(g.newImage("enemy_image3.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             } else if (current_enemy_draw.getEnemy_num() == 4) {
-
+                g.drawImage(g.newImage("enemy_image4.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             } else if (current_enemy_draw.getEnemy_num() == 5) {
-
+                g.drawImage(g.newImage("enemy_image5.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             } else if (current_enemy_draw.getEnemy_num() == 6) {
-
+                g.drawImage(g.newImage("enemy_image6.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             } else if (current_enemy_draw.getEnemy_num() == 7) {
-
+                g.drawImage(g.newImage("enemy_image7.png", Graphics.ImageFormat.RGB565), (int) (this.enemy_list.get(i).getX_pos()-56.57f), (int) (this.enemy_list.get(i).getY_pos()-56.57));
             } else if (current_enemy_draw.getEnemy_num() == 8) {
-
+                g.drawImage(g.newImage("enemy_image8.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
+            } else if (current_enemy_draw.getEnemy_num() == 9) {
+                g.drawImage(g.newImage("enemy_image9.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             } else {
-
+                g.drawImage(g.newImage("enemy_image10.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             }
         }
         g.drawImage(g.newImage("player_image.png", Graphics.ImageFormat.RGB565), (int) this.player1.getX_pos(), (int) this.player1.getY_pos());

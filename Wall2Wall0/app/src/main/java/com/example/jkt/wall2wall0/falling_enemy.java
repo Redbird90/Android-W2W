@@ -35,30 +35,26 @@ public class falling_enemy extends DynamicGameObject {
         this.enemy_num = enemy_num;
         this.x_pos = x;
         this.y_pos = y;
-        if (this.enemy_num == 7) {
-            this.bounds = new Circle(x, y, (width / 2));
+/*        if (this.enemy_num == 7) {
+            this.bounds = new Circle(30, y, (width / 2));
         } else {
             this.bounds = new Rectangle(x, y, width, height);
-        }
+        }*/
     }
 
     public void update_enemy() {
         if (this.player_jumping) {
             this.y_pos += (this.velocity.getY() + 1.5f);
             this.x_pos += this.velocity.getX();
-            this.update_bounds();
-            Log.i("falling_enemy1", String.valueOf(velocity.getY()));
         } else {
-
             this.y_pos += this.velocity.getY();
             this.x_pos += this.velocity.getX();
-            this.update_bounds();
-            Log.i("falling_enemy2", String.valueOf(velocity.getY()));
         }
+        this.update_bounds();
     }
 
     public int getEnemy_num() {
-        return enemy_num;
+        return this.enemy_num;
     }
 
     public void update_bounds() {
@@ -70,7 +66,7 @@ public class falling_enemy extends DynamicGameObject {
     }
 
     public float getX_pos() {
-        return x_pos;
+        return this.x_pos;
     }
 
     public void setX_pos(float x_pos) {
@@ -78,7 +74,7 @@ public class falling_enemy extends DynamicGameObject {
     }
 
     public float getY_pos() {
-        return y_pos;
+        return this.y_pos;
     }
 
     public void setY_pos(float y_pos) {

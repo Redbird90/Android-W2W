@@ -11,4 +11,8 @@ public class Circle extends Shape {
         this.center.set(x,y);
         this.radius = radius;
     }
+
+    public void setCenter(float x, float y) {
+        this.center.set(x, y);
+    }
 }

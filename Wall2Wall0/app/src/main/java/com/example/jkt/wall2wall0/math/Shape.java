@@ -7,7 +7,6 @@ public class Shape {
 
     public float x;
     public float y;
-    public float center;
 
     public Shape(float x, float y) {
         this.x = x;
@@ -15,6 +14,10 @@ public class Shape {
     }
 
     public void setLowerLeft(float x, float y) {
+
+    }
+
+    public void setCenter(float x, float y) {
 
     }
 }

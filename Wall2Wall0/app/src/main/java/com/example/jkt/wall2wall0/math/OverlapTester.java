@@ -1,5 +1,7 @@
 package com.example.jkt.wall2wall0.math;
 
+import android.util.Log;
+
 public class OverlapTester {
     public static boolean overlapCircles(Circle c1, Circle c2) {
         float distance = c1.center.distSquared(c2.center);
@@ -20,6 +22,8 @@ public class OverlapTester {
     public static boolean overlapCircleRectangle(Circle c, Rectangle r) {
         float closestX = c.center.x;
         float closestY = c.center.y;
+        Log.i("OverlapTester", String.valueOf(closestX));
+        Log.i("OverlapTester", String.valueOf(closestY));
         
         if(c.center.x < r.lowerLeft.x) {
             closestX = r.lowerLeft.x; 

@@ -46,6 +46,8 @@ public class GameScreen extends Screen {
     private int currentScore;
     private boolean newHighScore;
     private long menu_delay;
+    private ArrayList<Object> tile_x_positions;
+    private ArrayList<Object> tile_y_positions;
     private int top_walls_y_pos;
     private int bot_walls_y_pos;
     private int top_backg_y_pos;
@@ -71,7 +73,19 @@ public class GameScreen extends Screen {
     private long current_time;
     private int enemy_count = 0;
     private boolean enemyArrayParsed;
-    
+    private boolean tileArrayRemakeNeeded;
+    private boolean first_tileArrayRemake;
+    private int forest_tree_1_y_pos;
+    private int forest_tree_2_y_pos;
+    private int forest_tree_3_y_pos;
+    private int forest_tree_4_y_pos;
+    private int forest_branch_reversed_x_pos;
+    private int forest_branch_1_y_pos;
+    private int forest_branch_normal_x_pos;
+    private int forest_branch_2_y_pos;
+    private int forest_branch_3_y_pos;
+    private int forest_branch_4_y_pos;
+
     private final float ENEMY_Y_SPAWN_POS = -110f;
 
     public float ENEMY_1_WIDTH=80f;
@@ -93,7 +107,11 @@ public class GameScreen extends Screen {
     public float ENEMY_9_HEIGHT=30f;
     public float ENEMY_10_WIDTH=85f;
     public float ENEMY_10_HEIGHT=70f;
-    
+
+    private int LEFT_WALL_X_POSITION = -21;
+    private int RIGHT_WALL_X_POSITION = 393;
+
+
     enum GameState {
         Ready, Running, Paused, GameOver
     }
@@ -137,6 +155,20 @@ public class GameScreen extends Screen {
         this.enemySpawnTimer = new SpawnTimer();
         this.enemySpawnEventArray = new ArrayList<SpawnEvent>();
         this.enemyArrayParsed = false;
+        this.tile_x_positions = new ArrayList<>(10);
+        this.tile_y_positions = new ArrayList<>(10);
+        this.tileArrayRemakeNeeded = false;
+        this.first_tileArrayRemake = true;
+        this.forest_tree_1_y_pos = -1189;
+        this.forest_tree_2_y_pos = -689;
+        this.forest_tree_3_y_pos = -185;
+        this.forest_tree_4_y_pos = 315;
+        this.forest_branch_reversed_x_pos = 175;
+        this.forest_branch_normal_x_pos = 305;
+        this.forest_branch_1_y_pos = -740;
+        this.forest_branch_2_y_pos = -292;
+        this.forest_branch_3_y_pos = 60;
+        this.forest_branch_4_y_pos = 508;
 
         this.timerHandler = new Handler(Looper.getMainLooper());
         this.timerRunnable = new Runnable() {
@@ -230,7 +262,7 @@ public class GameScreen extends Screen {
     @Override
     public void update(float deltaTime) {
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
-        Log.i("FPSCOUNTER", String.valueOf((System.currentTimeMillis() - this.fpscounter)*(1.000/1.000)));
+        Log.i("FPSCOUNTER", String.valueOf(((System.currentTimeMillis() - this.fpscounter)*(1.000/1.000))*100000));
         this.fpscounter = System.currentTimeMillis();
 
         // We have four separate update methods in this example.
@@ -273,6 +305,8 @@ public class GameScreen extends Screen {
                 this.enemySpawnEventArray = enemySpawnTimer.parseEnemyArray();
                 this.enemyArrayParsed = true;
             }
+
+
 
             if (true) {
                 state = GameState.Running;
@@ -406,6 +440,18 @@ public class GameScreen extends Screen {
             if (this.cam_scroll1 != 0 && this.cam_scroll2 != 0) {
                 this.top_backg_y_pos += ((this.cam_scroll1 + this.cam_scroll2) - 2.0f);
                 this.bot_backg_y_pos += ((this.cam_scroll1 + this.cam_scroll2) - 2.0f);
+                for (int i = 0; i < 10; i++) {
+                    this.tile_y_positions.set(i, ((int) this.tile_y_positions.get(i) + (((int) this.cam_scroll1 + (int) this.cam_scroll2) - 2)));
+                }
+                this.forest_tree_1_y_pos += (((int) this.cam_scroll1 + (int) this.cam_scroll2) - 2);
+                this.forest_tree_2_y_pos += (((int) this.cam_scroll1 + (int) this.cam_scroll2) - 2);
+                this.forest_tree_3_y_pos += (((int) this.cam_scroll1 + (int) this.cam_scroll2) - 2);
+                this.forest_tree_4_y_pos += (((int) this.cam_scroll1 + (int) this.cam_scroll2) - 2);
+
+                this.forest_branch_1_y_pos += (((int) this.cam_scroll1 + (int) this.cam_scroll2) - 2);
+                this.forest_branch_2_y_pos += (((int) this.cam_scroll1 + (int) this.cam_scroll2) - 2);
+                this.forest_branch_3_y_pos += (((int) this.cam_scroll1 + (int) this.cam_scroll2) - 2);
+                this.forest_branch_4_y_pos += (((int) this.cam_scroll1 + (int) this.cam_scroll2) - 2);
             }
             //Log.i("TESTING1A", String.valueOf(this.top_backg_y_pos) + "," + String.valueOf(this.bot_backg_y_pos));
             //Log.i("TESTING2A", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
@@ -422,12 +468,105 @@ public class GameScreen extends Screen {
                 //Log.i("TESTING2B", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
                 this.top_backg_y_pos += 4.0f;
                 this.bot_backg_y_pos += 4.0f;
+                for (int i = 0; i < 10; i++) {
+                    this.tile_y_positions.set(i, ((int) this.tile_y_positions.get(i) + 4));
+                }
+                this.forest_tree_1_y_pos += 4;
+                this.forest_tree_2_y_pos += 4;
+                this.forest_tree_3_y_pos += 4;
+                this.forest_tree_4_y_pos += 4;
+
+                this.forest_branch_1_y_pos += 4;
+                this.forest_branch_2_y_pos += 4;
+                this.forest_branch_3_y_pos += 4;
+                this.forest_branch_4_y_pos += 4;
                 // Handle walls scrolling as player is jumping
                 this.top_walls_y_pos += 7.0f;
                 this.bot_walls_y_pos += 7.0f;
             }
 
             // Redraw background and walls once they reach the bottom
+/*            if ((int) this.tile_y_positions.get(2) >= 256){
+                this.arrayRemakeNeeded = true;
+        }*/
+
+            if (this.tileArrayRemakeNeeded || this.first_tileArrayRemake) {
+                if (this.first_tileArrayRemake) {
+                    this.tile_x_positions.add(0, 0);
+                    this.tile_x_positions.add(1, 256);
+                    this.tile_x_positions.add(2, 0);
+                    this.tile_x_positions.add(3, 256);
+                    this.tile_x_positions.add(4, 0);
+                    this.tile_x_positions.add(5, 256);
+                    this.tile_x_positions.add(6, 0);
+                    this.tile_x_positions.add(7, 256);
+                    this.tile_x_positions.add(8, 0);
+                    this.tile_x_positions.add(9, 256);
+
+                    this.tile_y_positions.add(0, -256);
+                    this.tile_y_positions.add(1, -256);
+                    this.tile_y_positions.add(2, 0);
+                    this.tile_y_positions.add(3, 0);
+                    this.tile_y_positions.add(4, 256);
+                    this.tile_y_positions.add(5, 256);
+                    this.tile_y_positions.add(6, 512);
+                    this.tile_y_positions.add(7, 512);
+                    this.tile_y_positions.add(8, 768);
+                    this.tile_y_positions.add(9, 768);
+
+                    this.first_tileArrayRemake = false;
+                } else {
+                    this.tile_x_positions.set(0, 0);
+                    this.tile_x_positions.set(1, 256);
+                    this.tile_x_positions.set(2, 0);
+                    this.tile_x_positions.set(3, 256);
+                    this.tile_x_positions.set(4, 0);
+                    this.tile_x_positions.set(5, 256);
+                    this.tile_x_positions.set(6, 0);
+                    this.tile_x_positions.set(7, 256);
+                    this.tile_x_positions.set(8, 0);
+                    this.tile_x_positions.set(9, 256);
+
+                    this.tile_y_positions.set(0, -256);
+                    this.tile_y_positions.set(1, -256);
+                    this.tile_y_positions.set(2, 0);
+                    this.tile_y_positions.set(3, 0);
+                    this.tile_y_positions.set(4, 256);
+                    this.tile_y_positions.set(5, 256);
+                    this.tile_y_positions.set(6, 512);
+                    this.tile_y_positions.set(7, 512);
+                    this.tile_y_positions.set(8, 768);
+                    this.tile_y_positions.set(9, 768);
+
+                    this.tileArrayRemakeNeeded = false;
+                }
+            }
+
+            if ((int) this.tile_y_positions.get(2) >= 256) {
+                this.tileArrayRemakeNeeded = true;
+            }
+
+            if (this.forest_tree_4_y_pos >= 817) {
+                this.forest_tree_4_y_pos = -1191;
+            } else if (this.forest_tree_3_y_pos >= 817) {
+                this.forest_tree_3_y_pos = -1191;
+            } else if (this.forest_tree_2_y_pos >= 817) {
+                this.forest_tree_2_y_pos = -1191;
+            } else if (this.forest_tree_1_y_pos >= 817) {
+                this.forest_tree_1_y_pos = -1191;
+            }
+
+            if (this.forest_branch_4_y_pos >= 1308) {
+                this.forest_branch_4_y_pos = -292;
+            } else if (this.forest_branch_3_y_pos >= 860) {
+                this.forest_branch_3_y_pos = -740;
+            } else if (this.forest_branch_2_y_pos >= 1308) {
+                this.forest_branch_2_y_pos = -292;
+            } else if (this.forest_branch_1_y_pos >= 860) {
+                this.forest_branch_1_y_pos = -740;
+            }
+
+
             if (this.bot_backg_y_pos > 800) {
                 this.bot_backg_y_pos = -800;
                 this.top_backg_y_pos = 0;
@@ -590,12 +729,26 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
         if (current_level == 1) {
             // Now game elements:
             // Draw two sets of scrolling backgrounds
-            g.drawImage(g.newImage("background_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
-            g.drawImage(g.newImage("background_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.bot_backg_y_pos);
+/*            g.drawImage(g.newImage("background_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
+            g.drawImage(g.newImage("background_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.bot_backg_y_pos);*/
+            for (int i=0; i < 10; i++) {
+                g.drawImage(g.newImage("SceneOne_Tile.png", Graphics.ImageFormat.RGB565), (int) this.tile_x_positions.get(i), (int) this.tile_y_positions.get(i));
+            }
+
+            g.drawImage(g.newImage("SceneOne_MidGround_BranchReversed.png", Graphics.ImageFormat.RGB565), this.forest_branch_reversed_x_pos, this.forest_branch_1_y_pos);
+            g.drawImage(g.newImage("SceneOne_MidGround_BranchNormal.png", Graphics.ImageFormat.RGB565), this.forest_branch_normal_x_pos, this.forest_branch_2_y_pos);
+            g.drawImage(g.newImage("SceneOne_MidGround_BranchReversed.png", Graphics.ImageFormat.RGB565), this.forest_branch_reversed_x_pos, this.forest_branch_3_y_pos);
+            g.drawImage(g.newImage("SceneOne_MidGround_BranchNormal.png", Graphics.ImageFormat.RGB565), this.forest_branch_normal_x_pos, this.forest_branch_4_y_pos);
+
+            g.drawImage(g.newImage("SceneOne_MidGround_LogReversed.png", Graphics.ImageFormat.RGB565), 251, this.forest_tree_1_y_pos);
+            g.drawImage(g.newImage("SceneOne_MidGround_LogNormal.png", Graphics.ImageFormat.RGB565), 243, this.forest_tree_2_y_pos);
+            g.drawImage(g.newImage("SceneOne_MidGround_LogReversed.png", Graphics.ImageFormat.RGB565), 251, this.forest_tree_3_y_pos);
+            g.drawImage(g.newImage("SceneOne_MidGround_LogNormal.png", Graphics.ImageFormat.RGB565), 243, this.forest_tree_4_y_pos);
+
             //Log.i("TESTING1", String.valueOf(this.top_backg_y_pos) + "," + String.valueOf(this.bot_backg_y_pos));
-            //Log.i("TESTING2", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
-            // Draw two sets of left walls
-            g.drawImage(g.newImage("left_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.top_walls_y_pos);
+                    //Log.i("TESTING2", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
+                    // Draw two sets of left walls
+                    g.drawImage(g.newImage("left_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.top_walls_y_pos);
             g.drawImage(g.newImage("left_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.bot_walls_y_pos);
             // Draw two sets of right walls
             g.drawImage(g.newImage("right_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 400, this.top_walls_y_pos);

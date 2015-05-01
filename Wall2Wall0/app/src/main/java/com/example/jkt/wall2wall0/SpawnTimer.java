@@ -232,7 +232,7 @@ public class SpawnTimer {
                     enemyArray.get(i).replace("(", "").length();
             ArrayList<String> time_enemy_line_info = new ArrayList();
             int end_index = enemyArray.get(i).length();
-            Log.i("SpawnTimer1", String.valueOf(possible_enemies));
+            //Log.i("SpawnTimer1", String.valueOf(possible_enemies));
 
             s_location = enemyArray.get(i).indexOf("s");
             time_value = Integer.parseInt
@@ -249,7 +249,7 @@ public class SpawnTimer {
                 time_enemy_line_info.add(current_enemy_info);
                 starting_index = parenth_end + 1;
 
-                Log.i("SpawnTimer2", String.valueOf(parenth_start));
+                //Log.i("SpawnTimer2", String.valueOf(parenth_start));
                 Log.i(String.valueOf(starting_index), current_enemy_info);
             }
 
@@ -257,19 +257,19 @@ public class SpawnTimer {
 
                 if (time_enemy_line_info.get(y).length()>3) {
 
-                    Log.i("SpawnTimer3", "Starting addition");
+                    //Log.i("SpawnTimer3", "Starting addition");
                     enemy_type = Integer.parseInt
                             (time_enemy_line_info.get(y).substring(0,2));
                     enemy_location = Integer.parseInt
                             (time_enemy_line_info.get(y).substring(3,6));
 
-                    Log.i("EnemyATTR", (String.valueOf(enemy_type)+String.valueOf(enemy_location)+String.valueOf(time_value)));
+                    //Log.i("EnemyATTR", (String.valueOf(enemy_type)+String.valueOf(enemy_location)+String.valueOf(time_value)));
 
                     SpawnEvent enemy_to_create =
                             new SpawnEvent(enemy_type, enemy_location, time_value);
 
                     spawnEventArray.add(enemy_to_create);
-                    Log.i("SpawnTimer4", "Enemy ADDED"+String.valueOf(time_value));
+                    //Log.i("SpawnTimer4", "Enemy ADDED"+String.valueOf(time_value));
                 }
             }
         }

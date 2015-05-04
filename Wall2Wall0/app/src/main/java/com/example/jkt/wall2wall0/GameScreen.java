@@ -29,6 +29,7 @@ import java.util.TimerTask;
  * Created by JDK on 3/30/2015.
  */
 public class GameScreen extends Screen {
+
     private player_char player1;
     private falling_enemy enemy1;
     private boolean enemy1added;
@@ -52,6 +53,8 @@ public class GameScreen extends Screen {
     private int bot_walls_y_pos;
     private int top_backg_y_pos;
     private int bot_backg_y_pos;
+    private int bot_forestbgtree_y_pos;
+    private int top_forestbgtree_y_pos;
     private float fpscounter;
     private float cam_scroll1;
     private float cam_scroll2;
@@ -108,8 +111,8 @@ public class GameScreen extends Screen {
     public float ENEMY_10_WIDTH=85f;
     public float ENEMY_10_HEIGHT=70f;
 
-    private int LEFT_WALL_X_POSITION = -21;
-    private int RIGHT_WALL_X_POSITION = 393;
+    private int LEFT_WALL_X_POSITION = 0;
+    private int RIGHT_WALL_X_POSITION = 390;
 
 
     enum GameState {
@@ -144,10 +147,12 @@ public class GameScreen extends Screen {
         this.currentScore = 0;
         this.newHighScore = false;
         this.highScore = Settings.getHighScore();
-        this.top_backg_y_pos = -800;
-        this.bot_backg_y_pos = 0;
-        this.top_walls_y_pos = -800;
-        this.bot_walls_y_pos = 0;
+        this.top_backg_y_pos = -1248; // FOR LEVEL 1
+        this.bot_backg_y_pos = -224;
+        this.top_walls_y_pos = -812;
+        this.bot_walls_y_pos = -6;
+        this.bot_forestbgtree_y_pos = -195;
+        this.top_forestbgtree_y_pos = -1190;
         this.fpscounter = 0;
         this.delay_time = System.currentTimeMillis();
         this.cam_scroll1 = 0;
@@ -440,7 +445,11 @@ public class GameScreen extends Screen {
             if (this.cam_scroll1 != 0 && this.cam_scroll2 != 0) {
                 this.top_backg_y_pos += ((this.cam_scroll1 + this.cam_scroll2) - 2.0f);
                 this.bot_backg_y_pos += ((this.cam_scroll1 + this.cam_scroll2) - 2.0f);
-                for (int i = 0; i < 10; i++) {
+                this.bot_forestbgtree_y_pos += ((this.cam_scroll1 + this.cam_scroll2) - 2.0f);
+                this.top_forestbgtree_y_pos += ((this.cam_scroll1 + this.cam_scroll2) - 2.0f);
+
+                //START OBS
+/*                for (int i = 0; i < 10; i++) {
                     this.tile_y_positions.set(i, ((int) this.tile_y_positions.get(i) + (((int) this.cam_scroll1 + (int) this.cam_scroll2) - 2)));
                 }
                 this.forest_tree_1_y_pos += (((int) this.cam_scroll1 + (int) this.cam_scroll2) - 2);
@@ -451,7 +460,9 @@ public class GameScreen extends Screen {
                 this.forest_branch_1_y_pos += (((int) this.cam_scroll1 + (int) this.cam_scroll2) - 2);
                 this.forest_branch_2_y_pos += (((int) this.cam_scroll1 + (int) this.cam_scroll2) - 2);
                 this.forest_branch_3_y_pos += (((int) this.cam_scroll1 + (int) this.cam_scroll2) - 2);
-                this.forest_branch_4_y_pos += (((int) this.cam_scroll1 + (int) this.cam_scroll2) - 2);
+                this.forest_branch_4_y_pos += (((int) this.cam_scroll1 + (int) this.cam_scroll2) - 2);*/
+                //END OBS
+
             }
             //Log.i("TESTING1A", String.valueOf(this.top_backg_y_pos) + "," + String.valueOf(this.bot_backg_y_pos));
             //Log.i("TESTING2A", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
@@ -468,10 +479,14 @@ public class GameScreen extends Screen {
                 //Log.i("TESTING2B", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
                 this.top_backg_y_pos += 4.0f;
                 this.bot_backg_y_pos += 4.0f;
-                for (int i = 0; i < 10; i++) {
+                this.bot_forestbgtree_y_pos += 4.0f;
+                this.top_forestbgtree_y_pos += 4.0f;
+/*                for (int i = 0; i < 10; i++) {
                     this.tile_y_positions.set(i, ((int) this.tile_y_positions.get(i) + 4));
-                }
-                this.forest_tree_1_y_pos += 4;
+                }*/
+
+                //START OBS
+/*                this.forest_tree_1_y_pos += 4;
                 this.forest_tree_2_y_pos += 4;
                 this.forest_tree_3_y_pos += 4;
                 this.forest_tree_4_y_pos += 4;
@@ -479,10 +494,11 @@ public class GameScreen extends Screen {
                 this.forest_branch_1_y_pos += 4;
                 this.forest_branch_2_y_pos += 4;
                 this.forest_branch_3_y_pos += 4;
-                this.forest_branch_4_y_pos += 4;
+                this.forest_branch_4_y_pos += 4;*/
                 // Handle walls scrolling as player is jumping
                 this.top_walls_y_pos += 7.0f;
                 this.bot_walls_y_pos += 7.0f;
+                //END OBS
             }
 
             // Redraw background and walls once they reach the bottom
@@ -490,7 +506,7 @@ public class GameScreen extends Screen {
                 this.arrayRemakeNeeded = true;
         }*/
 
-            if (this.tileArrayRemakeNeeded || this.first_tileArrayRemake) {
+/*            if (this.tileArrayRemakeNeeded || this.first_tileArrayRemake) {
                 if (this.first_tileArrayRemake) {
                     this.tile_x_positions.add(0, 0);
                     this.tile_x_positions.add(1, 256);
@@ -544,9 +560,9 @@ public class GameScreen extends Screen {
 
             if ((int) this.tile_y_positions.get(2) >= 256) {
                 this.tileArrayRemakeNeeded = true;
-            }
+            }*/
 
-            if (this.forest_tree_4_y_pos >= 817) {
+/*            if (this.forest_tree_4_y_pos >= 817) {
                 this.forest_tree_4_y_pos = -1191;
             } else if (this.forest_tree_3_y_pos >= 817) {
                 this.forest_tree_3_y_pos = -1191;
@@ -564,32 +580,64 @@ public class GameScreen extends Screen {
                 this.forest_branch_2_y_pos = -292;
             } else if (this.forest_branch_1_y_pos >= 860) {
                 this.forest_branch_1_y_pos = -740;
-            }
+            }*/
 
 
             if (this.bot_backg_y_pos > 800) {
-                this.bot_backg_y_pos = -800;
-                this.top_backg_y_pos = 0;
+                Log.i("GameScreen", "bot_backg"+String.valueOf(this.bot_backg_y_pos));
+                Log.i("GameScreen", "top_backg"+String.valueOf(this.top_backg_y_pos));
+                this.bot_backg_y_pos -= (1024*2);
+                Log.i("GameScreen", "bot_backg"+String.valueOf(this.bot_backg_y_pos));
+                Log.i("GameScreen", "top_backg"+String.valueOf(this.top_backg_y_pos));
+                //this.top_backg_y_pos = -224;
             } else if (this.top_backg_y_pos > 800) {
-                this.top_backg_y_pos = -800;
-                this.bot_backg_y_pos = 0;
+                Log.i("GameScreen", "bot_backg"+String.valueOf(this.bot_backg_y_pos));
+                Log.i("GameScreen", "top_backg"+String.valueOf(this.top_backg_y_pos));
+                this.top_backg_y_pos -= (1024*2);
+                Log.i("GameScreen", "bot_backg"+String.valueOf(this.bot_backg_y_pos));
+                Log.i("GameScreen", "top_backg"+String.valueOf(this.top_backg_y_pos));
+                //this.bot_backg_y_pos = 0;
+            }
+
+            if (this.bot_forestbgtree_y_pos > 800) {
+                Log.i("GameScreen", "bot_tree"+String.valueOf(this.bot_forestbgtree_y_pos));
+                Log.i("GameScreen", "top_tree"+String.valueOf(this.top_forestbgtree_y_pos));
+                this.bot_forestbgtree_y_pos -= (995*2);
+                Log.i("GameScreen", "bot_tree"+String.valueOf(this.bot_forestbgtree_y_pos));
+                Log.i("GameScreen", "top_tree"+String.valueOf(this.top_forestbgtree_y_pos));
+                //update top_forestbgtree?
+            } else if (this.top_forestbgtree_y_pos > 800) {
+                Log.i("GameScreen", "bot_tree"+String.valueOf(this.bot_forestbgtree_y_pos));
+                Log.i("GameScreen", "top_tree"+String.valueOf(this.top_forestbgtree_y_pos));
+                this.top_forestbgtree_y_pos -= (995*2);
+                Log.i("GameScreen", "bot_tree"+String.valueOf(this.bot_forestbgtree_y_pos));
+                Log.i("GameScreen", "top_tree"+String.valueOf(this.top_forestbgtree_y_pos));
+                //update bot_forestbgtree?
             }
 
             if (this.bot_walls_y_pos > 800) {
-                this.bot_walls_y_pos = -800;
-                this.top_walls_y_pos = 0;
+                Log.i("GameScreen", "bot_walls"+String.valueOf(this.bot_walls_y_pos));
+                Log.i("GameScreen", "top_walls"+String.valueOf(this.top_walls_y_pos));
+                this.bot_walls_y_pos -= (806*2);
+                Log.i("GameScreen", "bot_walls"+String.valueOf(this.bot_walls_y_pos));
+                Log.i("GameScreen", "top_walls"+String.valueOf(this.top_walls_y_pos));
+                //this.top_walls_y_pos = -6;
             } else if (this.top_walls_y_pos > 800) {
-                this.top_walls_y_pos = -800;
-                this.bot_walls_y_pos = 0;
+                Log.i("GameScreen", "bot_walls"+String.valueOf(this.bot_walls_y_pos));
+                Log.i("GameScreen", "top_walls"+String.valueOf(this.top_walls_y_pos));
+                this.top_walls_y_pos -= (806*2);
+                Log.i("GameScreen", "bot_walls"+String.valueOf(this.bot_walls_y_pos));
+                Log.i("GameScreen", "top_walls"+String.valueOf(this.top_walls_y_pos));
+                //this.bot_walls_y_pos = 0;
             }
 
 
             for (int i = 0; i < this.enemy_list.size(); i++) {
                 if (this.player1.dying == false) {
                     if (this.enemy_list.get(i).getEnemy_num() == 7) {
-                        Log.i("GameScreen", "Checking Enemy 7");
-                        Log.i("GS", String.valueOf(this.enemy_list.get(i).bounds.x));
-                        Log.i("GS", String.valueOf(this.enemy_list.get(i).bounds.y));
+                        //Log.i("GameScreen", "Checking Enemy 7");
+                        //Log.i("GS", String.valueOf(this.enemy_list.get(i).bounds.x));
+                        //Log.i("GS", String.valueOf(this.enemy_list.get(i).bounds.y));
                         if (this.checkForOverlap.overlapCircleRectangle((Circle) this.enemy_list.get(i).bounds, this.player1.player_rect)) {
                             this.player1.dying = true;
                             Log.i("OVERLAP FOUND", String.valueOf(this.player1.getX_pos()));
@@ -729,30 +777,42 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
         if (current_level == 1) {
             // Now game elements:
             // Draw two sets of scrolling backgrounds
+            //START OBS
 /*            g.drawImage(g.newImage("background_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
             g.drawImage(g.newImage("background_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.bot_backg_y_pos);*/
-            for (int i=0; i < 10; i++) {
+/*            for (int i=0; i < 10; i++) {
                 g.drawImage(g.newImage("SceneOne_Tile.png", Graphics.ImageFormat.RGB565), (int) this.tile_x_positions.get(i), (int) this.tile_y_positions.get(i));
-            }
+            }*/
+            //END OBS
+            g.drawImage(g.newImage("Forest_Background_noshrubnotree.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
+            g.drawImage(g.newImage("Forest_Background_noshrubnotree.png", Graphics.ImageFormat.RGB565), 0, this.bot_backg_y_pos);
 
-            g.drawImage(g.newImage("SceneOne_MidGround_BranchReversed.png", Graphics.ImageFormat.RGB565), this.forest_branch_reversed_x_pos, this.forest_branch_1_y_pos);
+            g.drawImage(g.newImage("Forest_Background_noshrubnotree.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
+            g.drawImage(g.newImage("Forest_Background_noshrubnotree.png", Graphics.ImageFormat.RGB565), 0, this.bot_backg_y_pos);
+
+            g.drawImage(g.newImage("Forest_TreeandBranches.png", Graphics.ImageFormat.RGB565), 170, this.top_forestbgtree_y_pos);
+            g.drawImage(g.newImage("Forest_TreeandBranches.png", Graphics.ImageFormat.RGB565), 170, this.bot_forestbgtree_y_pos);
+
+            //START OBS
+/*            g.drawImage(g.newImage("SceneOne_MidGround_BranchReversed.png", Graphics.ImageFormat.RGB565), this.forest_branch_reversed_x_pos, this.forest_branch_1_y_pos);
             g.drawImage(g.newImage("SceneOne_MidGround_BranchNormal.png", Graphics.ImageFormat.RGB565), this.forest_branch_normal_x_pos, this.forest_branch_2_y_pos);
             g.drawImage(g.newImage("SceneOne_MidGround_BranchReversed.png", Graphics.ImageFormat.RGB565), this.forest_branch_reversed_x_pos, this.forest_branch_3_y_pos);
-            g.drawImage(g.newImage("SceneOne_MidGround_BranchNormal.png", Graphics.ImageFormat.RGB565), this.forest_branch_normal_x_pos, this.forest_branch_4_y_pos);
+            g.drawImage(g.newImage("SceneOne_MidGround_BranchNormal.png", Graphics.ImageFormat.RGB565), this.forest_branch_normal_x_pos, this.forest_branch_4_y_pos);*/
 
-            g.drawImage(g.newImage("SceneOne_MidGround_LogReversed.png", Graphics.ImageFormat.RGB565), 251, this.forest_tree_1_y_pos);
+/*            g.drawImage(g.newImage("SceneOne_MidGround_LogReversed.png", Graphics.ImageFormat.RGB565), 251, this.forest_tree_1_y_pos);
             g.drawImage(g.newImage("SceneOne_MidGround_LogNormal.png", Graphics.ImageFormat.RGB565), 243, this.forest_tree_2_y_pos);
             g.drawImage(g.newImage("SceneOne_MidGround_LogReversed.png", Graphics.ImageFormat.RGB565), 251, this.forest_tree_3_y_pos);
-            g.drawImage(g.newImage("SceneOne_MidGround_LogNormal.png", Graphics.ImageFormat.RGB565), 243, this.forest_tree_4_y_pos);
+            g.drawImage(g.newImage("SceneOne_MidGround_LogNormal.png", Graphics.ImageFormat.RGB565), 243, this.forest_tree_4_y_pos);*/
+            //END OBS
 
             //Log.i("TESTING1", String.valueOf(this.top_backg_y_pos) + "," + String.valueOf(this.bot_backg_y_pos));
                     //Log.i("TESTING2", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
                     // Draw two sets of left walls
-                    g.drawImage(g.newImage("left_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.top_walls_y_pos);
-            g.drawImage(g.newImage("left_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.bot_walls_y_pos);
+            g.drawImage(g.newImage("Left_Wall-90px.png", Graphics.ImageFormat.RGB565), LEFT_WALL_X_POSITION, this.top_walls_y_pos);
+            g.drawImage(g.newImage("Left_Wall-90px.png", Graphics.ImageFormat.RGB565), LEFT_WALL_X_POSITION, this.bot_walls_y_pos);
             // Draw two sets of right walls
-            g.drawImage(g.newImage("right_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 400, this.top_walls_y_pos);
-            g.drawImage(g.newImage("right_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 400, this.bot_walls_y_pos);
+            g.drawImage(g.newImage("Right_Wall-90px.png", Graphics.ImageFormat.RGB565), RIGHT_WALL_X_POSITION, this.top_walls_y_pos);
+            g.drawImage(g.newImage("Right_Wall-90px.png", Graphics.ImageFormat.RGB565), RIGHT_WALL_X_POSITION, this.bot_walls_y_pos);
         } else if (current_level == 2) {  // REPLACE IMAGES ONCE ASSETS OBTAINED
             // Now game elements:
             // Draw two sets of scrolling backgrounds
@@ -792,7 +852,6 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
                 g.drawImage(g.newImage("enemy_image10.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             }
         }
-        g.drawImage(g.newImage("enemy_image7.png", Graphics.ImageFormat.RGB565), 0, 0);
         g.drawImage(g.newImage("player_image.png", Graphics.ImageFormat.RGB565), (int) this.player1.getX_pos(), (int) this.player1.getY_pos());
 
         // And now, we overlay the UI:
@@ -838,6 +897,7 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
     private void nullify() {
         // Set all variables to null. We'll recreate
         // them in the constructor.
+        //UPDATE TO PROPERLY CLEAN UP VARIABLES
         Log.i("GameScreen", "nullify");
         paint = null;
         paint2 = null;

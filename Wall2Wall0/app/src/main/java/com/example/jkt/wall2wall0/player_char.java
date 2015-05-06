@@ -1,5 +1,7 @@
 package com.example.jkt.wall2wall0;
 
+import android.util.Log;
+
 import com.example.jkt.wall2wall0.math.Rectangle;
 import com.example.jkt.wall2wall0.math.Vector2;
 
@@ -27,8 +29,10 @@ public class player_char extends DynamicGameObject {
     public float player_score;
     public float landing_y;
     public float vertex_y;
+    public int frame_num;
 
     private String char_direction;
+    private String char_facing;
     public boolean jumped;
     public boolean dying;
     public boolean first_jump;
@@ -37,6 +41,39 @@ public class player_char extends DynamicGameObject {
     private long timer1;
     private boolean timer_started = false;
     private float decreased_y;
+    private String sprite_name;
+
+    // SPRITE_DIRECTION REFERS TO MOVEMENT OF CHARACTER
+    private String SPRITE_LEFT_WALL_HANG = "Sprite2_reverse-5perc.png";
+    private String SPRITE_RIGHT_WALL_HANG = "Sprite2-5perc.png";
+    private String SPRITE_RIGHT_DYING_EARLY = "Sprite13_reverse-5perc.png";
+    private String SPRITE_LEFT_DYING_EARLY = "Sprite13-5perc.png";
+    private String SPRITE_RIGHT_DYING_LATE = "Sprite14_reverse-5perc.png";
+    private String SPRITE_LEFT_DYING_LATE = "Sprite14-5perc.png";
+    private String SPRITE_RIGHT_3 = "Sprite3_reverse-5perc.png";
+    private String SPRITE_LEFT_3 = "Sprite3-5perc.png";
+    private String SPRITE_RIGHT_4 = "Sprite4_reverse-5perc.png";
+    private String SPRITE_LEFT_4 = "Sprite4-5perc.png";
+    private String SPRITE_RIGHT_5 = "Sprite5_reverse-5perc.png";
+    private String SPRITE_LEFT_5 = "Sprite5-5perc.png";
+    private String SPRITE_RIGHT_6 = "Sprite6_reverse-5perc.png";
+    private String SPRITE_LEFT_6 = "Sprite6-5perc.png";
+    private String SPRITE_RIGHT_7 = "Sprite7_reverse-5perc.png";
+    private String SPRITE_LEFT_7 = "Sprite7-5perc.png";
+    private String SPRITE_RIGHT_8 = "Sprite8_reverse-5perc.png";
+    private String SPRITE_LEFT_8 = "Sprite8-5perc.png";
+    private String SPRITE_RIGHT_9 = "Sprite9_reverse-5perc.png";
+    private String SPRITE_LEFT_9 = "Sprite9-5perc.png";
+    private String SPRITE_RIGHT_10 = "Sprite10_reverse-5perc.png";
+    private String SPRITE_LEFT_10 = "Sprite10-5perc.png";
+    private String SPRITE_RIGHT_11 = "Sprite11_reverse-5perc.png";
+    private String SPRITE_LEFT_11 = "Sprite11-5perc.png";
+    private String SPRITE_RIGHT_SLIDING = "Sprite16_reverse-5perc.png";
+    private String SPRITE_LEFT_SLIDING = "Sprite16-5perc.png";
+    private boolean sliding;
+
+    //private final float h_value;
+    //private final float k_value;
 
     public player_char(float x, float y, float width, float height) {
         super(x, y, width, height);
@@ -46,20 +83,28 @@ public class player_char extends DynamicGameObject {
         this.height = height;
         this.player_score = 0;
         this.player_rect = new Rectangle(x-width/2, y-height/2, width, height);
+        this.frame_num = 1;
+        this.char_facing = "right";
+        this.sliding = false;
+        //this.h_value = 256;
+        //this.k_value = 477.2f;
     }
     public void start_movement() {
         if (!jumped) {
-            first_jump = true;
-            jumped = true;
+            this.first_jump = true;
+            this.jumped = true;
+            this.sliding = false;
             if (this.x_pos < 240) {
-                velocity.set(12.0f, 0.0f);
+                this.velocity.set(12.0f, 0.0f);
                 this.char_direction = "right";
+                this.char_facing = "right";
             } else if (this.x_pos > 240) {
-                velocity.set(12.0f, 0.0f);
+                this.velocity.set(12.0f, 0.0f);
                 this.char_direction = "left";
+                this.char_facing = "left";
             }
-            landing_y = this.y_pos - 78.4f;
-            vertex_y = this.y_pos - 96.04f;
+            landing_y = this.y_pos - 76.44f;
+            vertex_y = this.y_pos - 108.42f;
             timer_started = false;
 
         }
@@ -72,16 +117,20 @@ public class player_char extends DynamicGameObject {
                 timer_started = true;
             } else if (timer_started) {
                 if (System.currentTimeMillis() - timer1 > 1800) {
+                    this.sliding = true;
                     this.velocity.set(0.0f, 0.5f);
                 }
                 if (System.currentTimeMillis() - timer1 > 3000) {
+                    this.sliding = true;
                     this.velocity.set(0.0f, 1.0f);
                 }
                 if (System.currentTimeMillis() - timer1 > 6000) {
+                    this.sliding = true;
                     this.velocity.set(0.0f, 2.0f);
                 }
             }
 
+            // Adjust when character is too high
             if (this.y_pos <= 526) {
                 if (this.y_pos <= 476) {
                     this.setY_pos(this.y_pos + 4.0f);
@@ -95,15 +144,16 @@ public class player_char extends DynamicGameObject {
                 }
             }
 
+            // Add velocities to positions
             if (this.char_direction == "right") {
                 this.x_pos += velocity.getX();
-                this.y_pos = (float) (0.0025 * ((this.x_pos - 276) * (this.x_pos - 276)) + (vertex_y + decreased_y));
+                this.y_pos = (float) (0.003 * ((this.x_pos - 256) * (this.x_pos - 256)) + (vertex_y + decreased_y)); //276, 164
                 if (velocity.getX() > 0) {
                     this.player_score += 1.4;
                 }
             } else if (this.char_direction == "left") {
                 this.x_pos -= velocity.getX();
-                this.y_pos = (float) (0.0025 * ((this.x_pos - 164) * (this.x_pos - 164)) + (vertex_y + decreased_y));  // ORIGINAL WAS (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 419.2);
+                this.y_pos = (float) (0.003 * ((this.x_pos - 168) * (this.x_pos - 168)) + (vertex_y + decreased_y));  // ORIGINAL WAS (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 419.2);
                 if (velocity.getX() > 0) {
                     this.player_score += 1.4;
                 }
@@ -119,17 +169,19 @@ public class player_char extends DynamicGameObject {
                 }
                 this.velocity.set(0.0f, 0.0f);
                 this.char_direction = "none";
+                this.char_facing = "right";
                 this.jumped = false;
                 decreased_y = 0f;
             }
-            if (this.x_pos > 360) {
-                this.x_pos = 360f;
+            if (this.x_pos > 344) {
+                this.x_pos = 344f;
                 this.y_pos = landing_y + decreased_y;
                 if (velocity.getX() > 0) {
                     this.player_score += 2.3;
                 }
                 this.velocity.set(0.0f, 0.0f);
                 this.char_direction = "none";
+                this.char_facing = "left";
                 this.jumped = false;
                 decreased_y = 0f;
             }
@@ -138,6 +190,80 @@ public class player_char extends DynamicGameObject {
             this.y_pos += 18f;
         }
         this.update_bounds();
+    }
+
+    public String getSpriteName() {
+        if (!this.dying) {
+            if (this.sliding) {
+                if (this.char_facing == "right") {
+                    return SPRITE_RIGHT_SLIDING;
+                } else if (this.char_facing == "left") {
+                    return SPRITE_LEFT_SLIDING;
+                }
+            }
+            if (!this.jumped) {
+                if (this.x_pos < 240) {
+                    return SPRITE_LEFT_WALL_HANG;
+                } else if (this.x_pos > 240) {
+                    return SPRITE_RIGHT_WALL_HANG;
+                }
+            } else {
+                if (this.char_direction == "right") {
+                    if (this.x_pos < 90) {
+                        return SPRITE_RIGHT_3;
+                    } else if (this.x_pos < 130) {
+                        return SPRITE_RIGHT_4;
+                    } else if (this.x_pos < 170) {
+                        return SPRITE_RIGHT_5;
+                    } else if (this.x_pos < 210) {
+                        return SPRITE_RIGHT_6;
+                    } else if (this.x_pos < 256) {
+                        return SPRITE_RIGHT_7;
+                    } else if (this.x_pos < 320) {
+                        return SPRITE_RIGHT_8;
+/*                    } else if (this.x_pos < 315) {
+                        return SPRITE_RIGHT_9;*/
+                    } else if (this.x_pos < 340) {
+                        return SPRITE_RIGHT_10;
+                    } else if (this.x_pos < 350) {
+                        return SPRITE_RIGHT_11;
+                    }
+                } else if (this.char_direction == "left") {
+                    if (this.x_pos > 334) {
+                        return SPRITE_LEFT_3;
+                    } else if (this.x_pos > 294) {
+                        return SPRITE_LEFT_4;
+                    } else if (this.x_pos > 254) {
+                        return SPRITE_LEFT_5;
+                    } else if (this.x_pos > 214) {
+                        return SPRITE_LEFT_6;
+                    } else if (this.x_pos > 168) {
+                        return SPRITE_LEFT_7;
+                    } else if (this.x_pos > 104) {
+                        return SPRITE_LEFT_8;
+/*                    } else if (this.x_pos > 153) {
+                        return SPRITE_LEFT_9;*/
+                    } else if (this.x_pos > 93) {
+                        return SPRITE_LEFT_10;
+                    } else if (this.x_pos > 74) {
+                        return SPRITE_LEFT_11;
+                    }
+                }
+            }
+
+        } else {
+            } if (this.y_pos > 620 && this.char_facing == "right") {
+                return SPRITE_RIGHT_DYING_LATE;
+            } else if (this.y_pos > 620 && this.char_facing == "left") {
+                return SPRITE_LEFT_DYING_LATE;
+            } else if (this.y_pos <= 620 && this.char_facing == "right") {
+                return SPRITE_RIGHT_DYING_EARLY;
+            } else if (this.y_pos <= 620 && this.char_facing == "left") {
+            return SPRITE_LEFT_DYING_EARLY;
+        } else {
+            Log.i("PLAYER_CHAR", "FAILED, RETURNING NULL");
+            return null;
+        }
     }
 
     public void update_bounds() {

@@ -11,8 +11,10 @@ public class BirdEnemy extends falling_enemy {
 
     public BirdEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);
-        this.velocity = new Vector2(3f, 4.5f);
+        this.velocity = new Vector2(5f, 4f);
         this.bounds = new Rectangle(x, y, width, height);
+        this.bounds_tsil.add(bounds);
+        this.start_moving_left = false;
     }
 
     @Override
@@ -26,9 +28,9 @@ public class BirdEnemy extends falling_enemy {
             this.x_pos += velocity.getX();
             this.update_bounds();
         }
-        if (this.velocity.getX() == 2f) {
+        if (this.velocity.getX() == 5f) {
             this.start_moving_left = true;
-        } else if (this.velocity.getX() == -2f) {
+        } else if (this.velocity.getX() == -5f) {
             this.start_moving_left = false;
         }
         if (this.start_moving_left) {
@@ -37,6 +39,16 @@ public class BirdEnemy extends falling_enemy {
         } else if (!this.start_moving_left) {
             float updated_x2 = this.velocity.getX() + 0.25f;
             this.velocity.set(updated_x2, this.velocity.getY());
+        }
+    }
+
+    public String getImageName() {
+        // BirdEnemy is moving right
+        if (this.velocity.getX() >= 0) {
+            return "BirdEnemy_reverse.png";
+            // BirdEnemy is moving left
+        } else {
+            return "BirdEnemy.png";
         }
     }
 }

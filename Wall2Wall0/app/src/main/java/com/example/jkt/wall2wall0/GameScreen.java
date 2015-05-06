@@ -91,16 +91,16 @@ public class GameScreen extends Screen {
 
     private final float ENEMY_Y_SPAWN_POS = -110f;
 
-    public float ENEMY_1_WIDTH=80f;
-    public float ENEMY_1_HEIGHT=80f;
+    public float ENEMY_1_WIDTH=100f;
+    public float ENEMY_1_HEIGHT=60f;
     public float ENEMY_2_WIDTH=64f;
     public float ENEMY_2_HEIGHT=96f;
-    public float ENEMY_3_WIDTH=96f;
-    public float ENEMY_3_HEIGHT=64f;
-    public float ENEMY_4_WIDTH=50f;
-    public float ENEMY_4_HEIGHT=50f;
-    public float ENEMY_5_WIDTH=60f;
-    public float ENEMY_5_HEIGHT=80f;
+    public float ENEMY_3_WIDTH=62f;
+    public float ENEMY_3_HEIGHT=79f;
+    public float ENEMY_4_WIDTH=57f;
+    public float ENEMY_4_HEIGHT=100f;
+    public float ENEMY_5_WIDTH=90f;
+    public float ENEMY_5_HEIGHT=114f;
     public float ENEMY_6_WIDTH=95f;
     public float ENEMY_6_HEIGHT=95f;
     public float ENEMY_7_RADIUS=40f;
@@ -121,8 +121,7 @@ public class GameScreen extends Screen {
     int a = 0;
 
     GameState state = GameState.Ready;
-    //private static player_char player1;
-    //private static falling_enemy enemy1;
+
     Paint paint;
     Paint paint2;
     Paint paint3;
@@ -193,17 +192,17 @@ public class GameScreen extends Screen {
                         Log.i("TESTING!", String.valueOf(current_spawn.enemy_x_location));
                         LogEnemy new_enemy = new LogEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_1_WIDTH, ENEMY_1_HEIGHT, 1);
                         enemy_list.add(new_enemy);
-                    } else if (current_spawn.enemy_type == 2) {
+/*                    } else if (current_spawn.enemy_type == 2) {
                         BranchEnemy new_enemy = new BranchEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_2_WIDTH, ENEMY_2_HEIGHT, 2);
-                        enemy_list.add(new_enemy);
+                        enemy_list.add(new_enemy);*/
                     } else if (current_spawn.enemy_type == 3) {
                         AppleEnemy new_enemy = new AppleEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_3_WIDTH, ENEMY_3_HEIGHT, 3);
                         enemy_list.add(new_enemy);
-                    } else if (current_spawn.enemy_type == 4) {
-                        MonkeyEnemy new_enemy = new MonkeyEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_4_WIDTH, ENEMY_4_HEIGHT, 4);
-                        enemy_list.add(new_enemy);
                     } else if (current_spawn.enemy_type == 5) {
-                        BirdEnemy new_enemy = new BirdEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_5_WIDTH, ENEMY_5_HEIGHT, 5);
+                        MonkeyEnemy new_enemy = new MonkeyEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_4_WIDTH, ENEMY_4_HEIGHT, 5);
+                        enemy_list.add(new_enemy);
+                    } else if (current_spawn.enemy_type == 4) {
+                        BirdEnemy new_enemy = new BirdEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_5_WIDTH, ENEMY_5_HEIGHT, 4);
                         enemy_list.add(new_enemy);
                     } else if (current_spawn.enemy_type == 6) {
                         CrateEnemy new_enemy = new CrateEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_6_WIDTH, ENEMY_6_HEIGHT, 6);
@@ -648,14 +647,16 @@ public class GameScreen extends Screen {
                             break;
                         }
                     } else {
-                    if (this.checkForOverlap.overlapRectangles(this.player1.player_rect, (Rectangle) this.enemy_list.get(i).bounds)) {
-                        this.player1.dying = true;
-                        Log.i("OVERLAP FOUND", String.valueOf(this.player1.getX_pos()));
-                        // CHANGE TO DIFF SOUND EFFECT
-                        if (Settings.soundEnabled) {
-                            death_sound.play(1f);
-                        }
-                        break;
+                        for (int z = 0; z < this.enemy_list.get(i).bounds_tsil.size(); z++) {
+                            if (this.checkForOverlap.overlapRectangles(this.player1.player_rect, (Rectangle) this.enemy_list.get(i).bounds_tsil.get(z))) {
+                                this.player1.dying = true;
+                                Log.i("OVERLAP FOUND", String.valueOf(this.player1.getX_pos()));
+                                // CHANGE TO DIFF SOUND EFFECT
+                                if (Settings.soundEnabled) {
+                                    death_sound.play(1f);
+                                }
+                                break;
+                            }
                         }
                     }
                 }
@@ -831,28 +832,28 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
         for (int i = 0; i < this.enemy_list.size(); i++) {
             falling_enemy current_enemy_draw = (falling_enemy) this.enemy_list.get(i);
             if (current_enemy_draw.getEnemy_num() == 1) {
-                g.drawImage(g.newImage("enemy_image1_larger.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
-            } else if (current_enemy_draw.getEnemy_num() == 2) {
-                g.drawImage(g.newImage("enemy_image2.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
+                g.drawImage(g.newImage(this.enemy_list.get(i).getImageName(), Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
+/*            } else if (current_enemy_draw.getEnemy_num() == 2) {
+                g.drawImage(g.newImage("enemy_image2.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());*/
             } else if (current_enemy_draw.getEnemy_num() == 3) {
-                g.drawImage(g.newImage("enemy_image3.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
+                g.drawImage(g.newImage(this.enemy_list.get(i).getImageName(), Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             } else if (current_enemy_draw.getEnemy_num() == 4) {
-                g.drawImage(g.newImage("enemy_image4.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
+                g.drawImage(g.newImage(this.enemy_list.get(i).getImageName(), Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             } else if (current_enemy_draw.getEnemy_num() == 5) {
-                g.drawImage(g.newImage("enemy_image5.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
+                g.drawImage(g.newImage(this.enemy_list.get(i).getImageName(), Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             } else if (current_enemy_draw.getEnemy_num() == 6) {
-                g.drawImage(g.newImage("enemy_image6.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
+                g.drawImage(g.newImage(this.enemy_list.get(i).getImageName(), Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             } else if (current_enemy_draw.getEnemy_num() == 7) {
-                g.drawImage(g.newImage("enemy_image7.png", Graphics.ImageFormat.RGB565), (int) (this.enemy_list.get(i).getX_pos()-40f), (int) (this.enemy_list.get(i).getY_pos()-40f));
+                g.drawImage(g.newImage(this.enemy_list.get(i).getImageName(), Graphics.ImageFormat.RGB565), (int) (this.enemy_list.get(i).getX_pos() - 40f), (int) (this.enemy_list.get(i).getY_pos() - 40f));
             } else if (current_enemy_draw.getEnemy_num() == 8) {
-                g.drawImage(g.newImage("enemy_image8.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
+                g.drawImage(g.newImage(this.enemy_list.get(i).getImageName(), Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             } else if (current_enemy_draw.getEnemy_num() == 9) {
-                g.drawImage(g.newImage("enemy_image9.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
+                g.drawImage(g.newImage(this.enemy_list.get(i).getImageName(), Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             } else {
-                g.drawImage(g.newImage("enemy_image10.png", Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
+                g.drawImage(g.newImage(this.enemy_list.get(i).getImageName(), Graphics.ImageFormat.RGB565), (int) this.enemy_list.get(i).getX_pos(), (int) this.enemy_list.get(i).getY_pos());
             }
         }
-        g.drawImage(g.newImage("player_image.png", Graphics.ImageFormat.RGB565), (int) this.player1.getX_pos(), (int) this.player1.getY_pos());
+        g.drawImage(g.newImage(this.player1.getSpriteName(), Graphics.ImageFormat.RGB565), (int) this.player1.getX_pos(), (int) this.player1.getY_pos());
 
         // And now, we overlay the UI:
         if (state == GameState.Ready)
@@ -875,7 +876,9 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
     @Override
     public void resume() {
         this.time_paused = System.currentTimeMillis() - this.pause_time;
-        this.game_music.seekBegin();
+        if (Settings.soundEnabled) {
+            this.game_music.seekBegin();
+        }
         this.previousSpawnTime[0] += time_paused;
         this.start_time += time_paused;
         this.passes = 0;

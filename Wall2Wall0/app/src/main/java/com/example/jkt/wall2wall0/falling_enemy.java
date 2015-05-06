@@ -11,6 +11,8 @@ import com.example.jkt.wall2wall0.math.Rectangle;
 import com.example.jkt.wall2wall0.math.Shape;
 import com.example.jkt.wall2wall0.math.Vector2;
 
+import java.util.ArrayList;
+
 /**         Dyn constructor:
  *         velocity = new Vector2();
              accel = new Vector2();
@@ -26,6 +28,7 @@ public class falling_enemy extends DynamicGameObject {
     public float width;
     public float height;
     private final int enemy_num;
+    public ArrayList<Shape> bounds_tsil = new ArrayList<>();
     public Shape bounds;
 
     public boolean player_jumping = false;

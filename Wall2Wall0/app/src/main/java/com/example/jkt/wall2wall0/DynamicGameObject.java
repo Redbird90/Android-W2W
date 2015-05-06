@@ -11,4 +11,8 @@ public class DynamicGameObject extends GameObject {
         velocity = new Vector2();
         accel = new Vector2();
     }
+
+    public String getImageName() {
+        return "DYNGAMEOBJ STRING, OVERRIDE";
+    }
 }

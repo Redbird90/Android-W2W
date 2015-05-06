@@ -11,7 +11,20 @@ public class MonkeyEnemy extends falling_enemy {
 
     public MonkeyEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);
-        this.velocity = new Vector2(2f, 5f);
+        if (this.x_pos >= 195) {
+            this.velocity = new Vector2(-2f, 7f);
+        } else if (this.x_pos <= 195) {
+            this.velocity = new Vector2(2f, 7f);
+        }
         this.bounds = new Rectangle(x, y, width, height);
+        this.bounds_tsil.add(bounds);
+    }
+
+    public String getImageName() {
+        if (this.velocity.getX() < 0) {
+            return "MonkeyEnemy_reverse.png";
+        } else {
+            return "MonkeyEnemy.png";
+        }
     }
 }

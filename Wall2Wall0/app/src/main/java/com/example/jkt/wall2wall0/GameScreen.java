@@ -1,16 +1,11 @@
 package com.example.jkt.wall2wall0;
 
-import android.content.Context;
 import android.graphics.*;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.ImageView;
 
-import com.example.jkt.wall2wall0.impl.AndroidGame;
-import com.example.jkt.wall2wall0.impl.AndroidImage;
 import com.example.jkt.wall2wall0.impl.AndroidMusic;
 import com.example.jkt.wall2wall0.impl.AndroidSound;
 import com.example.jkt.wall2wall0.math.Circle;
@@ -20,17 +15,13 @@ import com.example.jkt.wall2wall0.math.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by JDK on 3/30/2015.
  */
 public class GameScreen extends Screen {
 
-    private player_char player1;
+    private PlayerChar player1;
     private falling_enemy enemy1;
     private boolean enemy1added;
     private final Random randomGenerator;
@@ -62,6 +53,8 @@ public class GameScreen extends Screen {
     public boolean height_thresh2;
     private SpawnTimer enemySpawnTimer;
     private ArrayList<SpawnEvent> enemySpawnEventArray;
+    private int walls_blitted;
+    private WallHazardHandler wallHazardHandler;
 
     public AndroidMusic game_music;
     public AndroidSound death_sound;
@@ -115,6 +108,14 @@ public class GameScreen extends Screen {
     private int FOREST_RIGHT_WALL_X_POSITION = 390;
     private final int FACTORY_LEFT_WALL_X_POSITION = 0;
     private final int FACTORY_RIGHT_WALL_X_POSITION = 386;
+    private boolean bot_left_wall_low_hazard = false;
+    private boolean bot_left_wall_high_hazard = false;
+    private boolean top_left_wall_low_hazard = false;
+    private boolean top_left_wall_high_hazard = false;
+    private boolean bot_right_wall_low_hazard = false;
+    private boolean bot_right_wall_high_hazard = false;
+    private boolean top_right_wall_low_hazard = false;
+    private boolean top_right_wall_high_hazard = false;
 
 
     enum GameState {
@@ -136,7 +137,7 @@ public class GameScreen extends Screen {
 
         // Initialize game objects
 
-        this.player1 = new player_char(80f, 576f, 40f, 55f);
+        this.player1 = new PlayerChar(80f, 576f, 40f, 55f);
         this.enemy1 = new LogEnemy(200f, -50f, ENEMY_1_WIDTH, ENEMY_1_HEIGHT, 1);
         this.enemy1added = false;
         this.randomGenerator = new Random();
@@ -175,6 +176,8 @@ public class GameScreen extends Screen {
         this.forest_branch_2_y_pos = -292;
         this.forest_branch_3_y_pos = 60;
         this.forest_branch_4_y_pos = 508;
+        this.walls_blitted = 2;
+        this.wallHazardHandler = new WallHazardHandler();
 
         this.timerHandler = new Handler(Looper.getMainLooper());
         this.timerRunnable = new Runnable() {
@@ -325,7 +328,7 @@ public class GameScreen extends Screen {
             current_time = System.currentTimeMillis();
 
             // 1. All touch input is handled here:
-            Log.i("GameScreen", "update1, updateRunning started");
+            //Log.i("GameScreen", "update1, updateRunning started");
             int touchEventsSize = touchEvents.size();
             for (int currentTouchEventIndex = 0; currentTouchEventIndex < touchEventsSize; currentTouchEventIndex++) {
                 Input.TouchEvent currentEvent = (Input.TouchEvent) touchEvents
@@ -347,7 +350,7 @@ public class GameScreen extends Screen {
                             } else {
                                 this.player1.start_movement();
                                 delay_time = 0;
-                                Log.i("GameScreen", "player movement started");
+                                //Log.i("GameScreen", "player movement started");
                             }
                         }
                     }
@@ -585,65 +588,108 @@ public class GameScreen extends Screen {
 
 
             if (this.bot_backg_y_pos > 800) {
-                Log.i("GameScreen", "bot_backg"+String.valueOf(this.bot_backg_y_pos));
-                Log.i("GameScreen", "top_backg"+String.valueOf(this.top_backg_y_pos));
+                //Log.i("GameScreen", "bot_backg"+String.valueOf(this.bot_backg_y_pos));
+                //Log.i("GameScreen", "top_backg"+String.valueOf(this.top_backg_y_pos));
                 this.bot_backg_y_pos -= (1024*2);
-                Log.i("GameScreen", "bot_backg"+String.valueOf(this.bot_backg_y_pos));
-                Log.i("GameScreen", "top_backg"+String.valueOf(this.top_backg_y_pos));
+                //Log.i("GameScreen", "bot_backg"+String.valueOf(this.bot_backg_y_pos));
+                //Log.i("GameScreen", "top_backg"+String.valueOf(this.top_backg_y_pos));
                 //this.top_backg_y_pos = -224;
             } else if (this.top_backg_y_pos > 800) {
-                Log.i("GameScreen", "bot_backg"+String.valueOf(this.bot_backg_y_pos));
-                Log.i("GameScreen", "top_backg"+String.valueOf(this.top_backg_y_pos));
+                //Log.i("GameScreen", "bot_backg"+String.valueOf(this.bot_backg_y_pos));
+                //Log.i("GameScreen", "top_backg"+String.valueOf(this.top_backg_y_pos));
                 this.top_backg_y_pos -= (1024*2);
-                Log.i("GameScreen", "bot_backg"+String.valueOf(this.bot_backg_y_pos));
-                Log.i("GameScreen", "top_backg"+String.valueOf(this.top_backg_y_pos));
+                //Log.i("GameScreen", "bot_backg"+String.valueOf(this.bot_backg_y_pos));
+                //Log.i("GameScreen", "top_backg"+String.valueOf(this.top_backg_y_pos));
                 //this.bot_backg_y_pos = 0;
             }
 
             if (this.bot_forestbgtree_y_pos > 800) {
-                Log.i("GameScreen", "bot_tree"+String.valueOf(this.bot_forestbgtree_y_pos));
-                Log.i("GameScreen", "top_tree"+String.valueOf(this.top_forestbgtree_y_pos));
+                //Log.i("GameScreen", "bot_tree"+String.valueOf(this.bot_forestbgtree_y_pos));
+                //Log.i("GameScreen", "top_tree"+String.valueOf(this.top_forestbgtree_y_pos));
                 this.bot_forestbgtree_y_pos -= (995*2);
-                Log.i("GameScreen", "bot_tree"+String.valueOf(this.bot_forestbgtree_y_pos));
-                Log.i("GameScreen", "top_tree"+String.valueOf(this.top_forestbgtree_y_pos));
+                //Log.i("GameScreen", "bot_tree"+String.valueOf(this.bot_forestbgtree_y_pos));
+                //Log.i("GameScreen", "top_tree"+String.valueOf(this.top_forestbgtree_y_pos));
                 //update top_forestbgtree?
             } else if (this.top_forestbgtree_y_pos > 800) {
-                Log.i("GameScreen", "bot_tree"+String.valueOf(this.bot_forestbgtree_y_pos));
-                Log.i("GameScreen", "top_tree"+String.valueOf(this.top_forestbgtree_y_pos));
+                //Log.i("GameScreen", "bot_tree"+String.valueOf(this.bot_forestbgtree_y_pos));
+                //Log.i("GameScreen", "top_tree"+String.valueOf(this.top_forestbgtree_y_pos));
                 this.top_forestbgtree_y_pos -= (995*2);
-                Log.i("GameScreen", "bot_tree"+String.valueOf(this.bot_forestbgtree_y_pos));
-                Log.i("GameScreen", "top_tree"+String.valueOf(this.top_forestbgtree_y_pos));
+                //Log.i("GameScreen", "bot_tree"+String.valueOf(this.bot_forestbgtree_y_pos));
+                //Log.i("GameScreen", "top_tree"+String.valueOf(this.top_forestbgtree_y_pos));
                 //update bot_forestbgtree?
             }
 
+            // CHECK IF WALL REDRAW IS NEEDED, if so check for hazards present
             if (this.bot_walls_y_pos > 800) {
                 Log.i("GameScreen", "bot_walls"+String.valueOf(this.bot_walls_y_pos));
                 Log.i("GameScreen", "top_walls"+String.valueOf(this.top_walls_y_pos));
+                this.walls_blitted += 1;
+                this.bot_left_wall_low_hazard = false;
+                this.bot_left_wall_high_hazard = false;
+                if (this.wallHazardHandler.checkForLeftLowHazard(this.walls_blitted)) {
+                    this.bot_left_wall_low_hazard = true;
+                    // ADD RECT TO HANDLE OVERLAP TEST and update with wall movement
+                } else if (this.wallHazardHandler.checkForLeftHighHazard(this.walls_blitted)) {
+                    this.bot_left_wall_high_hazard = true;
+                    // ADD RECT TO HANDLE OVERLAP TEST and update with wall movement
+                }
+
+                this.bot_right_wall_low_hazard = false;
+                this.bot_right_wall_high_hazard = false;
+                if (this.wallHazardHandler.checkForRightLowHazard(this.walls_blitted)) {
+                    this.bot_right_wall_low_hazard = true;
+                    // ADD RECT TO HANDLE OVERLAP TEST and update with wall movement
+                } else if (this.wallHazardHandler.checkForRightHighHazard(this.walls_blitted)) {
+                    this.bot_right_wall_high_hazard = true;
+                    // ADD RECT TO HANDLE OVERLAP TEST and update with wall movement
+                }
+                
                 if (this.current_level == 1) {
                     this.bot_walls_y_pos -= (806*2);
                 } else {
                     this.bot_walls_y_pos -= (1099*2);
                 }
 
-                Log.i("GameScreen", "bot_walls"+String.valueOf(this.bot_walls_y_pos));
-                Log.i("GameScreen", "top_walls"+String.valueOf(this.top_walls_y_pos));
+                //Log.i("GameScreen", "bot_walls"+String.valueOf(this.bot_walls_y_pos));
+                //Log.i("GameScreen", "top_walls"+String.valueOf(this.top_walls_y_pos));
                 //this.top_walls_y_pos = -6;
             } else if (this.top_walls_y_pos > 800) {
-                Log.i("GameScreen", "bot_walls"+String.valueOf(this.bot_walls_y_pos));
-                Log.i("GameScreen", "top_walls"+String.valueOf(this.top_walls_y_pos));
+                //Log.i("GameScreen", "bot_walls"+String.valueOf(this.bot_walls_y_pos));
+                //Log.i("GameScreen", "top_walls"+String.valueOf(this.top_walls_y_pos));
+                this.walls_blitted += 1;
+                this.top_left_wall_low_hazard = false;
+                this.top_left_wall_high_hazard = false;
+                if (this.wallHazardHandler.checkForLeftLowHazard(this.walls_blitted)) {
+                    this.top_left_wall_low_hazard = true;
+                    // ADD RECT TO HANDLE OVERLAP TEST and update with wall movement
+                } else if (this.wallHazardHandler.checkForLeftHighHazard(this.walls_blitted)) {
+                    this.top_left_wall_high_hazard = true;
+                    // ADD RECT TO HANDLE OVERLAP TEST and update with wall movement
+                }
+
+                this.bot_right_wall_low_hazard = false;
+                this.bot_right_wall_high_hazard = false;
+                if (this.wallHazardHandler.checkForRightLowHazard(this.walls_blitted)) {
+                    this.bot_right_wall_low_hazard = true;
+                    // ADD RECT TO HANDLE OVERLAP TEST and update with wall movement
+                } else if (this.wallHazardHandler.checkForRightHighHazard(this.walls_blitted)) {
+                    this.bot_right_wall_high_hazard = true;
+                    // ADD RECT TO HANDLE OVERLAP TEST and update with wall movement
+                }
+                
                 if (this.current_level == 1) {
                     this.top_walls_y_pos -= (806*2);
                 } else {
                     this.top_walls_y_pos -= (1099*2);
                 }
-                Log.i("GameScreen", "bot_walls"+String.valueOf(this.bot_walls_y_pos));
-                Log.i("GameScreen", "top_walls"+String.valueOf(this.top_walls_y_pos));
+                //Log.i("GameScreen", "bot_walls"+String.valueOf(this.bot_walls_y_pos));
+                //Log.i("GameScreen", "top_walls"+String.valueOf(this.top_walls_y_pos));
                 //this.bot_walls_y_pos = 0;
             }
 
 
             for (int i = 0; i < this.enemy_list.size(); i++) {
-                if (this.player1.dying == false) {
+                if (this.player1.dying) {// == false) {//FIX FOR CHAR DEATh
                     if (this.enemy_list.get(i).getEnemy_num() == 7) {
                         //Log.i("GameScreen", "Checking Enemy 7");
                         //Log.i("GS", String.valueOf(this.enemy_list.get(i).bounds.x));
@@ -673,12 +719,16 @@ public class GameScreen extends Screen {
                 }
             }
 
-            Log.i("GameScreen", "update2, char and enemy");
+            //Log.i("GameScreen", "update2, char and enemy");
 
             if (player1.first_jump) {
-                if ((current_time - start_time) > 
-                        (enemySpawnEventArray.get(enemy_count).enemy_spawn_time)*1000) {
-                    this.timerRunnable.run();
+                try {
+                    if ((current_time - start_time) >
+                            (enemySpawnEventArray.get(enemy_count).enemy_spawn_time) * 1000) {
+                        this.timerRunnable.run();
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    Log.i("GameScreen", "NO MORE ENEMIES");
                 }
                 //Log.i("TESTING", String.valueOf(System.currentTimeMillis()));
             }
@@ -833,11 +883,36 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
             //Log.i("TESTING1", String.valueOf(this.top_backg_y_pos) + "," + String.valueOf(this.bot_backg_y_pos));
             //Log.i("TESTING2", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
             // Draw two sets of left walls
-            g.drawImage(g.newImage("FactoryLeft_Wallhighres-94px.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.top_walls_y_pos);
-            g.drawImage(g.newImage("FactoryLeft_Wallhighres-94px.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.bot_walls_y_pos);
+            if (this.top_left_wall_low_hazard) {
+                g.drawImage(g.newImage("FactoryLeft_Wallhighres-lowhazard,94px.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.top_walls_y_pos);
+            } else if (this.top_left_wall_high_hazard) {
+                g.drawImage(g.newImage("FactoryLeft_Wallhighres-highhazard,94px.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.top_walls_y_pos);
+            } else {
+                g.drawImage(g.newImage("FactoryLeft_Wallhighres-94px.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.top_walls_y_pos);
+            }
+            if (this.bot_left_wall_low_hazard) {
+                g.drawImage(g.newImage("FactoryLeft_Wallhighres-lowhazard,94px.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.bot_walls_y_pos);
+            } else if (this.bot_left_wall_high_hazard) {
+                g.drawImage(g.newImage("FactoryLeft_Wallhighres-highhazard,94px.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.bot_walls_y_pos);
+            } else {
+                g.drawImage(g.newImage("FactoryLeft_Wallhighres-94px.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.bot_walls_y_pos);
+            }
             // Draw two sets of right walls
-            g.drawImage(g.newImage("FactoryRight_Wallhighres-94px.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_X_POSITION, this.top_walls_y_pos);
-            g.drawImage(g.newImage("FactoryRight_Wallhighres-94px.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_X_POSITION, this.bot_walls_y_pos);
+            if (this.top_right_wall_low_hazard) {
+                g.drawImage(g.newImage("FactoryRight_Wallhighres-lowhazard,94px.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_X_POSITION, this.top_walls_y_pos);
+            } else if (this.top_left_wall_high_hazard) {
+                g.drawImage(g.newImage("FactoryRight_Wallhighres-highhazard,94px.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_X_POSITION, this.top_walls_y_pos);
+            } else {
+                g.drawImage(g.newImage("FactoryRight_Wallhighres-94px.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_X_POSITION, this.top_walls_y_pos);
+            }
+            if (this.top_right_wall_low_hazard) {
+                g.drawImage(g.newImage("FactoryRight_Wallhighres-lowhazard,94px.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_X_POSITION, this.bot_walls_y_pos);
+            } else if (this.top_left_wall_high_hazard) {
+                g.drawImage(g.newImage("FactoryRight_Wallhighres-highhazard,94px.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_X_POSITION, this.bot_walls_y_pos);
+            } else {
+                g.drawImage(g.newImage("FactoryRight_Wallhighres-94px.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_X_POSITION, this.bot_walls_y_pos);
+            }
+            Log.i("GameScreen", String.valueOf(this.walls_blitted));
         }
 
         for (int i = 0; i < this.enemy_list.size(); i++) {
@@ -942,7 +1017,7 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
         g.drawRect(410, 20, 60, 60, Color.CYAN);
         g.drawString("Pause", 440, 50, paint4);
 
-        if (this.player1.player_score >= 600 && transition_incomplete) {
+        if (this.player1.player_score >= 100 && transition_incomplete) {
             Log.i("STARTING", String.valueOf(this.opacity_num));
             g.drawARGB(this.opacity_num, 255, 255, 255);
             if (this.opacity_num < 255 && !this.reached_255_opacity) {

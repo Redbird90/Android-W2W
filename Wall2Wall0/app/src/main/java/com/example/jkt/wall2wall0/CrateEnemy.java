@@ -13,6 +13,11 @@ public class CrateEnemy extends falling_enemy {
         super(x, y, width, height, enemy_num);
         this.velocity = new Vector2(0f, 5.4f);
         this.bounds = new Rectangle(x, y, width, height);
+        this.bounds_tsil.add(this.bounds);
+    }
+
+    public String getImageName() {
+        return "Factory_Cratehighres-95px.png";
     }
 
 }

@@ -102,17 +102,19 @@ public class GameScreen extends Screen {
     public float ENEMY_5_WIDTH=90f;
     public float ENEMY_5_HEIGHT=114f;
     public float ENEMY_6_WIDTH=95f;
-    public float ENEMY_6_HEIGHT=95f;
+    public float ENEMY_6_HEIGHT=86f;
     public float ENEMY_7_RADIUS=40f;
-    public float ENEMY_8_WIDTH=80f;
-    public float ENEMY_8_HEIGHT=40f;
-    public float ENEMY_9_WIDTH=50f;
-    public float ENEMY_9_HEIGHT=30f;
-    public float ENEMY_10_WIDTH=85f;
-    public float ENEMY_10_HEIGHT=70f;
+    public float ENEMY_8_WIDTH=62f;
+    public float ENEMY_8_HEIGHT=100f;
+    public float ENEMY_9_WIDTH=65f;
+    public float ENEMY_9_HEIGHT=60f;
+    public float ENEMY_10_WIDTH=95f;
+    public float ENEMY_10_HEIGHT=81f;
 
-    private int LEFT_WALL_X_POSITION = 0;
-    private int RIGHT_WALL_X_POSITION = 390;
+    private int FOREST_LEFT_WALL_X_POSITION = 0;
+    private int FOREST_RIGHT_WALL_X_POSITION = 390;
+    private final int FACTORY_LEFT_WALL_X_POSITION = 0;
+    private final int FACTORY_RIGHT_WALL_X_POSITION = 386;
 
 
     enum GameState {
@@ -146,7 +148,7 @@ public class GameScreen extends Screen {
         this.currentScore = 0;
         this.newHighScore = false;
         this.highScore = Settings.getHighScore();
-        this.top_backg_y_pos = -1248; // FOR LEVEL 1
+        this.top_backg_y_pos = -1248; // FOR LEVEL 1 AND LEVEL 2
         this.bot_backg_y_pos = -224;
         this.top_walls_y_pos = -812;
         this.bot_walls_y_pos = -6;
@@ -617,14 +619,23 @@ public class GameScreen extends Screen {
             if (this.bot_walls_y_pos > 800) {
                 Log.i("GameScreen", "bot_walls"+String.valueOf(this.bot_walls_y_pos));
                 Log.i("GameScreen", "top_walls"+String.valueOf(this.top_walls_y_pos));
-                this.bot_walls_y_pos -= (806*2);
+                if (this.current_level == 1) {
+                    this.bot_walls_y_pos -= (806*2);
+                } else {
+                    this.bot_walls_y_pos -= (1099*2);
+                }
+
                 Log.i("GameScreen", "bot_walls"+String.valueOf(this.bot_walls_y_pos));
                 Log.i("GameScreen", "top_walls"+String.valueOf(this.top_walls_y_pos));
                 //this.top_walls_y_pos = -6;
             } else if (this.top_walls_y_pos > 800) {
                 Log.i("GameScreen", "bot_walls"+String.valueOf(this.bot_walls_y_pos));
                 Log.i("GameScreen", "top_walls"+String.valueOf(this.top_walls_y_pos));
-                this.top_walls_y_pos -= (806*2);
+                if (this.current_level == 1) {
+                    this.top_walls_y_pos -= (806*2);
+                } else {
+                    this.top_walls_y_pos -= (1099*2);
+                }
                 Log.i("GameScreen", "bot_walls"+String.valueOf(this.bot_walls_y_pos));
                 Log.i("GameScreen", "top_walls"+String.valueOf(this.top_walls_y_pos));
                 //this.bot_walls_y_pos = 0;
@@ -809,24 +820,24 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
             //Log.i("TESTING1", String.valueOf(this.top_backg_y_pos) + "," + String.valueOf(this.bot_backg_y_pos));
                     //Log.i("TESTING2", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
                     // Draw two sets of left walls
-            g.drawImage(g.newImage("Left_Wall-90px.png", Graphics.ImageFormat.RGB565), LEFT_WALL_X_POSITION, this.top_walls_y_pos);
-            g.drawImage(g.newImage("Left_Wall-90px.png", Graphics.ImageFormat.RGB565), LEFT_WALL_X_POSITION, this.bot_walls_y_pos);
+            g.drawImage(g.newImage("Left_Wall-90px.png", Graphics.ImageFormat.RGB565), FOREST_LEFT_WALL_X_POSITION, this.top_walls_y_pos);
+            g.drawImage(g.newImage("Left_Wall-90px.png", Graphics.ImageFormat.RGB565), FOREST_LEFT_WALL_X_POSITION, this.bot_walls_y_pos);
             // Draw two sets of right walls
-            g.drawImage(g.newImage("Right_Wall-90px.png", Graphics.ImageFormat.RGB565), RIGHT_WALL_X_POSITION, this.top_walls_y_pos);
-            g.drawImage(g.newImage("Right_Wall-90px.png", Graphics.ImageFormat.RGB565), RIGHT_WALL_X_POSITION, this.bot_walls_y_pos);
+            g.drawImage(g.newImage("Right_Wall-90px.png", Graphics.ImageFormat.RGB565), FOREST_RIGHT_WALL_X_POSITION, this.top_walls_y_pos);
+            g.drawImage(g.newImage("Right_Wall-90px.png", Graphics.ImageFormat.RGB565), FOREST_RIGHT_WALL_X_POSITION, this.bot_walls_y_pos);
         } else if (current_level == 2) {  // REPLACE IMAGES ONCE ASSETS OBTAINED
             // Now game elements:
             // Draw two sets of scrolling backgrounds
-            g.drawImage(g.newImage("background_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
-            g.drawImage(g.newImage("background_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.bot_backg_y_pos);
+            g.drawImage(g.newImage("RobotFactoryBackgroundhighres.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
+            g.drawImage(g.newImage("RobotFactoryBackgroundhighres.png", Graphics.ImageFormat.RGB565), 0, this.bot_backg_y_pos);
             //Log.i("TESTING1", String.valueOf(this.top_backg_y_pos) + "," + String.valueOf(this.bot_backg_y_pos));
             //Log.i("TESTING2", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
             // Draw two sets of left walls
-            g.drawImage(g.newImage("left_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.top_walls_y_pos);
-            g.drawImage(g.newImage("left_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 0, this.bot_walls_y_pos);
+            g.drawImage(g.newImage("FactoryLeft_Wallhighres-94px.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.top_walls_y_pos);
+            g.drawImage(g.newImage("FactoryLeft_Wallhighres-94px.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.bot_walls_y_pos);
             // Draw two sets of right walls
-            g.drawImage(g.newImage("right_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 400, this.top_walls_y_pos);
-            g.drawImage(g.newImage("right_wall_scrolling_image_lowres.png", Graphics.ImageFormat.RGB565), 400, this.bot_walls_y_pos);
+            g.drawImage(g.newImage("FactoryRight_Wallhighres-94px.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_X_POSITION, this.top_walls_y_pos);
+            g.drawImage(g.newImage("FactoryRight_Wallhighres-94px.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_X_POSITION, this.bot_walls_y_pos);
         }
 
         for (int i = 0; i < this.enemy_list.size(); i++) {
@@ -931,7 +942,7 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
         g.drawRect(410, 20, 60, 60, Color.CYAN);
         g.drawString("Pause", 440, 50, paint4);
 
-        if (this.player1.player_score >= 2000 && transition_incomplete) {
+        if (this.player1.player_score >= 600 && transition_incomplete) {
             Log.i("STARTING", String.valueOf(this.opacity_num));
             g.drawARGB(this.opacity_num, 255, 255, 255);
             if (this.opacity_num < 255 && !this.reached_255_opacity) {
@@ -940,6 +951,10 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
                 this.opacity_num -= 25;
                 this.reached_255_opacity = true;
                 this.current_level = 2;
+                this.bot_backg_y_pos = -224;
+                this.top_backg_y_pos = -1248;
+                this.bot_walls_y_pos = -299;
+                this.top_walls_y_pos = -1398;
             } else if (this.opacity_num < 255 && this.reached_255_opacity) {
                 this.opacity_num -= 25;
             }

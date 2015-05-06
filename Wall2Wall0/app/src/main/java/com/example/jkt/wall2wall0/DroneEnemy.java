@@ -17,8 +17,10 @@ public class DroneEnemy extends falling_enemy {
         super(x, y, width, height, enemy_num);
         this.velocity = new Vector2(2.5f, 5f);
         this.bounds = new Rectangle(x, y, width, height);
+        this.bounds_tsil.add(this.bounds);
     }
 
+    @Override
     public void update_enemy() {
         this.num_of_updates += 1;
         if (this.player_jumping) {
@@ -51,5 +53,9 @@ public class DroneEnemy extends falling_enemy {
             stop_movement = false;
             this.velocity.set(prev_x_velocity, 5f);
         }
+    }
+
+    public String getImageName() {
+        return "Factory_Dronehighres-95px.png";
     }
 }

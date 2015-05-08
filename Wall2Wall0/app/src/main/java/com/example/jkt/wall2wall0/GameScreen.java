@@ -111,6 +111,8 @@ public class GameScreen extends Screen {
     private final int FACTORY_RIGHT_WALL_X_POSITION = 386;
     private final int FOREST_RIGHT_WALL_HAZARD_X_POSITION = 300;
     private final int FACTORY_RIGHT_WALL_HAZARD_X_POSITION = 292;
+    private final int UI_WINDOW_X_POSITION = 50;
+    private final int UI_WINDOW_Y_POSITION = 130;
     private boolean bot_left_wall_low_hazard = false;
     private boolean bot_left_wall_high_hazard = false;
     private boolean top_left_wall_low_hazard = false;
@@ -1142,8 +1144,7 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
         } else {
             g.drawString((String.valueOf((int) this.player1.player_score) + "m"), 40, 40, paint2);
         }
-        g.drawRect(410, 20, 60, 60, Color.CYAN);
-        g.drawString("Pause", 440, 50, paint4);
+        g.drawImage(g.newImage("Pause.png", Graphics.ImageFormat.RGB565), 410, 20);
 
         if (this.player1.player_score >= 100 && transition_incomplete) {
             Log.i("STARTING", String.valueOf(this.opacity_num));
@@ -1179,10 +1180,8 @@ private void drawPausedUI() {
     Graphics g = game.getGraphics();
     // Darken the screen to display the Paused screen.
     g.drawARGB(155, 0, 0, 0);
-    g.drawRect(140, 365, 200, 50, Color.BLACK);
-    g.drawRect(410, 20, 60, 60, Color.CYAN);
-    g.drawString("Resume", 440, 50, paint4);
-    g.drawString("Back to Menu", 240, 400, paint);
+    g.drawImage(g.newImage("UI_Windowfilledhighres.png", Graphics.ImageFormat.RGB565), UI_WINDOW_X_POSITION, UI_WINDOW_Y_POSITION);
+    g.drawImage(g.newImage("Pause_Active.png", Graphics.ImageFormat.RGB565), 410, 20);
     }
 
     private void drawGameOverUI() {

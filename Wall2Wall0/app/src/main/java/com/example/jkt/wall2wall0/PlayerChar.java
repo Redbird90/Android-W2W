@@ -111,6 +111,7 @@ public class PlayerChar extends DynamicGameObject {
         this.frame_num = 1;
         this.char_facing = "right";
         this.sliding = false;
+        this.dying = false;
         this.currentSpriteBounds = leftWallHangArray;
         this.createPlayerRectArrays();
         Log.i("PlayerChar", String.valueOf(this.player_rect.getLowerLeft().getX()+String.valueOf(this.player_rect.getLowerLeft().getY())));

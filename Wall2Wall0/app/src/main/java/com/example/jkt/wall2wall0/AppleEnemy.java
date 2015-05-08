@@ -23,11 +23,11 @@ public class AppleEnemy extends falling_enemy {
 
     public String getImageName() {
         if (this.apple_orientation == 0) {
-            return "AppleEnemy.png";
+            return "AppleEnemyhighres.png";
         } else if (this.apple_orientation == 1) {
-            return "AppleEnemy_flat.png";
+            return "AppleEnemyhighres_flat.png";
         } else {
-            return "AppleEnemy_reverse.png";
+            return "AppleEnemyhighres_reverse.png";
         }
 
     }

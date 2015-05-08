@@ -20,6 +20,6 @@ public class LogEnemy extends falling_enemy {
     }
 
     public String getImageName() {
-        return "LogEnemy-100px.png";
+        return "LogEnemyhighres-100px.png";
     }
 }

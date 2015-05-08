@@ -22,9 +22,9 @@ public class MonkeyEnemy extends falling_enemy {
 
     public String getImageName() {
         if (this.velocity.getX() < 0) {
-            return "MonkeyEnemy_reverse.png";
+            return "MonkeyEnemyhighres_reverse-90px.png";
         } else {
-            return "MonkeyEnemy.png";
+            return "MonkeyEnemyhighres-90px.png";
         }
     }
 }

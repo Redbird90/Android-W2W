@@ -252,7 +252,7 @@ public class SpawnTimer {
                 starting_index = parenth_end + 1;
 
                 //Log.i("SpawnTimer2", String.valueOf(parenth_start));
-                Log.i(String.valueOf(starting_index), current_enemy_info);
+                //Log.i(String.valueOf(starting_index), current_enemy_info);
             }
 
             for (int y=0; y < time_enemy_line_info.size(); y++) {
@@ -275,6 +275,7 @@ public class SpawnTimer {
                 }
             }
         }
+        Log.i("SpawnTimer", "Parsing complete, returning...");
         return spawnEventArray;
     }
 

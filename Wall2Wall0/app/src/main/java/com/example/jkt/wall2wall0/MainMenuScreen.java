@@ -19,6 +19,7 @@ public class MainMenuScreen extends Screen {
     private boolean at_settings;
     private String sound_pref_text;
     Activity activity;
+    private boolean at_leaderboards;
 
     public MainMenuScreen(Game game) {
         super(game);
@@ -39,18 +40,21 @@ public class MainMenuScreen extends Screen {
         for (int touchEventIndex = 0; touchEventIndex < touchEventsListSize; touchEventIndex++) {
             Input.TouchEvent event = touchEvents.get(touchEventIndex);
             if (event.type == Input.TouchEvent.TOUCH_DOWN) {
-                if (!at_settings && inBounds(event, 0, 0, 480, 600)) {
+                if (!at_settings && inBounds(event, 95, 468, 240, 76)) {
                     game.setScreen(new GameScreen(game));
                 }
-                if (!at_settings && inBounds(event, 200, 730, 280, 790)) {
-                    at_settings = true;
+                if (!at_settings && inBounds(event, 95, 680, 290, 76)) {
+                    //at_settings = true;
                 } else if (at_settings && inBounds(event, 120, 370, 240, 100) && Settings.soundEnabled) {
-                    Settings.soundEnabled = false;
+                    //Settings.soundEnabled = false;
                 } else if (at_settings && inBounds(event, 120, 370, 240, 100) && !Settings.soundEnabled) {
-                    Settings.soundEnabled = true;
+                    //Settings.soundEnabled = true;
                 } else if (at_settings && inBounds(event, 140, 555, 240, 80)) {
-                    at_settings = false;
-                    Settings.save(game.getFileIO());
+                    //at_settings = false;
+                    //Settings.save(game.getFileIO());
+                }
+                if (!at_settings && inBounds(event, 95, 572, 250, 76)) {
+                    //at_leaderboards = true;
                 }
 
 /*                if (!at_settings && inBounds(event, LEADERBOARD_BUTTON_DIMENSIONS)) {
@@ -83,7 +87,7 @@ public class MainMenuScreen extends Screen {
     @Override
     public void paint(float deltaTime) {
         Graphics g = game.getGraphics();
-        menu_paint.setAntiAlias(true);
+/*        menu_paint.setAntiAlias(true);
         menu_paint.setTextAlign(Paint.Align.CENTER);
         menu_paint.setColor(Color.BLACK);
         menu_paint.setTextSize(60);
@@ -97,7 +101,9 @@ public class MainMenuScreen extends Screen {
         menu_paint.setColor(Color.BLUE);
         g.drawString("START", 240, 600, menu_paint);
 
-        g.drawString("Settings", 240, 760, menu_paint);
+        g.drawString("Settings", 240, 760, menu_paint);*/
+
+        g.drawImage(g.newImage("SplashScreenhighresfilled.png", Graphics.ImageFormat.RGB565), 0, 0);
 
         if (at_settings) {
             if (Settings.soundEnabled) {

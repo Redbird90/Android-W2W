@@ -16,6 +16,7 @@ public class WallHazard extends Rectangle {
 
     public void addY_pos(float y) {
         this.y_pos += y;
+        this.update();
     }
 
     public WallHazard(float x, float y, float width, float height) {
@@ -25,6 +26,6 @@ public class WallHazard extends Rectangle {
     }
 
     public void update() {
-        this.setLowerLeft(this.x, this.y);
+        this.setLowerLeft(this.x_pos, this.y_pos);
     }
 }

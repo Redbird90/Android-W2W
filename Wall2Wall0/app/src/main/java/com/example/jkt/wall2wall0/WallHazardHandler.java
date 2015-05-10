@@ -7,10 +7,10 @@ import android.util.Log;
  */
 public class WallHazardHandler {
     
-    public final int[] leftWallLowHazardArray = {3, 4};
-    public final int[] leftWallHighHazardArray = {5, 8, 12};
-    public final int[] rightWallLowHazardArray = {6, 9};
-    public final int[] rightWallHighHazardArray = {7, 10};
+    public final int[] leftWallLowHazardArray = {3, 15, 19};
+    public final int[] leftWallHighHazardArray = {8, 12, 30};
+    public final int[] rightWallLowHazardArray = {6, 9, 26};
+    public final int[] rightWallHighHazardArray = {10, 20, 38};
     private int leftLowIndex = 0;
     private int leftHighIndex = 0;
     private int rightLowIndex = 0;

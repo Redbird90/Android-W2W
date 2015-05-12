@@ -29,8 +29,8 @@ public class WheelEnemy extends falling_enemy {
     @Override
     public void update_bounds() {
         test_circ.setCenter(80, 80);
-        Log.i("WheelEnemy", "Using local update_bounds()");
-        Log.i("new x and y", String.valueOf(this.x_pos)+","+String.valueOf(this.y_pos));
+        //Log.i("WheelEnemy", "Using local update_bounds()");
+        //Log.i("new x and y", String.valueOf(this.x_pos)+","+String.valueOf(this.y_pos));
         //this.bounds.center = this.bounds.center.set(this.x_pos, this.y_pos);
         //bounds.center = new Vector2(this.getX_pos(), this.getY_pos());
         this.bounds.setCenter(this.getX_pos(), this.getY_pos());

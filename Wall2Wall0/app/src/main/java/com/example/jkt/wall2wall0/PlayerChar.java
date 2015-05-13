@@ -32,6 +32,7 @@ public class PlayerChar extends DynamicGameObject {
     public float landing_y;
     public float vertex_y;
     public int frame_num;
+    private int jumpType;
 
     private String char_direction;
     private String char_facing;
@@ -118,6 +119,7 @@ public class PlayerChar extends DynamicGameObject {
         this.dying = false;
         this.x_change = 0;
         this.y_change = 0;
+        this.jumpType = 0;
         this.currentSpriteBounds = leftWallHangArray;
         this.arrayOfArrays = new ArrayList<ArrayList<Rectangle>>();
         this.createPlayerRectArrays();
@@ -125,8 +127,9 @@ public class PlayerChar extends DynamicGameObject {
         //this.h_value = 256;
         //this.k_value = 477.2f;
     }
-    public void start_movement() {
+    public void start_movement(int jump_type) {
         if (!jumped) {
+            this.jumpType = jump_type;
             this.first_jump = true;
             this.jumped = true;
             this.sliding = false;
@@ -139,8 +142,16 @@ public class PlayerChar extends DynamicGameObject {
                 this.char_direction = "left";
                 this.char_facing = "left";
             }
-            landing_y = this.y_pos - 87.36f;
-            vertex_y = this.y_pos - 108.42f;
+            if (this.jumpType == 0) {
+                this.landing_y = this.y_pos - 79.056f;
+                this.vertex_y = this.y_pos - 92.93f;
+            } else if (this.jumpType == 1) {
+                this.landing_y = this.y_pos - 118.584f;
+                this.vertex_y = this.y_pos - 139.39f;
+            } else {
+                this.landing_y = this.y_pos - 158.11f;
+                this.vertex_y = this.y_pos - 185.86f;
+            }
             timer_started = false;
 
         }
@@ -188,14 +199,28 @@ public class PlayerChar extends DynamicGameObject {
             // Add velocities to positions
             if (this.char_direction == "right") {
                 this.x_pos += velocity.getX();
-                this.y_pos = (float) (0.003 * ((this.x_pos - 256) * (this.x_pos - 256)) + (vertex_y + decreased_y)); //276, 164
+                if (this.jumpType == 0) {
+                    this.y_pos = (float) (0.003 * ((this.x_pos - 256) * (this.x_pos - 256)) + (this.vertex_y + this.decreased_y)); //276, 164;
+                } else if (this.jumpType == 1) {
+                    this.y_pos = (float) (0.0045 * ((this.x_pos - 256) * (this.x_pos - 256)) + (this.vertex_y + this.decreased_y));
+                    this.player_score += 0.2;
+                } else {
+                    this.y_pos = (float) (0.006 * ((this.x_pos - 256) * (this.x_pos - 256)) + (this.vertex_y + this.decreased_y));
+                    this.player_score += 0.4;
+                }
                 if (velocity.getX() > 0) {
                     this.player_score += 1.4;
                 }
             } else if (this.char_direction == "left") {
                 this.x_pos -= velocity.getX();
-                this.y_pos = (float) (0.003 * ((this.x_pos - 168) * (this.x_pos - 168)) + (vertex_y + decreased_y));  // ORIGINAL WAS (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 419.2);
-                if (velocity.getX() > 0) {
+                if (this.jumpType == 0) {
+                    this.y_pos = (float) (0.003 * ((this.x_pos - 168) * (this.x_pos - 168)) + (this.vertex_y + this.decreased_y));
+                } else if (this.jumpType == 1) {
+                    this.y_pos = (float) (0.0045 * ((this.x_pos - 168) * (this.x_pos - 168)) + (this.vertex_y + this.decreased_y));  // ORIGINAL WAS (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 419.2);
+                } else {
+                    this.y_pos = (float) (0.006 * ((this.x_pos - 168) * (this.x_pos - 168)) + (this.vertex_y + this.decreased_y));
+                }
+                    if (velocity.getX() > 0) {
                     this.player_score += 1.4;
                 }
             } else {

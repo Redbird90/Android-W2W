@@ -32,6 +32,9 @@ public class falling_enemy extends DynamicGameObject {
     public Shape bounds;
 
     public boolean player_jumping = false;
+    public float y_change;
+    public float x_change;
+    public float y_height_thresh_change;
 
     public falling_enemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height);
@@ -46,6 +49,11 @@ public class falling_enemy extends DynamicGameObject {
     }
 
     public void update_enemy() {
+
+        this.x_change = 0f;
+        this.y_change = 0f;
+        float old_y_pos = this.y_pos;
+        float old_x_pos = this.x_pos;
         if (this.player_jumping) {
             this.y_pos += (this.velocity.getY() + 1.5f);
             this.x_pos += this.velocity.getX();
@@ -53,7 +61,13 @@ public class falling_enemy extends DynamicGameObject {
             this.y_pos += this.velocity.getY();
             this.x_pos += this.velocity.getX();
         }
+        float new_y_pos = this.y_pos;
+        float new_x_pos = this.x_pos;
+        this.y_change = (new_y_pos - old_y_pos);
+        this.x_change = (new_x_pos - old_x_pos);
+
         this.update_bounds();
+        this.y_height_thresh_change = 0f;
     }
 
     public int getEnemy_num() {
@@ -61,7 +75,16 @@ public class falling_enemy extends DynamicGameObject {
     }
 
     public void update_bounds() {
-        this.bounds.setLowerLeft(this.x_pos, this.y_pos);
+        for (int i=0; i < this.bounds_tsil.size(); i++) {
+            Rectangle curr_rect;
+            curr_rect = (Rectangle) this.bounds_tsil.get(i);
+            this.bounds_tsil.get(i).setLowerLeft(curr_rect.getLowerLeft().getX() + this.x_change,
+                    curr_rect.getLowerLeft().getY() + this.y_change + this.y_height_thresh_change);
+        }
+    }
+
+    public void setY_height_thresh_change(float y_height_thresh_change) {
+        this.y_height_thresh_change = y_height_thresh_change;
     }
 
     public void setPlayer_jumping(boolean player_jumping) {

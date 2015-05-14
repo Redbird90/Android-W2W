@@ -216,8 +216,8 @@ public class GameScreen extends Screen {
                         BranchEnemy new_enemy = new BranchEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_2_WIDTH, ENEMY_2_HEIGHT, 2);
                         enemy_list.add(new_enemy);*/
                     } else if (current_spawn.enemy_type == 3) {
-                        //AppleEnemy new_enemy = new AppleEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_3_WIDTH, ENEMY_3_HEIGHT, 3);
-                        //enemy_list.add(new_enemy);
+                        AppleEnemy new_enemy = new AppleEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_3_WIDTH, ENEMY_3_HEIGHT, 3);
+                        enemy_list.add(new_enemy);
                     } else if (current_spawn.enemy_type == 5) {
                         MonkeyEnemy new_enemy = new MonkeyEnemy(current_spawn.enemy_x_location, ENEMY_Y_SPAWN_POS, ENEMY_4_WIDTH, ENEMY_4_HEIGHT, 5);
                         enemy_list.add(new_enemy);
@@ -495,10 +495,12 @@ public class GameScreen extends Screen {
                 }
                 // Speed up blocks when player is too high
                 if (this.height_thresh1) {
+                    this.enemy_list.get(i).setY_pos(this.enemy_list.get(i).getY_pos() + 2.0f);
+                    this.enemy_list.get(i).setY_height_thresh_change(2f);
                     if (this.height_thresh2) {
                         this.enemy_list.get(i).setY_pos(this.enemy_list.get(i).getY_pos() + 4.0f);
+                        this.enemy_list.get(i).setY_height_thresh_change(6f);
                     }
-                    this.enemy_list.get(i).setY_pos(this.enemy_list.get(i).getY_pos() + 2.0f);
                 }
                 this.enemy_list.get(i).update_enemy();
             }
@@ -840,7 +842,7 @@ public class GameScreen extends Screen {
                                 this.player1.getCurrentSpriteBounds().get(y).height);*/
 
                                 Rectangle curr_rect = (Rectangle) this.enemy_list.get(i).bounds_tsil.get(z);
-                                //Log.i("GameScreenEnemy", String.valueOf(curr_rect.getLowerLeft().getX()+","+curr_rect.getLowerLeft().getY()+"..."+curr_rect.width+","+curr_rect.height));
+                                Log.i("GameScreenEnemy", String.valueOf(curr_rect.getLowerLeft().getX()+","+curr_rect.getLowerLeft().getY()+"..."+curr_rect.width+","+curr_rect.height));
                                 if (this.checkForOverlap.overlapRectangles(this.player1.getCurrentSpriteBounds().get(y), (Rectangle) this.enemy_list.get(i).bounds_tsil.get(z))) {
                                     this.player1.dying = true;
                                     Log.i("OVERLAP FOUND", String.valueOf(this.player1.getX_pos()));

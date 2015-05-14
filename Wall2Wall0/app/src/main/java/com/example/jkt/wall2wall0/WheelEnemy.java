@@ -14,7 +14,6 @@ import java.util.Random;
 public class WheelEnemy extends falling_enemy {
 
     private final int wheel_orientation;
-    private Circle test_circ = new Circle(50, 50, 20);
     private Random randGen = new Random();
 
     public WheelEnemy(float x, float y, float width, float height, int enemy_num) {
@@ -28,7 +27,6 @@ public class WheelEnemy extends falling_enemy {
 
     @Override
     public void update_bounds() {
-        test_circ.setCenter(80, 80);
         //Log.i("WheelEnemy", "Using local update_bounds()");
         //Log.i("new x and y", String.valueOf(this.x_pos)+","+String.valueOf(this.y_pos));
         //this.bounds.center = this.bounds.center.set(this.x_pos, this.y_pos);

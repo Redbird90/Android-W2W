@@ -5,7 +5,7 @@ public class Rectangle extends Shape {
     public float width, height;
 
     public Vector2 getLowerLeft() {
-        return lowerLeft;
+        return this.lowerLeft;
     }
 
     public void setLowerLeft(float x, float y) {

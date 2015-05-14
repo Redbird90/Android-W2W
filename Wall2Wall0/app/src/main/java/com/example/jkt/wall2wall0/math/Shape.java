@@ -5,12 +5,14 @@ package com.example.jkt.wall2wall0.math;
  */
 public class Shape {
 
+    public Vector2 lowerLeft;
     public float x;
     public float y;
 
     public Shape(float x, float y) {
         this.x = x;
         this.y = y;
+        this.lowerLeft = new Vector2(x, y);
     }
 
     public void setLowerLeft(float x, float y) {

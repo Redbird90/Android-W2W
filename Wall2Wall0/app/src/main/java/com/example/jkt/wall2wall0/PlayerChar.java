@@ -158,7 +158,7 @@ public class PlayerChar extends DynamicGameObject {
     }
 
     public void update_char() {
-        Log.i("PlayerCharUpdate", String.valueOf(this.x_pos+","+this.y_pos));
+        //Log.i("PlayerCharUpdate", String.valueOf(this.x_pos+","+this.y_pos));
         this.x_change = 0;
         this.y_change = 0;
         float old_y_pos = this.y_pos;
@@ -259,9 +259,9 @@ public class PlayerChar extends DynamicGameObject {
         float new_x_pos = this.x_pos;
         this.y_change = (new_y_pos - old_y_pos);
         this.x_change = (new_x_pos - old_x_pos);
-        Log.i("PlayerCharUpdate", String.valueOf(this.x_pos+","+this.y_pos));
-        Log.i("PlayerCharBeforeBounds", String.valueOf(this.x_change+","+this.y_change));
-        String empty_string = getSpriteName();
+        //Log.i("PlayerCharUpdate", String.valueOf(this.x_pos+","+this.y_pos));
+        //Log.i("PlayerCharBeforeBounds", String.valueOf(this.x_change+","+this.y_change));
+        String useless_string = getSpriteName();
         this.update_bounds();
     }
 
@@ -351,7 +351,7 @@ public class PlayerChar extends DynamicGameObject {
             }
 
         } else {
-            Log.i("PlayerChar", "DYING TRUE");
+            //Log.i("PlayerChar", "DYING TRUE");
             if (this.y_pos > 620 && this.char_facing == "right") {
                 return SPRITE_RIGHT_DYING_LATE;
             } else if (this.y_pos > 620 && this.char_facing == "left") {

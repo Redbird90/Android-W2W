@@ -23,8 +23,8 @@ public class BirdEnemy extends falling_enemy {
     private Rectangle bounds4_left;
     private Rectangle bounds5_left;
     private boolean start_moving_left;
-    private ArrayList<Shape> bounds_right_tsil = new ArrayList<>();
-    private ArrayList<Shape> bounds_left_tsil = new ArrayList<>();
+    private ArrayList<Shape> bounds_right_tsil = new ArrayList();
+    private ArrayList<Shape> bounds_left_tsil = new ArrayList();
 
     public BirdEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);

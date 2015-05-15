@@ -110,7 +110,7 @@ public class GameScreen extends Screen {
     private final int FACTORY_LEFT_WALL_X_POSITION = 0;
     private final int FACTORY_RIGHT_WALL_X_POSITION = 386;
     private final int FOREST_RIGHT_WALL_HAZARD_X_POSITION = 300;
-    private final int FACTORY_RIGHT_WALL_HAZARD_X_POSITION = 292;
+    private final int FACTORY_RIGHT_WALL_HAZARD_X_POSITION = 260;
     private final int UI_WINDOW_X_POSITION = 50;
     private final int UI_WINDOW_Y_POSITION = 130;
     private boolean bot_left_wall_low_hazard = false;
@@ -171,8 +171,8 @@ public class GameScreen extends Screen {
         this.enemySpawnTimer = new SpawnTimer();
         this.enemySpawnEventArray = new ArrayList<SpawnEvent>();
         this.enemyArrayParsed = false;
-        this.tile_x_positions = new ArrayList(10);
-        this.tile_y_positions = new ArrayList(10);
+        this.tile_x_positions = new ArrayList<>(10);
+        this.tile_y_positions = new ArrayList<>(10);
         this.tileArrayRemakeNeeded = false;
         this.first_tileArrayRemake = true;
         this.forest_tree_1_y_pos = -1189;
@@ -1013,14 +1013,14 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
                 g.drawImage(g.newImage("SceneOne_Tile.png", Graphics.ImageFormat.RGB565), (int) this.tile_x_positions.get(i), (int) this.tile_y_positions.get(i));
             }*/
             //END OBS
-            g.drawImage(g.newImage("Forest_Background_noshrubnotree.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
-            g.drawImage(g.newImage("Forest_Background_noshrubnotree.png", Graphics.ImageFormat.RGB565), 0, this.bot_backg_y_pos);
+            g.drawImage(g.newImage("Forest_Backgroundhighres.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
+            g.drawImage(g.newImage("Forest_Backgroundhighres.png", Graphics.ImageFormat.RGB565), 0, this.bot_backg_y_pos);
 
 /*            g.drawImage(g.newImage("Forest_Background_noshrubnotree.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
             g.drawImage(g.newImage("Forest_Background_noshrubnotree.png", Graphics.ImageFormat.RGB565), 0, this.bot_backg_y_pos);*/
 
-            g.drawImage(g.newImage("Forest_TreeandBranches.png", Graphics.ImageFormat.RGB565), 170, this.top_forestbgtree_y_pos);
-            g.drawImage(g.newImage("Forest_TreeandBranches.png", Graphics.ImageFormat.RGB565), 170, this.bot_forestbgtree_y_pos);
+            g.drawImage(g.newImage("Forest_TreeandBrancheshighres.png", Graphics.ImageFormat.RGB565), 170, this.top_forestbgtree_y_pos);
+            g.drawImage(g.newImage("Forest_TreeandBrancheshighres.png", Graphics.ImageFormat.RGB565), 170, this.bot_forestbgtree_y_pos);
 
             //START OBS
 /*            g.drawImage(g.newImage("SceneOne_MidGround_BranchReversed.png", Graphics.ImageFormat.RGB565), this.forest_branch_reversed_x_pos, this.forest_branch_1_y_pos);
@@ -1076,38 +1076,38 @@ private void updatePaused(List<Input.TouchEvent> touchEvents) {
         } else if (current_level == 2) {  // REPLACE IMAGES ONCE ASSETS OBTAINED
             // Now game elements:
             // Draw two sets of scrolling backgrounds
-            g.drawImage(g.newImage("RobotFactoryBackgroundhighres.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
-            g.drawImage(g.newImage("RobotFactoryBackgroundhighres.png", Graphics.ImageFormat.RGB565), 0, this.bot_backg_y_pos);
+            g.drawImage(g.newImage("RobotFactoryBackgroundhighres_lightson.png", Graphics.ImageFormat.RGB565), 0, this.top_backg_y_pos);
+            g.drawImage(g.newImage("RobotFactoryBackgroundhighres_lightson.png", Graphics.ImageFormat.RGB565), 0, this.bot_backg_y_pos);
             //Log.i("TESTING1", String.valueOf(this.top_backg_y_pos) + "," + String.valueOf(this.bot_backg_y_pos));
             //Log.i("TESTING2", String.valueOf(this.top_walls_y_pos) + "," + String.valueOf(this.bot_walls_y_pos));
 
             // Draw two sets of left walls
             if (this.top_left_wall_low_hazard) {
-                g.drawImage(g.newImage("FactoryLeft_Wallhighres-lowhazard,94px.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.top_walls_y_pos);
+                g.drawImage(g.newImage("FactoryLeft_Wallhighres-lowhazard, 220px, glow.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.top_walls_y_pos);
             } else if (this.top_left_wall_high_hazard) {
-                g.drawImage(g.newImage("FactoryLeft_Wallhighres-highhazard,94px.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.top_walls_y_pos);
+                g.drawImage(g.newImage("FactoryLeft_Wallhighres-highhazard, 220px, glow.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.top_walls_y_pos);
             } else {
                 g.drawImage(g.newImage("FactoryLeft_Wallhighres-94px.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.top_walls_y_pos);
             }
             if (this.bot_left_wall_low_hazard) {
-                g.drawImage(g.newImage("FactoryLeft_Wallhighres-lowhazard,94px.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.bot_walls_y_pos);
+                g.drawImage(g.newImage("FactoryLeft_Wallhighres-lowhazard, 220px, glow.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.bot_walls_y_pos);
             } else if (this.bot_left_wall_high_hazard) {
-                g.drawImage(g.newImage("FactoryLeft_Wallhighres-highhazard,94px.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.bot_walls_y_pos);
+                g.drawImage(g.newImage("FactoryLeft_Wallhighres-highhazard, 220px, glow.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.bot_walls_y_pos);
             } else {
                 g.drawImage(g.newImage("FactoryLeft_Wallhighres-94px.png", Graphics.ImageFormat.RGB565), FACTORY_LEFT_WALL_X_POSITION, this.bot_walls_y_pos);
             }
             // Draw two sets of right walls
             if (this.top_right_wall_low_hazard) {
-                g.drawImage(g.newImage("FactoryRight_Wallhighres-lowhazard,94px.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_X_POSITION, this.top_walls_y_pos);
+                g.drawImage(g.newImage("FactoryRight_Wallhighres-lowhazard, 220px, glow.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_HAZARD_X_POSITION, this.top_walls_y_pos);
             } else if (this.top_right_wall_high_hazard) {
-                g.drawImage(g.newImage("FactoryRight_Wallhighres-highhazard,94px.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_X_POSITION, this.top_walls_y_pos);
+                g.drawImage(g.newImage("FactoryRight_Wallhighres-highhazard, 220px, glow.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_HAZARD_X_POSITION, this.top_walls_y_pos);
             } else {
                 g.drawImage(g.newImage("FactoryRight_Wallhighres-94px.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_X_POSITION, this.top_walls_y_pos);
             }
             if (this.bot_right_wall_low_hazard) {
-                g.drawImage(g.newImage("FactoryRight_Wallhighres-lowhazard,94px.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_X_POSITION, this.bot_walls_y_pos);
+                g.drawImage(g.newImage("FactoryRight_Wallhighres-lowhazard, 220px, glow.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_HAZARD_X_POSITION, this.bot_walls_y_pos);
             } else if (this.bot_right_wall_high_hazard) {
-                g.drawImage(g.newImage("FactoryRight_Wallhighres-highhazard,94px.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_X_POSITION, this.bot_walls_y_pos);
+                g.drawImage(g.newImage("FactoryRight_Wallhighres-highhazard, 220px, glow.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_HAZARD_X_POSITION, this.bot_walls_y_pos);
             } else {
                 g.drawImage(g.newImage("FactoryRight_Wallhighres-94px.png", Graphics.ImageFormat.RGB565), FACTORY_RIGHT_WALL_X_POSITION, this.bot_walls_y_pos);
             }

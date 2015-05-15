@@ -33,6 +33,7 @@ public class PlayerChar extends DynamicGameObject {
     public float vertex_y;
     public int frame_num;
     private int jumpType;
+    private int slideAnimate;
 
     private String char_direction;
     private String char_facing;
@@ -96,8 +97,12 @@ public class PlayerChar extends DynamicGameObject {
     private String SPRITE_LEFT_10 = "Sprite10highres-6perc.png";
     private String SPRITE_RIGHT_11 = "Sprite11highres_reverse-6perc.png";
     private String SPRITE_LEFT_11 = "Sprite11highres-6perc.png";
-    private String SPRITE_RIGHT_SLIDING = "Sprite16highres_reverse-6perc.png";
-    private String SPRITE_LEFT_SLIDING = "Sprite16highres-6perc.png";
+    private String SPRITE_RIGHT_SLIDING1 = "Sprite16highres_reverse-6perc.png";
+    private String SPRITE_LEFT_SLIDING1 = "Sprite16highres-6perc.png";
+    private String SPRITE_RIGHT_SLIDING2 = "Sprite16highres_reverse-6perc2.png";
+    private String SPRITE_LEFT_SLIDING2 = "Sprite16highres-6perc2.png";
+    private String SPRITE_RIGHT_SLIDING3 = "Sprite16highres_reverse-6perc3.png";
+    private String SPRITE_LEFT_SLIDING3 = "Sprite16highres-6perc3.png";
 
 
 
@@ -174,11 +179,11 @@ public class PlayerChar extends DynamicGameObject {
                 }
                 if (System.currentTimeMillis() - timer1 > 1800) {
                     this.sliding = true;
-                    this.velocity.set(0.0f, 2f);
+                    this.velocity.set(0.0f, 1.8f);
                 }
                 if (System.currentTimeMillis() - timer1 > 4000) {
                     this.sliding = true;
-                    this.velocity.set(0.0f, 4f);
+                    this.velocity.set(0.0f, 3f);
                 }
             }
 
@@ -270,10 +275,26 @@ public class PlayerChar extends DynamicGameObject {
             if (this.sliding) {
                 if (this.char_facing == "right") {
                     this.currentSpriteBounds = this.rightSlidingArray;
-                    return SPRITE_RIGHT_SLIDING;
+                    this.slideAnimate += 1;
+                    if (this.slideAnimate == 0) {
+                        return SPRITE_RIGHT_SLIDING1;
+                    } else if (this.slideAnimate == 1) {
+                        return  SPRITE_RIGHT_SLIDING2;
+                    } else {
+                        this.slideAnimate = -1;
+                        return SPRITE_RIGHT_SLIDING3;
+                    }
                 } else if (this.char_facing == "left") {
                     this.currentSpriteBounds = this.leftSlidingArray;
-                    return SPRITE_LEFT_SLIDING;
+                    this.slideAnimate += 1;
+                    if (this.slideAnimate == 0) {
+                        return SPRITE_LEFT_SLIDING1;
+                    } else if (this.slideAnimate == 1) {
+                        return  SPRITE_LEFT_SLIDING2;
+                    } else {
+                        this.slideAnimate = -1;
+                        return SPRITE_LEFT_SLIDING3;
+                    }
                 }
             }
             if (!this.jumped) {

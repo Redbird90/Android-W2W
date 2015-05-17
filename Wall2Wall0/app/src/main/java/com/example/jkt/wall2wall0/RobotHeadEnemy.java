@@ -28,12 +28,14 @@ public class RobotHeadEnemy extends falling_enemy {
         this.bounds_tsil.add(this.bounds2);
     }
 
-    public String getImageName() {
-        if (this.head_orientation == 0) {
+    public int getImageName() {
+        return this.head_orientation;
+
+/*        if (this.head_orientation == 0) {
             return "Factory_RobotHeadhighres-60px.png";
         } else {
             return "Factory_RobotHeadhighres_reverse-60px.png";
-        }
+        }*/
 
     }
 }

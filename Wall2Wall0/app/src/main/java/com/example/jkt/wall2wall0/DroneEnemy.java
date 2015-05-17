@@ -75,7 +75,9 @@ public class DroneEnemy extends falling_enemy {
         Log.i("DroneEnemy", String.valueOf(this.velocity.getX()+","+this.velocity.getY()));
     }
 
-    public String getImageName() {
-        return "Factory_Dronehighres-95px.png";
+    public int getImageName() {
+        // NOT NEEDED
+        return 0;
+        //return "Factory_Dronehighres-95px.png";
     }
 }

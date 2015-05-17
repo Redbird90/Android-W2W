@@ -15,20 +15,13 @@ public class AppleEnemy extends falling_enemy {
 
     public AppleEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);
-        this.velocity = new Vector2(0f, 6.0f);
+        this.velocity = new Vector2(0f, 5.5f);
         this.bounds = new Rectangle(x, y, width, height);
         this.bounds_tsil.add(bounds);
         this.apple_orientation = randGen.nextInt(3);
     }
 
-    public String getImageName() {
-        if (this.apple_orientation == 0) {
-            return "AppleEnemyhighres.png";
-        } else if (this.apple_orientation == 1) {
-            return "AppleEnemyhighres_flat.png";
-        } else {
-            return "AppleEnemyhighres_reverse.png";
-        }
-
+    public int getImageName() {
+        return this.apple_orientation;
     }
 }

@@ -132,13 +132,15 @@ public class BirdEnemy extends falling_enemy {
         }
     }
 
-    public String getImageName() {
+    public int getImageName() {
         // BirdEnemy is moving right
         if (this.velocity.getX() >= 0) {
-            return "BirdEnemyhighres_reverse.png";
+            return 0;
+            //return "BirdEnemyhighres_reverse.png";
             // BirdEnemy is moving left
         } else {
-            return "BirdEnemyhighres.png";
+            return 1;
+            //return "BirdEnemyhighres.png";
         }
     }
 }

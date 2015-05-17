@@ -9,11 +9,16 @@ public class Assets {
 //	public static Sound click;
 //	public static Music theme;
 
-/*	public static void load(SampleGame sampleGame) {
-		theme = sampleGame.getAudio().createMusic("menutheme.mp3");
+public static void load(Game w2wgame, Screen gameScreen) {
+
+
+
+
+
+/*		theme = sampleGame.getAudio().createMusic("menutheme.mp3");
 		theme.setLooping(true);
 		theme.setVolume(0.85f);
-		theme.play();
-	}*/
+		theme.play();*/
+	}
 
 }

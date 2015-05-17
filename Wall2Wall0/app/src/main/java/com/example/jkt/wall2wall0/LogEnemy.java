@@ -1,7 +1,5 @@
 package com.example.jkt.wall2wall0;
 
-import android.util.Log;
-
 import com.example.jkt.wall2wall0.math.Rectangle;
 import com.example.jkt.wall2wall0.math.Vector2;
 
@@ -24,7 +22,9 @@ public class LogEnemy extends falling_enemy {
         this.bounds_tsil.add(bounds3);
     }
 
-    public String getImageName() {
-        return "LogEnemyhighres-100px.png";
+    public int getImageName() {
+        // NOT NEEDED
+        //return "LogEnemyhighres-100px.png"
+        return 0;
     }
 }

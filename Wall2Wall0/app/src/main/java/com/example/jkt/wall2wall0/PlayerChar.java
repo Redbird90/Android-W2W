@@ -49,60 +49,60 @@ public class PlayerChar extends DynamicGameObject {
     private float x_change;
     private float y_change;
 
-    private ArrayList<Rectangle> leftWallHangArray = new ArrayList();
-    private ArrayList<Rectangle> rightWallHangArray = new ArrayList();
-    private ArrayList<Rectangle> right3Array = new ArrayList();
-    private ArrayList<Rectangle> left3Array = new ArrayList();
-    private ArrayList<Rectangle> right4Array = new ArrayList();
-    private ArrayList<Rectangle> left4Array = new ArrayList();
-    private ArrayList<Rectangle> right5Array = new ArrayList();
-    private ArrayList<Rectangle> left5Array = new ArrayList();
-    private ArrayList<Rectangle> right6Array = new ArrayList();
-    private ArrayList<Rectangle> left6Array = new ArrayList();
-    private ArrayList<Rectangle> right7Array = new ArrayList();
-    private ArrayList<Rectangle> left7Array = new ArrayList();
-    private ArrayList<Rectangle> right8Array = new ArrayList();
-    private ArrayList<Rectangle> left8Array = new ArrayList();
-    private ArrayList<Rectangle> right10Array = new ArrayList();
-    private ArrayList<Rectangle> left10Array = new ArrayList();
-    private ArrayList<Rectangle> rightSlidingArray = new ArrayList();
-    private ArrayList<Rectangle> leftSlidingArray = new ArrayList();
+    private ArrayList<Rectangle> leftWallHangArray = new ArrayList<>();
+    private ArrayList<Rectangle> rightWallHangArray = new ArrayList<>();
+    private ArrayList<Rectangle> right3Array = new ArrayList<>();
+    private ArrayList<Rectangle> left3Array = new ArrayList<>();
+    private ArrayList<Rectangle> right4Array = new ArrayList<>();
+    private ArrayList<Rectangle> left4Array = new ArrayList<>();
+    private ArrayList<Rectangle> right5Array = new ArrayList<>();
+    private ArrayList<Rectangle> left5Array = new ArrayList<>();
+    private ArrayList<Rectangle> right6Array = new ArrayList<>();
+    private ArrayList<Rectangle> left6Array = new ArrayList<>();
+    private ArrayList<Rectangle> right7Array = new ArrayList<>();
+    private ArrayList<Rectangle> left7Array = new ArrayList<>();
+    private ArrayList<Rectangle> right8Array = new ArrayList<>();
+    private ArrayList<Rectangle> left8Array = new ArrayList<>();
+    private ArrayList<Rectangle> right10Array = new ArrayList<>();
+    private ArrayList<Rectangle> left10Array = new ArrayList<>();
+    private ArrayList<Rectangle> rightSlidingArray = new ArrayList<>();
+    private ArrayList<Rectangle> leftSlidingArray = new ArrayList<>();
     private ArrayList<Rectangle> currentSpriteBounds;
     private ArrayList<ArrayList<Rectangle>> arrayOfArrays;
 
 
 
     // SPRITE_DIRECTION REFERS TO MOVEMENT OF CHARACTER
-    private String SPRITE_LEFT_WALL_HANG = "Sprite2highres_reverse-6perc.png";
-    private String SPRITE_RIGHT_WALL_HANG = "Sprite2highres-6perc.png";
-    private String SPRITE_RIGHT_DYING_EARLY = "Sprite13highres_reverse-6perc.png";
-    private String SPRITE_LEFT_DYING_EARLY = "Sprite13highres-6perc.png";
-    private String SPRITE_RIGHT_DYING_LATE = "Sprite14highres_reverse-6perc.png";
-    private String SPRITE_LEFT_DYING_LATE = "Sprite14highres-6perc.png";
-    private String SPRITE_RIGHT_3 = "Sprite3highres_reverse-6perc.png";
-    private String SPRITE_LEFT_3 = "Sprite3highres-6perc.png";
-    private String SPRITE_RIGHT_4 = "Sprite4highres_reverse-6perc.png";
-    private String SPRITE_LEFT_4 = "Sprite4highres-6perc.png";
-    private String SPRITE_RIGHT_5 = "Sprite5highres_reverse-6perc.png";
-    private String SPRITE_LEFT_5 = "Sprite5highres-6perc.png";
-    private String SPRITE_RIGHT_6 = "Sprite6highres_reverse-6perc.png";
-    private String SPRITE_LEFT_6 = "Sprite6highres-6perc.png";
-    private String SPRITE_RIGHT_7 = "Sprite7highres_reverse-6perc.png";
-    private String SPRITE_LEFT_7 = "Sprite7highres-6perc.png";
-    private String SPRITE_RIGHT_8 = "Sprite8highres_reverse-6perc.png";
-    private String SPRITE_LEFT_8 = "Sprite8highres-6perc.png";
-    private String SPRITE_RIGHT_9 = "Sprite9highres_reverse-6perc.png";
-    private String SPRITE_LEFT_9 = "Sprite9highres-6perc.png";
-    private String SPRITE_RIGHT_10 = "Sprite10highres_reverse-6perc.png";
-    private String SPRITE_LEFT_10 = "Sprite10highres-6perc.png";
-    private String SPRITE_RIGHT_11 = "Sprite11highres_reverse-6perc.png";
-    private String SPRITE_LEFT_11 = "Sprite11highres-6perc.png";
-    private String SPRITE_RIGHT_SLIDING1 = "Sprite16highres_reverse-6perc.png";
-    private String SPRITE_LEFT_SLIDING1 = "Sprite16highres-6perc.png";
-    private String SPRITE_RIGHT_SLIDING2 = "Sprite16highres_reverse-6perc2.png";
-    private String SPRITE_LEFT_SLIDING2 = "Sprite16highres-6perc2.png";
-    private String SPRITE_RIGHT_SLIDING3 = "Sprite16highres_reverse-6perc3.png";
-    private String SPRITE_LEFT_SLIDING3 = "Sprite16highres-6perc3.png";
+    private int SPRITE_LEFT_WALL_HANG = 0;
+    private int SPRITE_RIGHT_WALL_HANG = 1;
+    private int SPRITE_RIGHT_DYING_EARLY = 2;
+    private int SPRITE_LEFT_DYING_EARLY = 3;
+    private int SPRITE_RIGHT_DYING_LATE = 4;
+    private int SPRITE_LEFT_DYING_LATE = 5;
+    private int SPRITE_RIGHT_3 = 6;
+    private int SPRITE_LEFT_3 = 7;
+    private int SPRITE_RIGHT_4 = 8;
+    private int SPRITE_LEFT_4 = 9;
+    private int SPRITE_RIGHT_5 = 10;
+    private int SPRITE_LEFT_5 = 11;
+    private int SPRITE_RIGHT_6 = 12;
+    private int SPRITE_LEFT_6 = 13;
+    private int SPRITE_RIGHT_7 = 14;
+    private int SPRITE_LEFT_7 = 15;
+    private int SPRITE_RIGHT_8 = 16;
+    private int SPRITE_LEFT_8 = 17;
+    //private int SPRITE_RIGHT_9 = 18;
+    //private int SPRITE_LEFT_9 = 19;
+    private int SPRITE_RIGHT_10 = 20;
+    private int SPRITE_LEFT_10 = 21;
+    //private int SPRITE_RIGHT_11 = 22;
+    //private int SPRITE_LEFT_11 = 23;
+    private int SPRITE_RIGHT_SLIDING1 = 24;
+    private int SPRITE_LEFT_SLIDING1 = 25;
+    private int SPRITE_RIGHT_SLIDING2 = 26;
+    private int SPRITE_LEFT_SLIDING2 = 27;
+    private int SPRITE_RIGHT_SLIDING3 = 28;
+    private int SPRITE_LEFT_SLIDING3 = 29;
 
 
 
@@ -266,11 +266,11 @@ public class PlayerChar extends DynamicGameObject {
         this.x_change = (new_x_pos - old_x_pos);
         //Log.i("PlayerCharUpdate", String.valueOf(this.x_pos+","+this.y_pos));
         //Log.i("PlayerCharBeforeBounds", String.valueOf(this.x_change+","+this.y_change));
-        String useless_string = getSpriteName();
+        int useless_int = getSpriteName();
         this.update_bounds();
     }
 
-    public String getSpriteName() {
+    public int getSpriteName() {
         if (!this.dying) {
             if (this.sliding) {
                 if (this.char_facing == "right") {
@@ -331,8 +331,8 @@ public class PlayerChar extends DynamicGameObject {
                         this.currentSpriteBounds = this.right10Array;
                         return SPRITE_RIGHT_10;
                     } else {
-                        Log.i("PLAYER_CHAR", "FAILED1, RETURNING NULL");
-                        return null;
+                        Log.i("PLAYER_CHAR", "FAILED1, RETURNING INVALID INT");
+                        return 50;
                     }
                     /* else if (this.x_pos < 350) {
                         return SPRITE_RIGHT_11;
@@ -362,8 +362,8 @@ public class PlayerChar extends DynamicGameObject {
                         this.currentSpriteBounds = this.left10Array;
                         return SPRITE_LEFT_10;
                     } else {
-                        Log.i("PLAYER_CHAR", "FAILED2, RETURNING NULL");
-                        return null;
+                        Log.i("PLAYER_CHAR", "FAILED2, RETURNING INVALID INT");
+                        return 50;
                     }
                     /* else if (this.x_pos > 74) {
                         return SPRITE_LEFT_11;
@@ -382,12 +382,12 @@ public class PlayerChar extends DynamicGameObject {
             } else if (this.y_pos <= 620 && this.char_facing == "left") {
                 return SPRITE_LEFT_DYING_EARLY;
             } else {
-                Log.i("PLAYER_CHAR", "FAILED3, RETURNING NULL");
-                return null;
+                Log.i("PLAYER_CHAR", "FAILED3, RETURNING INVALID INT");
+                return 50;
             }
         }
-        Log.i("PLAYER_CHAR", "FAILED4, RETURNING NULL");
-        return null;
+        Log.i("PLAYER_CHAR", "FAILED4, RETURNING INVALID INT");
+        return 50;
     }
 
     public void createPlayerRectArrays() {

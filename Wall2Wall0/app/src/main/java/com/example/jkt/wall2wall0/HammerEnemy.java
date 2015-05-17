@@ -28,11 +28,13 @@ public class HammerEnemy extends falling_enemy {
         this.bounds_tsil.add(this.bounds2);
     }
 
-    public String getImageName() {
-        if (this.hammer_orientation == 0) {
+    public int getImageName() {
+        return this.hammer_orientation;
+
+/*        if (this.hammer_orientation == 0) {
             return "Factory_Hammerhighres-100pxh.png";
         } else {
             return "Factory_Hammerhighres_reverse-100pxh.png";
-        }
+        }*/
     }
 }

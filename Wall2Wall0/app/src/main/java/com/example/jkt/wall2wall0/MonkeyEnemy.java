@@ -20,11 +20,13 @@ public class MonkeyEnemy extends falling_enemy {
         this.bounds_tsil.add(bounds);
     }
 
-    public String getImageName() {
+    public int getImageName() {
         if (this.velocity.getX() < 0) {
-            return "MonkeyEnemyhighres_reverse-90px.png";
+            return 0;
+            //return "MonkeyEnemyhighres_reverse-90px.png";
         } else {
-            return "MonkeyEnemyhighres-90px.png";
+            return 1;
+            //return "MonkeyEnemyhighres-90px.png";
         }
     }
 }

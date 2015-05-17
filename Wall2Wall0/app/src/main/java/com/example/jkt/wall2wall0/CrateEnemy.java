@@ -16,8 +16,10 @@ public class CrateEnemy extends falling_enemy {
         this.bounds_tsil.add(this.bounds);
     }
 
-    public String getImageName() {
-        return "Factory_Cratehighres-95px.png";
+    public int getImageName() {
+        // NOT NEEDED
+        return 0;
+        //return "Factory_Cratehighres-95px.png";
     }
 
 }

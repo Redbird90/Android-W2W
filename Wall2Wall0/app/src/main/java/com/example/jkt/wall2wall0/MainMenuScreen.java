@@ -102,8 +102,8 @@ public class MainMenuScreen extends Screen {
         g.drawString("START", 240, 600, menu_paint);
 
         g.drawString("Settings", 240, 760, menu_paint);*/
-
-        g.drawImage(g.newImage("SplashScreenhighresfilled.png", Graphics.ImageFormat.RGB565), 0, 0);
+        Image here = g.newImage("SplashScreenhighresfilled.png", Graphics.ImageFormat.RGB565);
+        g.drawImage(here, 0, 0);
 
         if (at_settings) {
             if (Settings.soundEnabled) {

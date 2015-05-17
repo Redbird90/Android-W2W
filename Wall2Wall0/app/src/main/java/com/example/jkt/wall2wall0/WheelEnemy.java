@@ -1,9 +1,6 @@
 package com.example.jkt.wall2wall0;
 
-import android.util.Log;
-
 import com.example.jkt.wall2wall0.math.Circle;
-import com.example.jkt.wall2wall0.math.Shape;
 import com.example.jkt.wall2wall0.math.Vector2;
 
 import java.util.Random;
@@ -35,15 +32,17 @@ public class WheelEnemy extends falling_enemy {
         //Log.i("WheelEnemy", String.valueOf(bounds.center.getY()));
     }
 
-    public String getImageName() {
-        if (this.wheel_orientation == 0) {
+    public int getImageName() {
+        return this.wheel_orientation;
+
+/*        if (this.wheel_orientation == 0) {
             return "Factory_Wheelhighres_square-80px.png";
         } else if (this.wheel_orientation == 1) {
             return "Factory_Wheelhighres_square_90deg-80px.png";
-        } else if (this.wheel_orientation == 1) {
+        } else if (this.wheel_orientation == 2) {
             return "Factory_Wheelhighres_square_180deg-80px.png";
         } else {
             return "Factory_Wheelhighres_square_270deg-80px.png";
-        }
+        }*/
     }
 }

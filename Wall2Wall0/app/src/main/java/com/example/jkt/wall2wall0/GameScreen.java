@@ -234,8 +234,8 @@ public class GameScreen extends Screen {
         this.enemySpawnTimer = new SpawnTimer();
         this.enemySpawnEventArray = new ArrayList<SpawnEvent>();
         this.enemyArrayParsed = false;
-        this.tile_x_positions = new ArrayList<>(10);
-        this.tile_y_positions = new ArrayList<>(10);
+        this.tile_x_positions = new ArrayList(10);
+        this.tile_y_positions = new ArrayList(10);
         this.tileArrayRemakeNeeded = false;
         this.first_tileArrayRemake = true;
         this.forest_tree_1_y_pos = -1189;

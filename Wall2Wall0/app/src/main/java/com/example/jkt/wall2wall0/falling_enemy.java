@@ -28,7 +28,7 @@ public class falling_enemy extends DynamicGameObject {
     public float width;
     public float height;
     private final int enemy_num;
-    public ArrayList<Shape> bounds_tsil = new ArrayList<>();
+    public ArrayList<Shape> bounds_tsil = new ArrayList();
     public Shape bounds;
 
     public boolean player_jumping = false;

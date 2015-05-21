@@ -251,7 +251,7 @@ public class GameScreen extends Screen {
         this.walls_blitted = 2;
         this.wallHazardHandler = new WallHazardHandler();
         this.playerArrayParsed = false;
-        this.hazardBoundsArray = new ArrayList<>();
+        this.hazardBoundsArray = new ArrayList();
         this.jump_type = 0;
         this.hold_start_time = 0;
         this.player_holding = false;

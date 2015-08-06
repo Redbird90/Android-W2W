@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.DisplayMetrics;
@@ -22,7 +21,6 @@ import com.example.jkt.wall2wall0.Input;
 import com.example.jkt.wall2wall0.Music;
 import com.example.jkt.wall2wall0.Screen;
 import com.example.jkt.wall2wall0.Sound;
-import com.example.jkt.wall2wall0.falling_enemy;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 
@@ -68,12 +66,6 @@ public abstract class AndroidGame extends Activity implements Game, GoogleApiCli
         input = new AndroidInput(this, renderView, scaleX, scaleY);
         screen = getInitScreen();
         setContentView(renderView);
-
-        GoogleApiClient play_services_client = new GoogleApiClient.Builder(this.getApplicationContext())
-                .addApi(Plus.API)
-                .addScope(Plus.SCOPE_PLUS_LOGIN)
-                .setAccountName("users.account.name@gmail.com")
-                .build();
 
         mResolvingError = savedInstanceState != null
                 && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
@@ -133,29 +125,40 @@ public abstract class AndroidGame extends Activity implements Game, GoogleApiCli
         //this.screen.pause();
         //this.screen.dispose();
         //screen.resume();
-        //screen.update(0);
+        screen.update(0);
         this.screen = screen;
     }
 
     public Screen getCurrentScreen() {
-        this.screen.update(0);
+        //this.screen.update(0);
         return this.screen;
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        //play_services_client.disconnect();
+        play_services_client.disconnect();
     }
 
     @Override
-     public void onStart() {
+    public void onStart() {
     super.onStart();
+        Log.i("AndrGame", "starting client construction");
+
     GoogleApiClient play_services_client = new GoogleApiClient.Builder(this.getApplicationContext())
             .addApi(Plus.API)
             .addScope(Plus.SCOPE_PLUS_LOGIN)
             .setAccountName("users.account.name@gmail.com")
             .build();
-    //play_services_client.connect();
-}
+        Log.i("AndrGame", "client constructed, starting connection");
+    play_services_client.connect();
+    }
+
+    public GoogleApiClient getPlayServicesClient() {
+        return this.play_services_client;
+    }
+
+    public Context getAppContext() {
+        return getApplicationContext();
+    }
 }

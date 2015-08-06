@@ -203,6 +203,9 @@ public class AndroidGraphics implements Graphics {
 
     @Override
     public void drawImage(Image image, int x, int y) {
+        if (image == null) {
+            Log.i("AndroidGraphics", "Image is NULL");
+        }
         canvas.drawBitmap(((AndroidImage) image).bitmap, x, y, null);
     }
 

@@ -6,17 +6,14 @@ import com.example.jkt.wall2wall0.math.Vector2;
 /**
  * Created by James on 4/16/2015.
  */
-public class LogEnemy extends falling_enemy {
-
-    private Rectangle bounds2;
-    private Rectangle bounds3;
+public class LogEnemy extends FallingEnemy {
 
     public LogEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);
-        this.velocity = new Vector2(0.0f, 4.8f);
-        this.bounds = new Rectangle(x+8, y+34, 20, 15);
-        this.bounds2 = new Rectangle(x+34, y+14, 29, 21);
-        this.bounds3 = new Rectangle(x+74, y+8, 20, 25);
+        this.velocity = new Vector2(0.0f, 1.5f);//4.8
+        this.bounds = new Rectangle(x+6, y+27, 17, 12);
+        Rectangle bounds2 = new Rectangle(x + 27, y + 11, 24, 17);
+        Rectangle bounds3 = new Rectangle(x + 59, y + 6, 16, 21);
         this.bounds_tsil.add(bounds);
         this.bounds_tsil.add(bounds2);
         this.bounds_tsil.add(bounds3);

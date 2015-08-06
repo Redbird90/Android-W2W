@@ -5,6 +5,10 @@ import android.util.Log;
 /**
  * Created by JDK on 5/6/2015.
  */
+
+// WallHazardHandler class plans the placement of hazards on the left and right walls based on four
+// arrays, and the number of walls blitted in the current game
+// CHANGE TO REFLECT TIME PASSED
 public class WallHazardHandler {
     
     public final int[] leftWallLowHazardArray = {};//, 15, 19};

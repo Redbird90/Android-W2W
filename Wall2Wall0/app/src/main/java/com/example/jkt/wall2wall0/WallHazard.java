@@ -5,6 +5,9 @@ import com.example.jkt.wall2wall0.math.Rectangle;
 /**
  * Created by JDK on 5/7/2015.
  */
+
+// WallHazard class is a subclass of Rectangle mainly used to hold x and y positions of hazard
+// images and easily handle collisions in GameScreen class
 public class WallHazard extends Rectangle {
 
     private final float x_pos;

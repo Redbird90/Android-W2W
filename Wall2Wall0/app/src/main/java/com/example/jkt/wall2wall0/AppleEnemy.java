@@ -8,16 +8,16 @@ import java.util.Random;
 /**
  * Created by James on 4/16/2015.
  */
-public class AppleEnemy extends falling_enemy {
+public class AppleEnemy extends FallingEnemy {
 
     private final int apple_orientation;
-    private Random randGen = new Random();
 
     public AppleEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);
-        this.velocity = new Vector2(0f, 5.5f);
+        this.velocity = new Vector2(0f, 1.8f);//5.5
         this.bounds = new Rectangle(x, y, width, height);
         this.bounds_tsil.add(bounds);
+        Random randGen = new Random();
         this.apple_orientation = randGen.nextInt(3);
     }
 

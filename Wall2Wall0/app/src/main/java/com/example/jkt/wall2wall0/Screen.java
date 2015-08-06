@@ -1,7 +1,8 @@
 package com.example.jkt.wall2wall0;
 
+
 public abstract class Screen {
-    protected final Game game;
+    protected Game game;
 
     public Screen(Game game) {
         this.game = game;

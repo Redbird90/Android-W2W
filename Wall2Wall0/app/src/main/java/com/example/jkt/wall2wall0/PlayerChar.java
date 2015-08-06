@@ -49,61 +49,30 @@ public class PlayerChar extends DynamicGameObject {
     private float x_change;
     private float y_change;
 
-    private ArrayList<Rectangle> leftWallHangArray = new ArrayList();
-    private ArrayList<Rectangle> rightWallHangArray = new ArrayList();
-    private ArrayList<Rectangle> right3Array = new ArrayList();
-    private ArrayList<Rectangle> left3Array = new ArrayList();
-    private ArrayList<Rectangle> right4Array = new ArrayList();
-    private ArrayList<Rectangle> left4Array = new ArrayList();
-    private ArrayList<Rectangle> right5Array = new ArrayList();
-    private ArrayList<Rectangle> left5Array = new ArrayList();
-    private ArrayList<Rectangle> right6Array = new ArrayList();
-    private ArrayList<Rectangle> left6Array = new ArrayList();
-    private ArrayList<Rectangle> right7Array = new ArrayList();
-    private ArrayList<Rectangle> left7Array = new ArrayList();
-    private ArrayList<Rectangle> right8Array = new ArrayList();
-    private ArrayList<Rectangle> left8Array = new ArrayList();
-    private ArrayList<Rectangle> right10Array = new ArrayList();
-    private ArrayList<Rectangle> left10Array = new ArrayList();
-    private ArrayList<Rectangle> rightSlidingArray = new ArrayList();
-    private ArrayList<Rectangle> leftSlidingArray = new ArrayList();
+    private ArrayList<Rectangle> leftWallHangArray = new ArrayList<>();
+    private ArrayList<Rectangle> rightWallHangArray = new ArrayList<>();
+    private ArrayList<Rectangle> right3Array = new ArrayList<>();
+    private ArrayList<Rectangle> left3Array = new ArrayList<>();
+    private ArrayList<Rectangle> right4Array = new ArrayList<>();
+    private ArrayList<Rectangle> left4Array = new ArrayList<>();
+    private ArrayList<Rectangle> right5Array = new ArrayList<>();
+    private ArrayList<Rectangle> left5Array = new ArrayList<>();
+    private ArrayList<Rectangle> right6Array = new ArrayList<>();
+    private ArrayList<Rectangle> left6Array = new ArrayList<>();
+    private ArrayList<Rectangle> right7Array = new ArrayList<>();
+    private ArrayList<Rectangle> left7Array = new ArrayList<>();
+    private ArrayList<Rectangle> right8Array = new ArrayList<>();
+    private ArrayList<Rectangle> left8Array = new ArrayList<>();
+    private ArrayList<Rectangle> right10Array = new ArrayList<>();
+    private ArrayList<Rectangle> left10Array = new ArrayList<>();
+    private ArrayList<Rectangle> rightSlidingArray = new ArrayList<>();
+    private ArrayList<Rectangle> leftSlidingArray = new ArrayList<>();
     private ArrayList<Rectangle> currentSpriteBounds;
     private ArrayList<ArrayList<Rectangle>> arrayOfArrays;
 
 
-
-    // SPRITE_DIRECTION REFERS TO MOVEMENT OF CHARACTER
-    private int SPRITE_LEFT_WALL_HANG = 0;
-    private int SPRITE_RIGHT_WALL_HANG = 1;
-    private int SPRITE_RIGHT_DYING_EARLY = 2;
-    private int SPRITE_LEFT_DYING_EARLY = 3;
-    private int SPRITE_RIGHT_DYING_LATE = 4;
-    private int SPRITE_LEFT_DYING_LATE = 5;
-    private int SPRITE_RIGHT_3 = 6;
-    private int SPRITE_LEFT_3 = 7;
-    private int SPRITE_RIGHT_4 = 8;
-    private int SPRITE_LEFT_4 = 9;
-    private int SPRITE_RIGHT_5 = 10;
-    private int SPRITE_LEFT_5 = 11;
-    private int SPRITE_RIGHT_6 = 12;
-    private int SPRITE_LEFT_6 = 13;
-    private int SPRITE_RIGHT_7 = 14;
-    private int SPRITE_LEFT_7 = 15;
-    private int SPRITE_RIGHT_8 = 16;
-    private int SPRITE_LEFT_8 = 17;
-    //private int SPRITE_RIGHT_9 = 18;
-    //private int SPRITE_LEFT_9 = 19;
-    private int SPRITE_RIGHT_10 = 20;
-    private int SPRITE_LEFT_10 = 21;
-    //private int SPRITE_RIGHT_11 = 22;
-    //private int SPRITE_LEFT_11 = 23;
-    private int SPRITE_RIGHT_SLIDING1 = 24;
-    private int SPRITE_LEFT_SLIDING1 = 25;
-    private int SPRITE_RIGHT_SLIDING2 = 26;
-    private int SPRITE_LEFT_SLIDING2 = 27;
-    private int SPRITE_RIGHT_SLIDING3 = 28;
-    private int SPRITE_LEFT_SLIDING3 = 29;
-
+    private int landing_frame;
+    private boolean slideAnimateUpdated;
 
 
     //private final float h_value;
@@ -125,6 +94,8 @@ public class PlayerChar extends DynamicGameObject {
         this.x_change = 0;
         this.y_change = 0;
         this.jumpType = 0;
+        this.landing_frame = 0;
+        this.slideAnimateUpdated = false;
         this.currentSpriteBounds = leftWallHangArray;
         this.arrayOfArrays = new ArrayList<ArrayList<Rectangle>>();
         this.createPlayerRectArrays();
@@ -132,6 +103,8 @@ public class PlayerChar extends DynamicGameObject {
         //this.h_value = 256;
         //this.k_value = 477.2f;
     }
+
+    // Method called upon user tap to change player velocities and update appropriate variables
     public void start_movement(int jump_type) {
         if (!jumped) {
             this.jumpType = jump_type;
@@ -139,11 +112,11 @@ public class PlayerChar extends DynamicGameObject {
             this.jumped = true;
             this.sliding = false;
             if (this.x_pos < 240) {
-                this.velocity.set(12.0f, 0.0f);
+                this.velocity.set(4.0f, 0.0f);
                 this.char_direction = "right";
                 this.char_facing = "right";
             } else if (this.x_pos > 240) {
-                this.velocity.set(12.0f, 0.0f);
+                this.velocity.set(4.0f, 0.0f);
                 this.char_direction = "left";
                 this.char_facing = "left";
             }
@@ -158,54 +131,72 @@ public class PlayerChar extends DynamicGameObject {
                 this.vertex_y = this.y_pos - 185.86f;
             }
             timer_started = false;
-
+            this.landing_frame = 0;
         }
     }
 
     public void update_char() {
         //Log.i("PlayerCharUpdate", String.valueOf(this.x_pos+","+this.y_pos));
+
+        // Keep track of changes in x and y positions to update bounds accordingly
         this.x_change = 0;
         this.y_change = 0;
         float old_y_pos = this.y_pos;
         float old_x_pos = this.x_pos;
+        // Use slideAnimateUpdated boolean to ensure slide animation is incremented once per frame
+        this.slideAnimateUpdated = false;
+
         if (!dying) {
+            // Handle sliding timer and sliding y velocity
             if (!timer_started && !jumped && first_jump) {
                 timer1 = System.currentTimeMillis();
                 timer_started = true;
             } else if (timer_started) {
                 if (System.currentTimeMillis() - timer1 > 800) {
                     this.sliding = true;
-                    this.velocity.set(0.0f, 1f);
+                    this.velocity.set(0.0f, 0.3f);
                 }
                 if (System.currentTimeMillis() - timer1 > 1800) {
                     this.sliding = true;
-                    this.velocity.set(0.0f, 1.8f);
+                    this.velocity.set(0.0f, 0.7f);
                 }
                 if (System.currentTimeMillis() - timer1 > 4000) {
                     this.sliding = true;
-                    this.velocity.set(0.0f, 3f);
+                    this.velocity.set(0.0f, 1.4f);
                 }
             }
+
+            // Increment landing_frame and update x position if landing animation with SPRITE_10
+            // is complete
+            if (this.first_jump && !this.jumped) {
+                this.landing_frame += 1;
+                if (this.char_facing == "left" && this.landing_frame > 3) {
+                    this.x_pos = 324f;
+                }
+            }
+
 
             // Adjust when character is too high
             if (this.y_pos <= 526) {
                 if (this.y_pos <= 476) {
-                    this.setY_pos(this.y_pos + 4.0f);
+                    this.setY_pos(this.y_pos + 2.0f);//4
                     if (jumped) {
-                        decreased_y += 4.0f;
+                        decreased_y += 2.0f;//4
                     }
                 }
-                this.setY_pos(this.y_pos + 2.0f);
+                this.setY_pos(this.y_pos + 1.0f);//2
                 if (jumped) {
-                    decreased_y += 2.0f;
+                    decreased_y += 1.0f;//2
                 }
             }
 
             // Add velocities to positions
+            // Character jumping right
             if (this.char_direction == "right") {
                 this.x_pos += velocity.getX();
                 if (this.jumpType == 0) {
                     this.y_pos = (float) (0.003 * ((this.x_pos - 256) * (this.x_pos - 256)) + (this.vertex_y + this.decreased_y)); //276, 164;
+                    this.player_score += 0.1;
                 } else if (this.jumpType == 1) {
                     this.y_pos = (float) (0.0045 * ((this.x_pos - 256) * (this.x_pos - 256)) + (this.vertex_y + this.decreased_y));
                     this.player_score += 0.2;
@@ -213,26 +204,33 @@ public class PlayerChar extends DynamicGameObject {
                     this.y_pos = (float) (0.006 * ((this.x_pos - 256) * (this.x_pos - 256)) + (this.vertex_y + this.decreased_y));
                     this.player_score += 0.4;
                 }
-                if (velocity.getX() > 0) {
-                    this.player_score += 1.4;
-                }
+/*                if (velocity.getX() > 0) {
+                    this.player_score += 1.4;  NOT SURE WHY THIS IS HERE...
+                }*/
+            // Character jumping left
             } else if (this.char_direction == "left") {
                 this.x_pos -= velocity.getX();
                 if (this.jumpType == 0) {
-                    this.y_pos = (float) (0.003 * ((this.x_pos - 168) * (this.x_pos - 168)) + (this.vertex_y + this.decreased_y));
+                    this.y_pos = (float) (0.003 * ((this.x_pos - 168) * (this.x_pos - 168)) +
+                             (this.vertex_y + this.decreased_y));
                 } else if (this.jumpType == 1) {
-                    this.y_pos = (float) (0.0045 * ((this.x_pos - 168) * (this.x_pos - 168)) + (this.vertex_y + this.decreased_y));  // ORIGINAL WAS (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 419.2);
+                    this.y_pos = (float) (0.0045 * ((this.x_pos - 168) * (this.x_pos - 168)) +
+                             (this.vertex_y + this.decreased_y));  // ORIGINAL WAS (float) (0.008 * ((this.x_pos - 220) * (this.x_pos - 220)) + 419.2);
                 } else {
-                    this.y_pos = (float) (0.006 * ((this.x_pos - 168) * (this.x_pos - 168)) + (this.vertex_y + this.decreased_y));
+                    this.y_pos = (float) (0.006 * ((this.x_pos - 168) * (this.x_pos - 168)) +
+                             (this.vertex_y + this.decreased_y));
                 }
                     if (velocity.getX() > 0) {
                     this.player_score += 1.4;
                 }
+            // Character not jumping, x velocity [irrelevant](0), update y position
             } else {
                 this.y_pos += this.velocity.getY();
             }
+
             // if left wall reached, reattach to left wall and stop velocity
             if (this.x_pos < 80) {
+                this.landing_frame = 0;
                 this.x_pos = 80f;
                 this.y_pos = landing_y + decreased_y;
                 if (velocity.getX() > 0) {
@@ -244,8 +242,10 @@ public class PlayerChar extends DynamicGameObject {
                 this.jumped = false;
                 decreased_y = 0f;
             }
-            if (this.x_pos > 324) {
-                this.x_pos = 324f;
+            // if right wall reached, reattach to right wall and stop velocity
+            if (this.x_pos > 338) {
+                this.landing_frame = 0;
+                this.x_pos = 338f;
                 this.y_pos = landing_y + decreased_y;
                 if (velocity.getX() > 0) {
                     this.player_score += 2.3;
@@ -257,77 +257,114 @@ public class PlayerChar extends DynamicGameObject {
                 decreased_y = 0f;
             }
 
+        // Character falling to death
         } else {
-            this.y_pos += 18f;
+            this.y_pos += 7f;//18
         }
+
+        // Possible changes to x and y positions done, assign appropriate variables
         float new_y_pos = this.y_pos;
         float new_x_pos = this.x_pos;
         this.y_change = (new_y_pos - old_y_pos);
         this.x_change = (new_x_pos - old_x_pos);
         //Log.i("PlayerCharUpdate", String.valueOf(this.x_pos+","+this.y_pos));
         //Log.i("PlayerCharBeforeBounds", String.valueOf(this.x_change+","+this.y_change));
+
+        // Call getSpriteName method to update currentSpriteBounds before paint method is called
+        // in GameScreen class, otherwise collision detection may use an outdated array
         int useless_int = getSpriteName();
+        this.slideAnimateUpdated = true;
         this.update_bounds();
     }
 
+    // getSpriteName method is used to return an int value to the paint method in GameScreen class
+    // so the correct sprite is blitted to the screen
     public int getSpriteName() {
         if (!this.dying) {
             if (this.sliding) {
                 if (this.char_facing == "right") {
                     this.currentSpriteBounds = this.rightSlidingArray;
-                    this.slideAnimate += 1;
+                    // Update slideAnimate if not completed this frame
+                    if (!this.slideAnimateUpdated) {
+                        this.slideAnimate += 1;
+                    }
                     if (this.slideAnimate == 0) {
+                        int SPRITE_RIGHT_SLIDING1 = 24;
                         return SPRITE_RIGHT_SLIDING1;
                     } else if (this.slideAnimate == 1) {
-                        return  SPRITE_RIGHT_SLIDING2;
+                        int SPRITE_RIGHT_SLIDING2 = 26;
+                        return SPRITE_RIGHT_SLIDING2;
                     } else {
                         this.slideAnimate = -1;
+                        int SPRITE_RIGHT_SLIDING3 = 28;
                         return SPRITE_RIGHT_SLIDING3;
                     }
                 } else if (this.char_facing == "left") {
                     this.currentSpriteBounds = this.leftSlidingArray;
                     this.slideAnimate += 1;
                     if (this.slideAnimate == 0) {
+                        int SPRITE_LEFT_SLIDING1 = 25;
                         return SPRITE_LEFT_SLIDING1;
                     } else if (this.slideAnimate == 1) {
-                        return  SPRITE_LEFT_SLIDING2;
+                        int SPRITE_LEFT_SLIDING2 = 27;
+                        return SPRITE_LEFT_SLIDING2;
                     } else {
                         this.slideAnimate = -1;
+                        int SPRITE_LEFT_SLIDING3 = 29;
                         return SPRITE_LEFT_SLIDING3;
                     }
                 }
             }
+            int SPRITE_RIGHT_10 = 20;
+            int SPRITE_LEFT_10 = 21;
             if (!this.jumped) {
+                this.landing_frame += 1;
                 if (this.x_pos < 240) {
                     this.currentSpriteBounds = this.leftWallHangArray;
-                    return SPRITE_LEFT_WALL_HANG;
+                    if (this.landing_frame < 3 && this.first_jump) {
+                        return SPRITE_LEFT_10;
+                    } else {
+                        int SPRITE_LEFT_WALL_HANG = 0;
+                        return SPRITE_LEFT_WALL_HANG;
+                    }
                 } else if (this.x_pos > 240) {
                     this.currentSpriteBounds = this.rightWallHangArray;
-                    return SPRITE_RIGHT_WALL_HANG;
+                    if (this.landing_frame < 3 && this.first_jump) {
+                        return SPRITE_RIGHT_10;
+                    } else {
+                        int SPRITE_RIGHT_WALL_HANG = 1;
+                        return SPRITE_RIGHT_WALL_HANG;
+                    }
                 }
             } else {
                 if (this.char_direction == "right") {
                     if (this.x_pos < 100) {
                         this.currentSpriteBounds = this.right3Array;
+                        int SPRITE_RIGHT_3 = 6;
                         return SPRITE_RIGHT_3;
                     } else if (this.x_pos < 130) {
                         this.currentSpriteBounds = this.right4Array;
+                        int SPRITE_RIGHT_4 = 8;
                         return SPRITE_RIGHT_4;
                     } else if (this.x_pos < 160) {
                         this.currentSpriteBounds = this.right5Array;
+                        int SPRITE_RIGHT_5 = 10;
                         return SPRITE_RIGHT_5;
                     } else if (this.x_pos < 200) {
                         this.currentSpriteBounds = this.right6Array;
+                        int SPRITE_RIGHT_6 = 12;
                         return SPRITE_RIGHT_6;
                     } else if (this.x_pos < 240) {
                         this.currentSpriteBounds = this.right7Array;
+                        int SPRITE_RIGHT_7 = 14;
                         return SPRITE_RIGHT_7;
                     } else if (this.x_pos < 290) {
                         this.currentSpriteBounds = this.right8Array;
+                        int SPRITE_RIGHT_8 = 16;
                         return SPRITE_RIGHT_8;
 /*                    } else if (this.x_pos < 315) {
                         return SPRITE_RIGHT_9;*/
-                    } else if (this.x_pos < 330) {
+                    } else if (this.x_pos < 338) {
                         this.currentSpriteBounds = this.right10Array;
                         return SPRITE_RIGHT_10;
                     } else {
@@ -340,21 +377,27 @@ public class PlayerChar extends DynamicGameObject {
                 } else {
                     if (this.x_pos > 304) {
                         this.currentSpriteBounds = this.left3Array;
+                        int SPRITE_LEFT_3 = 7;
                         return SPRITE_LEFT_3;
                     } else if (this.x_pos > 274) {
                         this.currentSpriteBounds = this.left4Array;
+                        int SPRITE_LEFT_4 = 9;
                         return SPRITE_LEFT_4;
                     } else if (this.x_pos > 244) {
                         this.currentSpriteBounds = this.left5Array;
+                        int SPRITE_LEFT_5 = 11;
                         return SPRITE_LEFT_5;
                     } else if (this.x_pos > 204) {
                         this.currentSpriteBounds = this.left6Array;
+                        int SPRITE_LEFT_6 = 13;
                         return SPRITE_LEFT_6;
                     } else if (this.x_pos > 164) {
                         this.currentSpriteBounds = this.left7Array;
+                        int SPRITE_LEFT_7 = 15;
                         return SPRITE_LEFT_7;
                     } else if (this.x_pos > 114) {
                         this.currentSpriteBounds = this.left8Array;
+                        int SPRITE_LEFT_8 = 17;
                         return SPRITE_LEFT_8;
 /*                    } else if (this.x_pos > 153) {
                         return SPRITE_LEFT_9;*/
@@ -374,12 +417,16 @@ public class PlayerChar extends DynamicGameObject {
         } else {
             //Log.i("PlayerChar", "DYING TRUE");
             if (this.y_pos > 620 && this.char_facing == "right") {
+                int SPRITE_RIGHT_DYING_LATE = 4;
                 return SPRITE_RIGHT_DYING_LATE;
             } else if (this.y_pos > 620 && this.char_facing == "left") {
+                int SPRITE_LEFT_DYING_LATE = 5;
                 return SPRITE_LEFT_DYING_LATE;
             } else if (this.y_pos <= 620 && this.char_facing == "right") {
+                int SPRITE_RIGHT_DYING_EARLY = 2;
                 return SPRITE_RIGHT_DYING_EARLY;
             } else if (this.y_pos <= 620 && this.char_facing == "left") {
+                int SPRITE_LEFT_DYING_EARLY = 3;
                 return SPRITE_LEFT_DYING_EARLY;
             } else {
                 Log.i("PLAYER_CHAR", "FAILED3, RETURNING INVALID INT");
@@ -390,6 +437,8 @@ public class PlayerChar extends DynamicGameObject {
         return 50;
     }
 
+    // createPlayerRectArrays is completed upon playerChar construction to create the bounds
+    // for collision for every relevant sprite
     public void createPlayerRectArrays() {
         this.leftWallHangArray.add(new Rectangle(this.x_pos+1,this.y_pos+12,14,16));
         this.leftWallHangArray.add(new Rectangle(this.x_pos+0,this.y_pos+66,15,36));
@@ -500,8 +549,6 @@ public class PlayerChar extends DynamicGameObject {
         this.leftSlidingArray.add(new Rectangle(this.x_pos+20,this.y_pos+58,22,12));
         this.leftSlidingArray.add(new Rectangle(this.x_pos+63,this.y_pos+67,11,34));
         this.arrayOfArrays.add(this.leftSlidingArray);
-
-
 
         Log.i("PlayerChar", "RectArrays created");
 

@@ -4,6 +4,9 @@ package com.example.jkt.wall2wall0;
 
 import android.content.Context;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;
+
 public interface Game {
 
     public Audio getAudio();
@@ -19,6 +22,10 @@ public interface Game {
     public Screen getCurrentScreen();
 
     public Screen getInitScreen();
+
+    public GoogleApiClient getPlayServicesClient();
+
+    public Context getAppContext();
 
     void goToLeaderboard();
 }

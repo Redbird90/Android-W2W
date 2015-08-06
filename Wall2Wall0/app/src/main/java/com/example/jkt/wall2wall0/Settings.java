@@ -30,6 +30,8 @@ public class Settings {
     public static int highScore;
 
 
+    // save method is used to write updated sound setting and score value(key, value) to a
+    // .savedata file
     public static void save(FileIO files) {
         BufferedWriter out = null;
         try {
@@ -58,6 +60,7 @@ public class Settings {
         }
     }
 
+    // load method is used to read sound setting and score value from .savedata file
     public static void load(FileIO files) {
         BufferedReader in = null;
         try {

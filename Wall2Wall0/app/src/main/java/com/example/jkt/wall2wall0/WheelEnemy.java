@@ -8,17 +8,17 @@ import java.util.Random;
 /**
  * Created by James on 4/16/2015.
  */
-public class WheelEnemy extends falling_enemy {
+public class WheelEnemy extends FallingEnemy {
 
     private final int wheel_orientation;
-    private Random randGen = new Random();
 
     public WheelEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);
-        this.velocity = new Vector2(0f, 5.8f);
+        this.velocity = new Vector2(0f, 2.5f);//5.8
         // X AND Y ARE THE CENTER OF THE OBJECT NOT THE CORNER
         this.bounds = new Circle(x, y, (width / 2));
         this.bounds_tsil.add(this.bounds);
+        Random randGen = new Random();
         this.wheel_orientation = randGen.nextInt(4);
     }
 

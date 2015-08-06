@@ -37,6 +37,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by JDK on 3/30/2015.
  */
+
+// W2WGame class corresponds to the usual MainActivity, and is the first class run upon application
+// start
 public class W2WGame extends AndroidGame {
 
     public static String map;
@@ -50,7 +53,7 @@ public class W2WGame extends AndroidGame {
     private static boolean mResolvingError = false;
 
 
-
+    @Override
     public Screen getInitScreen() {
         if (firstTimeCreate) {
             Settings.load(getFileIO());
@@ -58,8 +61,7 @@ public class W2WGame extends AndroidGame {
         }
         Log.i("W2WGame", "getInitScreen");
 
-
-        return new LoadingScreen(this);
+        return new MainMenuScreen(this);
     }
 
     @Override
@@ -68,8 +70,8 @@ public class W2WGame extends AndroidGame {
     }
 
     public void goToLeaderboard() {
-/*        startActivityForResult(Games.Leaderboards.getLeaderboardIntent(this.play_services_client,
-                LEADERBOARD_ID), 1); // Last arg is an arbitrary int*/
+        startActivityForResult(Games.Leaderboards.getLeaderboardIntent(this.play_services_client,
+                getString(R.string.leaderboard_high_score)), 1); // Last arg is an arbitrary int
     }
 
 
@@ -126,7 +128,7 @@ public class W2WGame extends AndroidGame {
                 connectionResult.startResolutionForResult(this, REQUEST_RESOLVE_ERROR);
             } catch (IntentSender.SendIntentException e) {
                 // There was an error with the resolution intent. Try again.
-                //play_services_client.connect();
+                play_services_client.connect();
             }
         } else {
             // Show dialog using GooglePlayServicesUtil.getErrorDialog()

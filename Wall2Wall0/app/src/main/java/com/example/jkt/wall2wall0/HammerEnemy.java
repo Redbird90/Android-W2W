@@ -8,24 +8,35 @@ import java.util.Random;
 /**
  * Created by James on 4/16/2015.
  */
-public class HammerEnemy extends falling_enemy {
+public class HammerEnemy extends FallingEnemy {
 
     private final int hammer_orientation;
-    private final Rectangle bounds2;
-    private Random randGen = new Random();
+    private float updated_y_velocity;
 
     public HammerEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);
-        this.velocity = new Vector2(0f, 6.5f);
+        this.velocity = new Vector2(0f, 0f);//6.5
+        this.accel = new Vector2(0f, 0.03f);
+        Random randGen = new Random();
         this.hammer_orientation = randGen.nextInt(2);
         this.bounds = new Rectangle(x, y+80, 62, 20);
+        Rectangle bounds2;
         if (this.hammer_orientation == 0) {
-            this.bounds2 = new Rectangle(x+25, y, 33, 79);
+            bounds2 = new Rectangle(x+25, y, 33, 79);
         } else {
-            this.bounds2 = new Rectangle(x+4, y, 33, 79);
+            bounds2 = new Rectangle(x+4, y, 33, 79);
         }
         this.bounds_tsil.add(this.bounds);
-        this.bounds_tsil.add(this.bounds2);
+        this.bounds_tsil.add(bounds2);
+    }
+
+    @Override
+    public void update_enemy() {
+        // Override to implement acceleration in fall
+        this.updated_y_velocity = this.velocity.getY() + this.accel.getY();
+        this.velocity.set(this.velocity.getX(), this.updated_y_velocity);
+        // Use parent's update method as normal with updated velocity
+        super.update_enemy();
     }
 
     public int getImageName() {

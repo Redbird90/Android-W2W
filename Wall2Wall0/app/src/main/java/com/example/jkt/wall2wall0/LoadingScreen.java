@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.example.jkt.wall2wall0.impl.AndroidFileIO;
+import com.example.jkt.wall2wall0.impl.AndroidGame;
 
 /**
  * Created by JDK on 4/1/2015.
  */
+// OBSOLETE CLASS
 public class LoadingScreen extends Screen {
 
     public LoadingScreen(Game game) {
@@ -23,7 +25,7 @@ public class LoadingScreen extends Screen {
         Assets.enemy_image2 = g.newImage("enemy_image2.png", Graphics.ImageFormat.RGB565);
         Assets.enemy_image3 = g.newImage("enemy_image3.png", Graphics.ImageFormat.RGB565);*/
 
-        game.setScreen(new MainMenuScreen(game));
+        //game.setScreen(new MainMenuScreen(game));
         Log.i("Loading Screen", "Setting new MainMenuScreen...");
     }
 

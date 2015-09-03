@@ -1,0 +1,8 @@
+W2W Buglist
+Music plays again so two tracks are heard at once after game restart - seems fixed with dispose() addition
+Music plays after app is closed - seems fixed with dispose() addition
+Drone position updating is incorrect, results in collision above drone enemy - fixed x and y change values and added new bound rects
+Jump Type - Jump 1 looks much slower than jump 3 based on arc differences - inputted differing velocities based on jump type
+Enemy falling rates can seem laggy/unpredictable -> try to remove extra speed when char jumps
+Player and enemy movement can seem laggy -> find optimizations
+DroneEnemy new pattern with current velocity seems to slow down game and cause player to wait on wall -> 

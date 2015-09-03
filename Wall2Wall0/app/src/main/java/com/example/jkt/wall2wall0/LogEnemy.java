@@ -10,7 +10,7 @@ public class LogEnemy extends FallingEnemy {
 
     public LogEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);
-        this.velocity = new Vector2(0.0f, 1.5f);//4.8
+        this.velocity = new Vector2(0.0f, 3.2f);//4.8,1.5
         this.bounds = new Rectangle(x+6, y+27, 17, 12);
         Rectangle bounds2 = new Rectangle(x + 27, y + 11, 24, 17);
         Rectangle bounds3 = new Rectangle(x + 59, y + 6, 16, 21);

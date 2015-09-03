@@ -80,12 +80,17 @@ public class FallingEnemy extends DynamicGameObject {
         for (int i=0; i < this.bounds_tsil.size(); i++) {
             Rectangle curr_rect;
             curr_rect = (Rectangle) this.bounds_tsil.get(i);
+            Log.i("fallingEnemyD", String.valueOf(this.x_change) + ", " + String.valueOf(this.y_change));
+            Log.i("fallingEnemyD", String.valueOf(this.y_height_thresh_change));
+            Log.i("fallingEnemyBounds1", String.valueOf(curr_rect.getLowerLeft().getX() + ", " + String.valueOf(curr_rect.getLowerLeft().getY())));
             this.bounds_tsil.get(i).setLowerLeft(curr_rect.getLowerLeft().getX() + this.x_change,
                     curr_rect.getLowerLeft().getY() + this.y_change + this.y_height_thresh_change);
+            Log.i("fallingEnemyBounds2", String.valueOf(curr_rect.getLowerLeft().getX() + ", " + String.valueOf(curr_rect.getLowerLeft().getY())));
         }
     }
 
     public void setY_height_thresh_change(float y_height_thresh_change) {
+        Log.i("fallingEnemyD", "ythresh set as " + String.valueOf(y_height_thresh_change));
         this.y_height_thresh_change = y_height_thresh_change;
     }
 

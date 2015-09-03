@@ -79,7 +79,8 @@ public class MainMenuScreen extends Screen {
                 }
 
                 if (!at_settings && inBounds(event, 95, 572, 250, 76)) {
-                    game.goToLeaderboard();
+                    // TODO: Uncomment below
+                    //game.goToLeaderboard();
                     Log.i("MainMenuS", "went to Leaderboards");
                 }
 

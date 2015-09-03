@@ -112,11 +112,23 @@ public class PlayerChar extends DynamicGameObject {
             this.jumped = true;
             this.sliding = false;
             if (this.x_pos < 240) {
-                this.velocity.set(4.0f, 0.0f);
+                if (this.jumpType == 0) {
+                    this.velocity.set(6.5f, 0.0f);
+                } else if (this.jumpType == 1) {
+                    this.velocity.set(6.25f, 0.0f);
+                } else {
+                    this.velocity.set(6.0f, 0.0f);//4,6
+                }
                 this.char_direction = "right";
                 this.char_facing = "right";
             } else if (this.x_pos > 240) {
-                this.velocity.set(4.0f, 0.0f);
+                if (this.jumpType == 0) {
+                    this.velocity.set(6.5f, 0.0f);
+                } else if (this.jumpType == 1) {
+                    this.velocity.set(6.25f, 0.0f);
+                } else {
+                    this.velocity.set(6.0f, 0.0f);//4,6
+                }
                 this.char_direction = "left";
                 this.char_facing = "left";
             }
@@ -364,10 +376,11 @@ public class PlayerChar extends DynamicGameObject {
                         return SPRITE_RIGHT_8;
 /*                    } else if (this.x_pos < 315) {
                         return SPRITE_RIGHT_9;*/
-                    } else if (this.x_pos < 338) {
+                    } else if (this.x_pos < 390) {//OLD VALUE IS 338
                         this.currentSpriteBounds = this.right10Array;
                         return SPRITE_RIGHT_10;
                     } else {
+                        Log.i("PLAYER_CHAR", String.valueOf(this.x_pos));
                         Log.i("PLAYER_CHAR", "FAILED1, RETURNING INVALID INT");
                         return 50;
                     }

@@ -320,9 +320,9 @@ public class GameScreen extends Screen {
 
         if (Settings.soundEnabled) {
             this.music_started = true;
-            game_music = (AndroidMusic) game.getAudio().newMusic("179562__clinthammer__clinthammermusic-ts-bass.wav");
-            game_music.play();
-            game_music.setLooping(true);
+            this.game_music = (AndroidMusic) game.getAudio().newMusic("179562__clinthammer__clinthammermusic-ts-bass.wav");
+            this.game_music.play();
+            this.game_music.setLooping(true);
             death_sound = (AndroidSound) game.getAudio().newSound("Realistic_Punch.wav");
         }
     }
@@ -424,7 +424,8 @@ public class GameScreen extends Screen {
                         if (tutorial_time) {
                             tutorial_time = false;
                             game_start_time = System.currentTimeMillis();
-                            this.player1.start_movement(0);
+                            // Uncomment to start first tap with jump
+                            //this.player1.start_movement(0);
                         } else {
                             Log.i("GameScreenC", "TOUCH_UP detected in bounds");
                             if (this.player_holding) {
@@ -460,8 +461,9 @@ public class GameScreen extends Screen {
             this.currentScore = (int) player1.player_score;
 
             // Update Leaderboards with newest score
-            Games.Leaderboards.submitScore(game.getPlayServicesClient(), game.getAppContext().getString(R
-                    .string.leaderboard_high_score), this.currentScore);
+            // TODO: Uncomment below
+            //Games.Leaderboards.submitScore(game.getPlayServicesClient(), game.getAppContext().getString(R
+            //        .string.leaderboard_high_score), this.currentScore);
 
             if (this.currentScore > this.highScore) {
                 this.highScore = this.currentScore;
@@ -876,6 +878,7 @@ public class GameScreen extends Screen {
                 } else if (inBounds(currentEvent, UI_WINDOW_X_POSITION + 33, UI_WINDOW_Y_POSITION + 146, 293, 70) && !drawInGameSettings) {
                     drawInGameSettings = true;
                 } else if (inBounds(currentEvent, UI_WINDOW_X_POSITION + 33, UI_WINDOW_Y_POSITION + 244, 323, 70) && !drawInGameSettings) {
+                    dispose();
                     nullify();
                     goToMenu();
                 } else if (drawInGameSettings && Settings.soundEnabled && inBounds(currentEvent, SETTINGS_CHANGE_X_POSITION, SETTINGS_CHANGE_Y_POSITION, SETTINGS_CHANGE_WIDTH, SETTINGS_CHANGE_HEIGHT)) {
@@ -903,6 +906,7 @@ public class GameScreen extends Screen {
             // clean up and return to the menu (on a new game.)
             if (currentEvent.type == Input.TouchEvent.TOUCH_DOWN) {
                 if (inBounds(currentEvent, 0, 80, 800, 400)) {
+                    dispose();
                     nullify();
                     game.setScreen(new GameScreen(game));  // CREATES NEW GAMESCREEN EVERY GAME
                     state = GameState.Ready;
@@ -1087,6 +1091,10 @@ public class GameScreen extends Screen {
 
     @Override
     public void dispose() {
+        if (this.music_started) {
+            this.game_music.dispose();
+            this.death_sound.dispose();
+        }
         Log.i("GameScreen", "dispose");
 
     }
@@ -1098,13 +1106,13 @@ public class GameScreen extends Screen {
         // Keep music in sync despite pause
         if (Settings.soundEnabled) {
             if (this.music_started) {
-                this.game_music.seekBegin();
+                this.game_music.play();//was seekBegin()
             } else {
                 this.music_started = true;
-                game_music = (AndroidMusic) game.getAudio().newMusic("179562__clinthammer__clinthammermusic-ts-bass.wav");
-                game_music.play();
-                game_music.setLooping(true);
-                death_sound = (AndroidSound) game.getAudio().newSound("Realistic_Punch.wav");
+                this.game_music = (AndroidMusic) game.getAudio().newMusic("179562__clinthammer__clinthammermusic-ts-bass.wav");
+                this.game_music.play();
+                this.game_music.setLooping(true);
+                this.death_sound = (AndroidSound) game.getAudio().newSound("Realistic_Punch.wav");
             }
         }
         this.previousSpawnTime[0] += time_paused;
@@ -1432,6 +1440,7 @@ public class GameScreen extends Screen {
 
     // Based on PlayerChar class getSpriteName method, return appropriate image to blit to screen
     private Image getSpriteImage() {
+        Log.i("GameScreen", String.valueOf(this.player1.getSpriteName()));
         switch (this.player1.getSpriteName()) {
             case 0: {
                 return SPRITE_LEFT_WALL_HANG;

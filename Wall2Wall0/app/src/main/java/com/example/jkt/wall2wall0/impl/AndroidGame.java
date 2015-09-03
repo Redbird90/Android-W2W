@@ -137,7 +137,8 @@ public abstract class AndroidGame extends Activity implements Game, GoogleApiCli
     @Override
     public void onStop() {
         super.onStop();
-        play_services_client.disconnect();
+        // TODO: Uncomment Below
+        //play_services_client.disconnect();
     }
 
     @Override

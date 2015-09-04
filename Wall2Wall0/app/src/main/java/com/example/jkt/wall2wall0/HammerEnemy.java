@@ -12,11 +12,13 @@ public class HammerEnemy extends FallingEnemy {
 
     private final int hammer_orientation;
     private float updated_y_velocity;
+    private boolean updated_accel1 = false;
+    private boolean updated_accel2 = false;
 
     public HammerEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);
         this.velocity = new Vector2(0f, 0f);//6.5
-        this.accel = new Vector2(0f, 0.03f);
+        this.accel = new Vector2(0f, 0.05f);
         Random randGen = new Random();
         this.hammer_orientation = randGen.nextInt(2);
         this.bounds = new Rectangle(x, y+80, 62, 20);
@@ -37,6 +39,14 @@ public class HammerEnemy extends FallingEnemy {
         this.velocity.set(this.velocity.getX(), this.updated_y_velocity);
         // Use parent's update method as normal with updated velocity
         super.update_enemy();
+        // Check for height to update acceleration
+        if (this.y_pos > 75 && !this.updated_accel1) {
+            this.accel.set(0f, 0.06f);
+            this.updated_accel1 = true;
+        } else if (this.y_pos > 150 && !this.updated_accel2) {
+            this.accel.set(0f, 0.8f);
+            this.updated_accel2 = true;
+        }
     }
 
     public int getImageName() {

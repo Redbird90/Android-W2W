@@ -12,9 +12,9 @@ public class MonkeyEnemy extends FallingEnemy {
     public MonkeyEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);
         if (this.x_pos >= 195) {
-            this.velocity = new Vector2(-1f, 3.25f);//-2, 7
+            this.velocity = new Vector2(-1.25f, 3.75f);//(-2, 7)(-1,3.25)
         } else if (this.x_pos <= 195) {
-            this.velocity = new Vector2(1f, 3.25f);//2, 7
+            this.velocity = new Vector2(1.25f, 3.75f);//(2, 7)(-1,3.25)
         }
         this.bounds = new Rectangle(x, y, width, height);
         this.bounds_tsil.add(bounds);

@@ -14,7 +14,7 @@ public class WheelEnemy extends FallingEnemy {
 
     public WheelEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);
-        this.velocity = new Vector2(0f, 2.5f);//5.8
+        this.velocity = new Vector2(0f, 3.8f);//5.8,2.5
         // X AND Y ARE THE CENTER OF THE OBJECT NOT THE CORNER
         this.bounds = new Circle(x, y, (width / 2));
         this.bounds_tsil.add(this.bounds);

@@ -14,7 +14,7 @@ public class AppleEnemy extends FallingEnemy {
 
     public AppleEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);
-        this.velocity = new Vector2(0f, 1.8f);//5.5
+        this.velocity = new Vector2(0f, 2.2f);//5.5,1.8
         this.bounds = new Rectangle(x, y, width, height);
         this.bounds_tsil.add(bounds);
         Random randGen = new Random();

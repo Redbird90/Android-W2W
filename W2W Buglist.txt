@@ -5,4 +5,6 @@ Drone position updating is incorrect, results in collision above drone enemy - f
 Jump Type - Jump 1 looks much slower than jump 3 based on arc differences - inputted differing velocities based on jump type
 Enemy falling rates can seem laggy/unpredictable -> try to remove extra speed when char jumps
 Player and enemy movement can seem laggy -> find optimizations
-DroneEnemy new pattern with current velocity seems to slow down game and cause player to wait on wall -> 
+DroneEnemy new pattern with current velocity seems to slow down game and cause player to wait on wall -
+Game screen after death can sometimes be unresponsive -
+Four enemies spawned at the same time rather than staggered as in SpawnTimer.class - NOT REPRODUCIBLE -

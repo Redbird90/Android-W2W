@@ -13,12 +13,13 @@ import java.util.ArrayList;
  */
 public class BirdEnemy extends FallingEnemy {
     private boolean start_moving_left;
+    private boolean updated_velocity = false;
     private ArrayList<Shape> bounds_right_tsil = new ArrayList<>();
     private ArrayList<Shape> bounds_left_tsil = new ArrayList<>();
 
     public BirdEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);
-        this.velocity = new Vector2(2.0f, 1.0f);//4, 4
+        this.velocity = new Vector2(2.0f, 1.0f);//(4, 4),
 
         // Create bounds for reversed and normal bird images
         Rectangle bounds_right = new Rectangle(x + 2, y + 2, 10, 31);
@@ -91,6 +92,12 @@ public class BirdEnemy extends FallingEnemy {
         } else if (!this.start_moving_left) {
             float updated_x2 = this.velocity.getX() + 0.1f;
             this.velocity.set(updated_x2, this.velocity.getY());
+        }
+
+        // Handle updating of y velocity
+        if (this.y_pos > 100f && !updated_velocity) {
+            this.velocity.set(this.velocity.getX(), 3.8f);
+            this.updated_velocity = true;
         }
 
         // Update bounds_tsil based on image blitted

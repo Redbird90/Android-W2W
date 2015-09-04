@@ -424,8 +424,8 @@ public class GameScreen extends Screen {
                         if (tutorial_time) {
                             tutorial_time = false;
                             game_start_time = System.currentTimeMillis();
-                            // Uncomment to start first tap with jump
-                            //this.player1.start_movement(0);
+                            // First tap to remove tutorial starts a jump
+                            this.player1.start_movement(0);
                         } else {
                             Log.i("GameScreenC", "TOUCH_UP detected in bounds");
                             if (this.player_holding) {
@@ -520,13 +520,15 @@ public class GameScreen extends Screen {
             // Speed up blocks when player jumps
             if (this.player1.jumped) {
                 if (this.enemy_list.get(i).player_jumping == false) {
-                    this.enemy_list.get(i).setPlayer_jumping(true);
+                    // TODO: Remove line below and associated code
+                    //this.enemy_list.get(i).setPlayer_jumping(true);
                 }
                 //this.enemy_list.get(i).update_enemy();
                 //Log.i("TESTING EN1", String.valueOf(this.enemy_list.get(i).getY_pos()));
             } else {
                 if (this.enemy_list.get(i).player_jumping == true) {
-                    this.enemy_list.get(i).setPlayer_jumping(false);
+                    // TODO: Remove line below and associated code
+                    //this.enemy_list.get(i).setPlayer_jumping(false);
                 }
                 //this.enemy_list.get(i).update_enemy();
                 //Log.i("TESTING EN2", String.valueOf(this.enemy_list.get(i).getY_pos()));
@@ -774,7 +776,7 @@ public class GameScreen extends Screen {
                                     //curr_rect.width + "," + curr_rect.height));
                             // Check for collisions between all enemy_rects and all player_rects
                             if (OverlapTester.overlapRectangles(this.player1.getCurrentSpriteBounds().get(y), (Rectangle) this.enemy_list.get(i).bounds_tsil.get(z))) {
-                                this.player1.dying = true;
+                                //this.player1.dying = true;
                                 Log.i("OVERLAP FOUND", String.valueOf(this.player1.getX_pos()));
                                 // CHANGE TO DIFF SOUND EFFECT
                                 if (Settings.soundEnabled) {

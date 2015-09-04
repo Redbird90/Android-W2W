@@ -20,7 +20,7 @@ public class DroneEnemy extends FallingEnemy {
 
     public DroneEnemy(float x, float y, float width, float height, int enemy_num) {
         super(x, y, width, height, enemy_num);
-        this.velocity = new Vector2(0.5f, 1.5f);//2.5, 3
+        this.velocity = new Vector2(0.5f, 3.5f);//(2.5,3)(0.5,1.5)
 
         this.bounds = new Rectangle(x + 22, y + 43, 52, 28);
         Rectangle bounds2 = new Rectangle(x + 11, y + 10, 74, 30);
@@ -90,14 +90,14 @@ public class DroneEnemy extends FallingEnemy {
         // Start movement if stopped and 20th frame reached after stop
         if (this.stop_movement && (this.num_of_updates == this.start_at_update)) {
             this.stop_movement = false;
-            this.velocity.set(prev_x_velocity, 1.5f);//3
+            this.velocity.set(prev_x_velocity, 3.5f);//3,1.5
         // Mimic shake if movement stopped
         } else if (this.stop_movement) {
             if (this.shakebool) {
-                this.x_pos += 2f;//1
+                this.x_pos += 2.5f;//1
                 this.shakebool = false;
             } else {
-                this.x_pos -= 2f;//1
+                this.x_pos -= 2.5f;//1
                 this.shakebool = true;
             }
         }

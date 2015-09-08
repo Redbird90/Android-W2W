@@ -14,6 +14,7 @@ import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.util.Log;
 
+import com.example.jkt.wall2wall0.AssetWorkerTask;
 import com.example.jkt.wall2wall0.Graphics;
 import com.example.jkt.wall2wall0.Image;
 import com.example.jkt.wall2wall0.Pixmap;
@@ -33,7 +34,7 @@ public class AndroidGraphics implements Graphics {
         this.paint = new Paint();
     }
 
-    @Override
+/*    @Override
     public Image newImage(String fileName, ImageFormat format) {
         Config config = null;
         if (format == ImageFormat.RGB565)
@@ -76,6 +77,15 @@ public class AndroidGraphics implements Graphics {
             format = ImageFormat.ARGB4444;
         else
             format = ImageFormat.ARGB8888;
+
+        return new AndroidImage(bitmap, format);
+    }*/
+
+    @Override
+    public Image newImage(String fileName, ImageFormat format) {
+
+        AssetWorkerTask assetWorkerTask = new AssetWorkerTask();
+        assetWorkerTask.execute(fileName, format);
 
         return new AndroidImage(bitmap, format);
     }

@@ -166,15 +166,15 @@ public class PlayerChar extends DynamicGameObject {
             } else if (timer_started) {
                 if (System.currentTimeMillis() - timer1 > 800) {
                     this.sliding = true;
-                    this.velocity.set(0.0f, 0.3f);
+                    this.velocity.set(0.0f, 1.2f);//0.3
                 }
                 if (System.currentTimeMillis() - timer1 > 1800) {
                     this.sliding = true;
-                    this.velocity.set(0.0f, 0.7f);
+                    this.velocity.set(0.0f, 0.9f);//0.7
                 }
                 if (System.currentTimeMillis() - timer1 > 4000) {
                     this.sliding = true;
-                    this.velocity.set(0.0f, 1.4f);
+                    this.velocity.set(0.0f, 0.4f);//1.4
                 }
             }
 

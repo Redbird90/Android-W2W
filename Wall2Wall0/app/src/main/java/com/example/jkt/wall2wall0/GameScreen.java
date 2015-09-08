@@ -2,6 +2,7 @@ package com.example.jkt.wall2wall0;
 
 import android.graphics.*;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.jkt.wall2wall0.impl.AndroidGame;
@@ -620,19 +621,36 @@ public class GameScreen extends Screen {
 
             this.bot_left_wall_low_hazard = false;
             this.bot_left_wall_high_hazard = false;
-            if (this.wallHazardHandler.checkForLeftLowHazard(this.walls_blitted)) {
+/*            if (this.wallHazardHandler.checkForLeftLowHazard(this.walls_blitted)) {
                 this.bot_left_wall_low_hazard = true;
             } else if (this.wallHazardHandler.checkForLeftHighHazard(this.walls_blitted)) {
+                this.bot_left_wall_high_hazard = true;
+            }*/
+            // Replacing above code:
+            if (this.wallHazardHandler.checkForLeftLowHazard(System.currentTimeMillis() - game_start_time)) {
+                this.bot_left_wall_low_hazard = true;
+            }
+            if (this.wallHazardHandler.checkForLeftHighHazard(System.currentTimeMillis() - game_start_time)) {
                 this.bot_left_wall_high_hazard = true;
             }
 
             this.bot_right_wall_low_hazard = false;
             this.bot_right_wall_high_hazard = false;
-            if (this.wallHazardHandler.checkForRightLowHazard(this.walls_blitted)) {
+/*            if (this.wallHazardHandler.checkForRightLowHazard(this.walls_blitted)) {
                 this.bot_right_wall_low_hazard = true;
             } else if (this.wallHazardHandler.checkForRightHighHazard(this.walls_blitted)) {
                 this.bot_right_wall_high_hazard = true;
+            }*/
+            // Replacing above code:
+            if (this.wallHazardHandler.checkForRightLowHazard(System.currentTimeMillis() - game_start_time) &&
+                    !this.bot_left_wall_low_hazard) {
+                this.bot_right_wall_low_hazard = true;
             }
+            if (this.wallHazardHandler.checkForRightHighHazard(System.currentTimeMillis() - game_start_time) &&
+                    !this.bot_left_wall_high_hazard) {
+                this.bot_right_wall_high_hazard = true;
+            }
+            
 
             // Add WallHazards to hazardBoundsArray if appropriate
             if (this.current_level == 1) {
@@ -679,17 +697,33 @@ public class GameScreen extends Screen {
             this.walls_blitted += 1;
             this.top_left_wall_low_hazard = false;
             this.top_left_wall_high_hazard = false;
-            if (this.wallHazardHandler.checkForLeftLowHazard(this.walls_blitted)) {
+/*            if (this.wallHazardHandler.checkForLeftLowHazard(this.walls_blitted)) {
                 this.top_left_wall_low_hazard = true;
             } else if (this.wallHazardHandler.checkForLeftHighHazard(this.walls_blitted)) {
+                this.top_left_wall_high_hazard = true;
+            }*/
+            // Replacing above code:
+            if (this.wallHazardHandler.checkForLeftLowHazard(System.currentTimeMillis() - game_start_time)) {
+                this.top_left_wall_low_hazard = true;
+            }
+            if (this.wallHazardHandler.checkForLeftHighHazard(System.currentTimeMillis() - game_start_time)) {
                 this.top_left_wall_high_hazard = true;
             }
 
             this.top_right_wall_low_hazard = false;
             this.top_right_wall_high_hazard = false;
-            if (this.wallHazardHandler.checkForRightLowHazard(this.walls_blitted)) {
+/*            if (this.wallHazardHandler.checkForRightLowHazard(this.walls_blitted)) {
                 this.top_right_wall_low_hazard = true;
             } else if (this.wallHazardHandler.checkForRightHighHazard(this.walls_blitted)) {
+                this.top_right_wall_high_hazard = true;
+            }*/
+            // Replacing above code:
+            if (this.wallHazardHandler.checkForRightLowHazard(System.currentTimeMillis() - game_start_time) &&
+                    !this.top_left_wall_low_hazard) {
+                this.top_right_wall_low_hazard = true;
+            }
+            if (this.wallHazardHandler.checkForRightHighHazard(System.currentTimeMillis() - game_start_time) &&
+                    !this.top_left_wall_high_hazard) {
                 this.top_right_wall_high_hazard = true;
             }
 
@@ -776,6 +810,7 @@ public class GameScreen extends Screen {
                                     //curr_rect.width + "," + curr_rect.height));
                             // Check for collisions between all enemy_rects and all player_rects
                             if (OverlapTester.overlapRectangles(this.player1.getCurrentSpriteBounds().get(y), (Rectangle) this.enemy_list.get(i).bounds_tsil.get(z))) {
+                                // TODO: Uncomment below
                                 //this.player1.dying = true;
                                 Log.i("OVERLAP FOUND", String.valueOf(this.player1.getX_pos()));
                                 // CHANGE TO DIFF SOUND EFFECT
@@ -809,7 +844,8 @@ public class GameScreen extends Screen {
                             //this.hazardBoundsArray.get(i).height));
                     // Check for collisions between all hazard_rects and all player_rects
                     if (OverlapTester.overlapRectangles(this.player1.getCurrentSpriteBounds().get(z), this.hazardBoundsArray.get(i))) {
-                        this.player1.dying = true;
+                        // TODO: Uncomment below
+                        //this.player1.dying = true;
                         Log.i("OVERLAP FOUND", String.valueOf(this.player1.getX_pos()));
                         // CHANGE TO DIFF SOUND EFFECT
                         if (Settings.soundEnabled) {
@@ -827,7 +863,7 @@ public class GameScreen extends Screen {
         // Check if it is time to spawn a new enemy
         if (player1.first_jump) {
             try {
-                if ((current_time - game_start_time) >
+                if ((System.currentTimeMillis() - game_start_time) >  // Switched out current_time for System.currentTime
                         (enemySpawnEventArray.get(enemy_count).enemy_spawn_time) * 1000) {
                     this.timerRunnable.run();
                 }
@@ -835,7 +871,6 @@ public class GameScreen extends Screen {
             } catch (IndexOutOfBoundsException e) {
                 Log.i("GameScreen", "NO MORE ENEMIES");
             }
-            //Log.i("TESTING", String.valueOf(System.currentTimeMillis()));
         }
 
         // Clean up enemies off screen
@@ -847,7 +882,7 @@ public class GameScreen extends Screen {
         // Clean up hazards off screen
         for (int i = 0; i < this.hazardBoundsArray.size(); i++) {
             if (this.hazardBoundsArray.get(i).getY_pos() > 820) {
-                this.hazardBoundsArray.remove(i);
+                this.hazardBoundsArray.remove(i);;
             }
         }
     }
@@ -1341,6 +1376,9 @@ public class GameScreen extends Screen {
 
     // Load all image assets needed for game, called during GameState.READY
     private void loadAssets() {
+        AssetWorkerTask assetWorkerTask = new AssetWorkerTask();
+        assetWorkerTask.execute(game);
+
         Graphics g = game.getGraphics();
         Log.i("GameScreen", "Loading Assets...");
 

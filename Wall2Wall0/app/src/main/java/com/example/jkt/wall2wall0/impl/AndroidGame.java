@@ -95,8 +95,9 @@ public abstract class AndroidGame extends Activity implements Game, GoogleApiCli
             screen.dispose();
     }
 
+    // Added Synchronized to getInput method
     @Override
-    public Input getInput() {
+    public synchronized Input getInput() {
         return input;
     }
 

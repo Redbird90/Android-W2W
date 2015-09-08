@@ -58,8 +58,8 @@ public class AndroidInput implements Input {
         return accelHandler.getAccelZ();
     }
 
-    
-    public List<TouchEvent> getTouchEvents() {
+    // Added synchronized keyword
+    public synchronized List<TouchEvent> getTouchEvents() {
         return touchHandler.getTouchEvents();
     }
     

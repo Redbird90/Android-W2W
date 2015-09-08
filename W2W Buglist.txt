@@ -8,3 +8,10 @@ Player and enemy movement can seem laggy -> find optimizations
 DroneEnemy new pattern with current velocity seems to slow down game and cause player to wait on wall -
 Game screen after death can sometimes be unresponsive -
 Four enemies spawned at the same time rather than staggered as in SpawnTimer.class - NOT REPRODUCIBLE -
+Current line 45 (Input.TouchEvent event = touchEvents.get(touchEventIndex);) gives IndexOutOfBoundsException: Invalid index 1, size is 0 -
+WallHazards keep spawning after array completion - Incorrectly commented code needed to refresh bool states
+WallHazards can be adjacent, and are then impossible to surpass -> Add checks, if botleftlow=true, botrightlow!=true - INCOMPLETE - Fixed mistake in variable placement
+Errors due to MediaPlayer -
+Game unpaused from home screen then immediately transformed to lvl 2 and spawned many enemies -> Seems as if game_start_time was not correctly updated with total time paused -
+Game unpauses immediately from home screen
+Game does not pause when recent apps button is pressed (app loses focus), and game_start_time continues -

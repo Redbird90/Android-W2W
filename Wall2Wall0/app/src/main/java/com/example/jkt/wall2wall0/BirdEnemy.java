@@ -52,7 +52,7 @@ public class BirdEnemy extends FallingEnemy {
 
     @Override
     public void update_enemy() {
-        Log.i("BirdEnemy", String.valueOf(this.x_pos + "," + this.y_pos));
+        //Log.i("BirdEnemy", String.valueOf(this.x_pos + "," + this.y_pos));
         // Keep track of changes in x and y positions to update bounds accordingly
         this.x_change = 0f;
         this.y_change = 0f;
@@ -73,14 +73,14 @@ public class BirdEnemy extends FallingEnemy {
         this.y_change = (new_y_pos - old_y_pos);
         this.x_change = (new_x_pos - old_x_pos);
 
-        Log.i("BirdEnemy", String.valueOf(this.x_pos + "," + this.y_pos));
-        Log.i("BirdEnemy", String.valueOf(this.x_change+","+this.y_change));
+        //Log.i("BirdEnemy", String.valueOf(this.x_pos + "," + this.y_pos));
+        //Log.i("BirdEnemy", String.valueOf(this.x_change+","+this.y_change));
 
         this.update_bounds();
         this.y_height_thresh_change = 0f;
 
         // Handle updating of x velocity
-        Log.i("BirdEnemyCheck", String.valueOf(this.velocity.getX()));
+        //Log.i("BirdEnemyCheck", String.valueOf(this.velocity.getX()));
         if (this.velocity.getX() >= 3.0f) {//4
             this.start_moving_left = true;
         } else if (this.velocity.getX() <= -3.0f) {//-4

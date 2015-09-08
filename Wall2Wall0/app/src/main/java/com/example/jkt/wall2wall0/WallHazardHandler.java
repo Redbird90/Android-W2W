@@ -11,19 +11,19 @@ import android.util.Log;
 // CHANGE TO REFLECT TIME PASSED
 public class WallHazardHandler {
     
-    public final int[] leftWallLowHazardArray = {};//, 15, 19};
-    public final int[] leftWallHighHazardArray = {};//, 12, 30};
-    public final int[] rightWallLowHazardArray = {};//, 9, 26};
-    public final int[] rightWallHighHazardArray = {};//, 20, 38};
+    public final int[] leftWallLowHazardArray = {3, 16, 48, 112, 172, 248, 300};//, 15, 19};
+    public final int[] leftWallHighHazardArray = {8, 34, 68, 134, 182, 276, 318};//, 12, 30};
+    public final int[] rightWallLowHazardArray = {22, 41, 75, 85, 200, 215, 242};//, 9, 26};
+    public final int[] rightWallHighHazardArray = {29, 54, 110, 146, 153, 215, 300};//, 20, 38};
     private int leftLowIndex = 0;
     private int leftHighIndex = 0;
     private int rightLowIndex = 0;
     private int rightHighIndex = 0;
 
     
-    public boolean checkForLeftLowHazard(int wall_num) {
+    public boolean checkForLeftLowHazard(long current_time) {
         try {
-            if (wall_num == leftWallLowHazardArray[this.leftLowIndex]) {
+            if (current_time >= (leftWallLowHazardArray[this.leftLowIndex] * 1000)) {
                 this.leftLowIndex += 1;
                 return true;
             } else {
@@ -35,9 +35,9 @@ public class WallHazardHandler {
         }
     }
 
-    public boolean checkForLeftHighHazard(int wall_num) {
+    public boolean checkForLeftHighHazard(long current_time) {
         try {
-            if (wall_num == leftWallHighHazardArray[this.leftHighIndex]) {
+            if (current_time >= (leftWallHighHazardArray[this.leftHighIndex] * 1000)) {
                 this.leftHighIndex += 1;
                 return true;
             } else {
@@ -49,9 +49,9 @@ public class WallHazardHandler {
         }
     }
 
-    public boolean checkForRightLowHazard(int wall_num) {
+    public boolean checkForRightLowHazard(long current_time) {
         try {
-            if (wall_num == rightWallLowHazardArray[this.rightLowIndex]) {
+            if (current_time >= (rightWallLowHazardArray[this.rightLowIndex] * 1000)) {
                 this.rightLowIndex += 1;
                 return true;
             } else {
@@ -63,9 +63,9 @@ public class WallHazardHandler {
         }
     }
 
-    public boolean checkForRightHighHazard(int wall_num) {
+    public boolean checkForRightHighHazard(long current_time) {
         try {
-            if (wall_num == rightWallHighHazardArray[this.rightHighIndex]) {
+            if (current_time >= (rightWallHighHazardArray[this.rightHighIndex] * 1000)) {
                 this.rightHighIndex += 1;
                 return true;
             } else {

@@ -334,8 +334,8 @@ public class GameScreen extends Screen {
     @Override
     public void update(float deltaTime) {
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
-        Log.i("FPSCOUNTER", String.valueOf(((System.currentTimeMillis() - this.fpscounter) * (1.000 / 1.000)) * 100000));
-        this.fpscounter = System.currentTimeMillis();
+        //Log.i("FPSCOUNTER", String.valueOf(((System.currentTimeMillis() - this.fpscounter) * (1.000 / 1.000)) * 100000));
+        //this.fpscounter = System.currentTimeMillis();
 
         // We have four separate update methods in this example.
         // Depending on the state of the game, we call different
@@ -389,7 +389,7 @@ public class GameScreen extends Screen {
     private void updateRunning(List<Input.TouchEvent> touchEvents, float deltaTime) {
 
         this.current_time = System.currentTimeMillis();
-        Log.i("GameScreenTIMER", String.valueOf(this.current_time));
+        //Log.i("GameScreenTIMER", String.valueOf(this.current_time));
 
 
         // 1. All touch input is handled here:
@@ -401,7 +401,7 @@ public class GameScreen extends Screen {
 
             // Handle TOUCH_DOWN
             if (currentEvent.type == Input.TouchEvent.TOUCH_DOWN) {
-                if (System.currentTimeMillis() - delay_time > 200) {
+                if (System.currentTimeMillis() - this.delay_time > 200) {
                     if (!tutorial_time) {
                         if (inBounds(currentEvent, 0, 180, 770, 860)) {
                             Log.i("GameScreen", "TOUCH_DOWN detected in bounds");
@@ -421,7 +421,7 @@ public class GameScreen extends Screen {
             if (currentEvent.type == Input.TouchEvent.TOUCH_UP) {
                 // Screen pressed in game bounds
                 if (inBounds(currentEvent, 0, 180, 770, 860)) {
-                    if (System.currentTimeMillis() - delay_time > 500) {
+                    if (System.currentTimeMillis() - this.delay_time > 500) {
                         if (tutorial_time) {
                             tutorial_time = false;
                             game_start_time = System.currentTimeMillis();
@@ -441,7 +441,7 @@ public class GameScreen extends Screen {
                                 this.jump_type = 0;
                             }
                             this.player1.start_movement(this.jump_type);
-                            delay_time = 0;
+                            this.delay_time = 0;
                             this.jump_type = 0;
                             this.player_holding = false;
                             this.hold_start_time = 0;
@@ -452,7 +452,7 @@ public class GameScreen extends Screen {
             }
         }
         // 2. Check miscellaneous events like death:
-        if (this.player1.getY_pos() > 870) {
+        if (this.player1.getY_pos() > 850) {
             if (Settings.soundEnabled) {
                 death_sound.play(1.0f);
             }
@@ -472,7 +472,6 @@ public class GameScreen extends Screen {
                 Settings.setHighScore(this.highScore);
                 Settings.save(game.getFileIO());
             }
-            delay_time = (long) 0;
         }
 
         // ADD FIRST ENEMY AT CERTAIN SPOT; KEEP OR REMOVE?
@@ -779,7 +778,7 @@ public class GameScreen extends Screen {
                         //Log.i("GameScreen", "Checking for Overlap1");
                         // Check for a collision between circle and all player_rects
                         if (OverlapTester.overlapCircleRectangle((Circle) this.enemy_list.get(i).bounds, this.player1.getCurrentSpriteBounds().get(z))) {
-                            this.player1.dying = true;
+                            //this.player1.dying = true;
                             Log.i("OVERLAP FOUND", String.valueOf(this.player1.getX_pos()));
                             // CHANGE TO DIFF SOUND EFFECT
                             if (Settings.soundEnabled) {
@@ -947,8 +946,7 @@ public class GameScreen extends Screen {
                     nullify();
                     game.setScreen(new GameScreen(game));  // CREATES NEW GAMESCREEN EVERY GAME
                     state = GameState.Ready;
-                    delay_time = System.currentTimeMillis();
-                    return;
+                    //delay_time = System.currentTimeMillis();
                 }
             }
         }
@@ -1156,6 +1154,7 @@ public class GameScreen extends Screen {
         this.game_start_time += time_paused;
         // Update GameState to Running to ensure updateRunning is being called
         this.state = GameState.Running;
+        this.delay_time = System.currentTimeMillis();
     }
 
 
@@ -1302,7 +1301,7 @@ public class GameScreen extends Screen {
         Log.i("TIME DIFF", String.valueOf(current_time - game_start_time));*/
 
         // Handle transition from level 1 to level 2
-        if (((current_time - game_start_time) > (120 * 1000)) && transition_incomplete && !tutorial_time) {
+        if (((current_time - game_start_time) > (140 * 1000)) && transition_incomplete && !tutorial_time) {
             Log.i("STARTING", String.valueOf(this.opacity_num));
 
             // Draw an overlay that becomes completely white then completely transparent
@@ -1320,6 +1319,17 @@ public class GameScreen extends Screen {
                 this.bot_walls_y_pos = -299;
                 this.top_walls_y_pos = -1398;
                 this.player1.player_score += 15f;
+                // Clear hazards present from level 1, in both bounds and blits
+                this.hazardBoundsArray.clear();
+                this.top_left_wall_high_hazard = false;
+                this.top_left_wall_low_hazard = false;
+                this.top_right_wall_high_hazard = false;
+                this.top_right_wall_low_hazard = false;
+                this.bot_left_wall_high_hazard = false;
+                this.bot_left_wall_low_hazard = false;
+                this.bot_right_wall_high_hazard = false;
+                this.bot_right_wall_low_hazard = false;
+
             } else if (this.opacity_num < 255 && this.reached_255_opacity) {
                 // Gradually decrease image brightness until transparent
                 this.opacity_num -= 25;
@@ -1376,8 +1386,8 @@ public class GameScreen extends Screen {
 
     // Load all image assets needed for game, called during GameState.READY
     private void loadAssets() {
-        AssetWorkerTask assetWorkerTask = new AssetWorkerTask();
-        assetWorkerTask.execute(game);
+/*        AssetWorkerTask assetWorkerTask = new AssetWorkerTask();
+        assetWorkerTask.execute(game);*/
 
         Graphics g = game.getGraphics();
         Log.i("GameScreen", "Loading Assets...");

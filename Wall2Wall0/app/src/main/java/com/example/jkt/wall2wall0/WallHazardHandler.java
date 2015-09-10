@@ -11,10 +11,10 @@ import android.util.Log;
 // CHANGE TO REFLECT TIME PASSED
 public class WallHazardHandler {
     
-    public final int[] leftWallLowHazardArray = {3, 16, 48, 112, 172, 248, 300};//, 15, 19};
-    public final int[] leftWallHighHazardArray = {8, 34, 68, 134, 182, 276, 318};//, 12, 30};
-    public final int[] rightWallLowHazardArray = {22, 41, 75, 85, 200, 215, 242};//, 9, 26};
-    public final int[] rightWallHighHazardArray = {29, 54, 110, 146, 153, 215, 300};//, 20, 38};
+    public final int[] leftWallLowHazardArray = {3, 16, 48, 121, 172, 248, 300};//, 15, 19};
+    public final int[] leftWallHighHazardArray = {8, 34, 62, 123, 131, 182, 276, 318};//, 12, 30};
+    public final int[] rightWallLowHazardArray = {22, 41, 79, 82, 129, 200, 215, 242};//, 9, 26};
+    public final int[] rightWallHighHazardArray = {29, 54, 116, 124, 127, 133, 156, 163, 215, 300};//, 20, 38};
     private int leftLowIndex = 0;
     private int leftHighIndex = 0;
     private int rightLowIndex = 0;

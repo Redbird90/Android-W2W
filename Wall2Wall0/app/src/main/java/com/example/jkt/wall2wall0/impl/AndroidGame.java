@@ -80,8 +80,9 @@ public abstract class AndroidGame extends Activity implements Game, GoogleApiCli
     public void onResume() {
         super.onResume();
         wakeLock.acquire();
-        screen.resume();
+        //screen.resume();
         renderView.resume();
+        Log.i("AndroidGame", "Screen should not be resumed");
     }
 
     @Override
@@ -90,6 +91,7 @@ public abstract class AndroidGame extends Activity implements Game, GoogleApiCli
         wakeLock.release();
         renderView.pause();
         screen.pause();
+        Log.i("AndroidGame", "Screen paused");
 
         if (isFinishing())
             screen.dispose();
